@@ -1,3 +1,4 @@
+from playsound import playsound
 from tkinter import *
 from re import *
 
@@ -28,9 +29,10 @@ class Ticket_Screen:
         email = self.email_entry.get()
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         if not re.fullmatch(regex, email):
-            # Execute code to make invalid_email_label pop up
+            # Execute code to make invalid_email_label pop up and play error sound
+            # playsound("[Error Noise]")
             print("Invalid Email Address")
-        
+
 
 
         print("Perform Ticket Operations")
