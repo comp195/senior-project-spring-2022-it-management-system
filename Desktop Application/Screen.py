@@ -31,18 +31,22 @@ class Ticket_Screen:
         self.root.geometry(self.resolution)
 
         # Email Entry
+        self.email_label = Label(self.root, width=20, text="Email")
         self.email_entry = Entry(self.root, width=50)
         self.invalid_email_label = Label(self.root, width=50, text="Please enter a valid email.", fg="red")
 
         # Ticket Title Entry
+        self.title_label = Label(self.root, width=20, text="Title")
         self.ticket_title = Entry(self.root, width=50)
 
         # Ticket Category Dropdown
+        self.category_label = Label(self.root, width=20, text="Category")
         self.dropdown_selection = StringVar(self.root)
         self.dropdown_selection.set(self.dropdown_options[0])
         self.ticket_dropdown = OptionMenu(self.root, self.dropdown_selection, self.dropdown_options[0], *self.dropdown_options[1:])
 
         # Ticket Description Box
+        self.description_label = Label(self.root, width=20, text="Description")
         self.description_box = Entry(self.root, width=50)
 
         # Ticket Submission Button
@@ -50,11 +54,22 @@ class Ticket_Screen:
 
     def draw_screen(self):
         print("Put items on screen")
+        self.email_label.pack()
         self.email_entry.pack()
+        self.title_label.pack()
         self.ticket_title.pack()
+        self.category_label.pack()
         self.ticket_dropdown.pack()
+        self.description_label.pack()
         self.description_box.pack()
         self.submission_button.pack()
+
+    def setMaxWidth(self, element):
+        # f = tkFont.nametofont(element.cget("font"))
+        # zerowidth = f.measure("0")
+        # w = max([f.measure(i) for i in self.dropdown_options]) / zerowidth
+        # element.config(width=w)
+        print("Make it so that width of dropdown list is equal to longest element")
 
     def on_ticket_submission(self):
 
