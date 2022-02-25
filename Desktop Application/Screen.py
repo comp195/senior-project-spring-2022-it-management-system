@@ -50,7 +50,6 @@ class PageHeader(tk.Frame):
 
         # Initializing GUI Controller
         self.controller = controller
-        self.controller.config(menu=self.menubar)
 
         # Setting Up the MenuBar
         self.menubar = tk.Menu(master=controller)
@@ -59,6 +58,9 @@ class PageHeader(tk.Frame):
         self.menubar.add_command(label="Employees", command=lambda: self.controller.show_frame("EmployeePage"))
         self.menubar.add_command(label="Tickets", command=lambda: self.controller.show_frame("TicketPage"))
         self.menubar.add_command(label="Help", command=lambda: self.controller.show_frame("HelpPage"))
+
+        # Assign MenuBar after it has been initialized
+        self.controller.config(menu=self.menubar)
 
 
 class MainMenuPage(tk.Frame):
