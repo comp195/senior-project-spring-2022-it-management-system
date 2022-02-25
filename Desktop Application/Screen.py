@@ -1,6 +1,7 @@
 from playsound import playsound
 import tkinter as tk
 from tkinter import font  as tkfont # python 3
+from tkinter import *   # for 'Button'
 from re import *
 
 class GUIController(tk.Tk):
@@ -22,13 +23,14 @@ class GUIController(tk.Tk):
         # Implementation of Root Tk() Configurations
         self.title(self.window_title)
         self.geometry(self.resolution)
-        self['bg'] = 'green'
+        self['bg'] = 'orange'       # background color of ROOT
 
         # Initializing all of our frames within our container
         self.frames = {}
         for F in (PageHeader, MainMenuPage, EquipmentPage, EmployeePage, TicketPage, HelpPage):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
+            frame.config(bg='orange')   # background color of individual frame
             self.frames[page_name] = frame
 
             # Putting all of our frames in the same place on the screen with the top one being active
@@ -37,6 +39,13 @@ class GUIController(tk.Tk):
         # Frame visible at the start of the application
         self.show_frame("PageHeader")
 
+        # Initialize font for button use
+        button_font = font.Font(size=30, weight='bold')
+
+        # Add exit button
+        # USE COMMAND= TO CALL FUNCTION
+        Button(self, text="EXIT", font=button_font, bg='red', activebackground='pink',
+               command=self.destroy).place(x=0, y=1000)
     
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
