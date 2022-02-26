@@ -7,15 +7,23 @@ from re import *
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 
+coconut = "#9B582E"
+quick_silver = "A7A39E"
+gainsboro = "#E0DDD9"
+rajah = "#F5B15E"
+stormcloud = "#4D646A"
+
+
 class GUIController(tk.Tk):
 
     def __init__(self, *args, **kwargs):
+        global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
         tk.Tk.__init__(self, *args, **kwargs)
 
         # Basic Configuration Values for Root Tk()
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
         self.window_title = "Application"
-        self.resolution = "1920x1080"
+        self.resolution = str(SCREEN_WIDTH) + "x" + str(SCREEN_HEIGHT)
 
         # Initializing container that stacks our frames
         container = tk.Frame(self)
@@ -26,14 +34,14 @@ class GUIController(tk.Tk):
         # Implementation of Root Tk() Configurations
         self.title(self.window_title)
         self.geometry(self.resolution)
-        self['bg'] = 'orange'       # background color of ROOT
+        self['bg'] = coconut       # background color of ROOT
 
         # Initializing all of our frames within our container
         self.frames = {}
         for F in (PageHeader, MainMenuPage, EquipmentPage, EmployeePage, TicketPage, HelpPage):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
-            frame.config(bg='orange')   # background color of individual frame
+            frame.config(bg=coconut)   # background color of individual frame
             self.frames[page_name] = frame
 
             # Putting all of our frames in the same place on the screen with the top one being active
@@ -42,26 +50,6 @@ class GUIController(tk.Tk):
         # Frame visible at the start of the application
         self.show_frame("PageHeader")
 
-        # Initialize font for button use
-        button_font = font.Font(size=30, weight='bold')
-
-        # Create the Equipment screen title label
-        Label(self, text="EQUIPMENT", font=('Lucida', 40, 'bold'), bg='orange').place(x=820, y=0)
-
-        # Add label and dropdown menu for selecting the equipment category
-        Label(self, text="Equipment Category", font=60, bg='orange').place(x=50, y=170)
-        equipment_options = ['Desktop', 'Laptop', 'VoIP Phone', 'Monitor', 'Headset', 'Webcam']
-        dropdown_text = StringVar()
-        dropdown_text.set('Desktop')
-        dropdown_menu = OptionMenu(self, dropdown_text, *equipment_options)
-        dropdown_menu.config(activebackground='#C4A484')
-        dropdown_menu.place(x=75, y=200)
-
-        # Add exit button
-        # USE COMMAND= TO CALL FUNCTION
-        Button(self, text="EXIT", font=button_font, bg='red', activebackground='pink',
-               command=self.destroy).place(x=0, y=1000)
-    
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
@@ -71,7 +59,7 @@ class GUIController(tk.Tk):
 class PageHeader(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-
+        global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
         # Initializing GUI Controller
         self.controller = controller
 
@@ -90,23 +78,62 @@ class PageHeader(tk.Frame):
 class MainMenuPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-
+        global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
         # Initializing GUI Controller
         self.controller = controller
 
 
 class EquipmentPage(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-
+        self.equipment_mainframe = tk.Frame.__init__(self, parent)
+        global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
         # Initializing GUI Controller
         self.controller = controller
+
+        # Initialize font for button use
+        button_font = tkfont.Font(size=30, weight='bold')
+
+        # Create the Equipment screen title label
+        self.title_label = Label(self.equipment_mainframe, text="EQUIPMENT", font=('Rubik', 40), bg=coconut, fg=stormcloud)\
+            .place(x=65, y=30)
+
+        # Subframe
+        self.equipment_subframe = tk.Frame(self.equipment_mainframe, bg="#ECA62D", highlightbackground=rajah,
+                                           highlightthickness=1, width=1920, height=955) \
+            .place(x=0, y=125)
+
+        # Add label and dropdown menu for selecting the equipment category
+        self.category_label = Label(self.equipment_subframe, text="Category", font=('Rubik', 13), bg="#ECA62D", fg="#363030")\
+            .place(x=77, y=170)
+
+        # Category Dropdown List
+        equipment_options = ['Desktop', 'Laptop', 'VoIP Phone', 'Monitor', 'Headset', 'Webcam']
+        dropdown_text = StringVar()
+        dropdown_text.set('Desktop')
+        self.category_menu = OptionMenu(self.equipment_mainframe, dropdown_text, *equipment_options)
+        self.category_menu.config(activebackground='#C4A484')
+        self.category_menu.place(x=70, y=195)
+
+        # Search Bar
+        self.search_bar = Entry(self.equipment_mainframe, highlightbackground="#363030", highlightthickness=1,
+                                width=258)\
+            .place(x=170, y=200)
+
+        # Search Button
+        self.search_button = Button(self.equipment_mainframe, text="Search", fg="#363030", width=15)\
+            .place(x=1735, y=197)
+
+
+        # Frame for Equipment Tabs
+        self.equipment_searchframe = tk.Frame(self.equipment_mainframe, bg="white", highlightbackground="#363030",
+                                           highlightthickness=2, width=1780, height=680)\
+            .place(x=70, y=250)
 
 
 class EmployeePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-
+        global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
         # Initializing GUI Controller
         self.controller = controller
 
@@ -114,7 +141,7 @@ class EmployeePage(tk.Frame):
 class TicketPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-
+        global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
         # Initializing GUI Controller
         self.controller = controller
 
@@ -122,7 +149,7 @@ class TicketPage(tk.Frame):
 class HelpPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-
+        global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
         # Initializing GUI Controller
         self.controller = controller
 
