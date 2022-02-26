@@ -8,7 +8,7 @@ SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 
 coconut = "#9B582E"
-quick_silver = "A7A39E"
+quick_silver = "#A7A39E"
 gainsboro = "#E0DDD9"
 rajah = "#F5B15E"
 stormcloud = "#4D646A"
@@ -34,14 +34,14 @@ class GUIController(tk.Tk):
         # Implementation of Root Tk() Configurations
         self.title(self.window_title)
         self.geometry(self.resolution)
-        self['bg'] = coconut       # background color of ROOT
+        self['bg'] = stormcloud       # background color of ROOT
 
         # Initializing all of our frames within our container
         self.frames = {}
         for F in (PageHeader, MainMenuPage, EquipmentPage, EmployeePage, TicketPage, HelpPage):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
-            frame.config(bg=coconut)   # background color of individual frame
+            frame.config(bg=stormcloud)   # background color of individual frame
             self.frames[page_name] = frame
 
             # Putting all of our frames in the same place on the screen with the top one being active
@@ -94,11 +94,11 @@ class EquipmentPage(tk.Frame):
         button_font = tkfont.Font(size=30, weight='bold')
 
         # Create the Equipment screen title label
-        self.title_label = Label(self.equipment_mainframe, text="EQUIPMENT", font=('Rubik', 40), bg=coconut, fg=stormcloud)\
+        self.title_label = Label(self.equipment_mainframe, text="Equipment", font=('Rubik', 40, "bold"), bg=stormcloud, fg=gainsboro)\
             .place(x=65, y=30)
 
         # Subframe
-        self.equipment_subframe = tk.Frame(self.equipment_mainframe, bg="#ECA62D", highlightbackground=rajah,
+        self.equipment_subframe = tk.Frame(self.equipment_mainframe, bg=gainsboro, highlightbackground=coconut,
                                            highlightthickness=1, width=1920, height=955) \
             .place(x=0, y=125)
 
