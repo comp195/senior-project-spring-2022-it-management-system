@@ -1,11 +1,11 @@
 Senior Project - IT Management System
 
 
-Last Update:     02/26/2022
+Last Update:     02/27/2022
 
-Contributors:    Daniel Adler -  d_adler@u.pacific.edu
-		     Vincent Tran - v_tran37@u.pacific.edu
-		     Andrew Vu    -   a_vu16@u.pacific.edu
+Contributors:    Daniel Adler - d_adler@u.pacific.edu
+		 Vincent Tran - v_tran37@u.pacific.edu
+		 Andrew Vu    - a_vu16@u.pacific.edu
 
 Description:     This IT management system exists to provide small business managers and IT technicians to
 		     have full scope over their assets, employees, and issues that might be impeding them from
