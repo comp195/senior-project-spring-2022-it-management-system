@@ -82,7 +82,6 @@ class MainMenuPage(tk.Frame):
         # Initializing GUI Controller
         self.controller = controller
 
-
 class EquipmentPage(tk.Frame):
     def __init__(self, parent, controller):
         self.equipment_mainframe = tk.Frame.__init__(self, parent)
@@ -108,9 +107,9 @@ class EquipmentPage(tk.Frame):
 
         # Category Dropdown List
         equipment_options = ['Desktop', 'Laptop', 'VoIP Phone', 'Monitor', 'Headset', 'Webcam']
-        dropdown_text = StringVar()
-        dropdown_text.set('Desktop')
-        self.category_menu = OptionMenu(self.equipment_mainframe, dropdown_text, *equipment_options)
+        self.dropdown_text = StringVar()
+        self.dropdown_text.set('Desktop')
+        self.category_menu = OptionMenu(self.equipment_mainframe, self.dropdown_text, *equipment_options, command=self.get_category_selection)
         self.category_menu.config(activebackground='#C4A484')
         self.category_menu.place(x=70, y=195)
 
@@ -128,6 +127,12 @@ class EquipmentPage(tk.Frame):
         self.equipment_searchframe = tk.Frame(self.equipment_mainframe, bg="white", highlightbackground="#363030",
                                            highlightthickness=2, width=1780, height=680)\
             .place(x=70, y=250)
+
+    def get_category_selection(self, selection):
+        selection = self.dropdown_text.get()
+        print(selection)
+        # use 'selection' as value for retrieving data from database
+
 
 
 class EmployeePage(tk.Frame):
