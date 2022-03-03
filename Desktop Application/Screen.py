@@ -71,7 +71,7 @@ class PageHeader(tk.Frame):
         self.menubar.add_command(label="Tickets", command=lambda: self.controller.show_frame("TicketPage"))
         self.menubar.add_command(label="Help", command=lambda: self.controller.show_frame("HelpPage"))
 
-        # Assign MenuBar after it has been initialized
+        # Assign MenuBhttps://github.com/comp195/senior-project-spring-2022-it-management-system/wiki/Snapshot-1ar after it has been initialized
         self.controller.config(menu=self.menubar)
 
 
