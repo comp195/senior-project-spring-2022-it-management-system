@@ -82,7 +82,6 @@ class MainMenuPage(tk.Frame):
         # Initializing GUI Controller
         self.controller = controller
 
-
 class EquipmentPage(tk.Frame):
     def __init__(self, parent, controller):
         self.equipment_mainframe = tk.Frame.__init__(self, parent)
@@ -108,9 +107,9 @@ class EquipmentPage(tk.Frame):
 
         # Category Dropdown List
         equipment_options = ['Desktop', 'Laptop', 'VoIP Phone', 'Monitor', 'Headset', 'Webcam']
-        dropdown_text = StringVar()
-        dropdown_text.set('Desktop')
-        self.category_menu = OptionMenu(self.equipment_mainframe, dropdown_text, *equipment_options)
+        self.dropdown_text = StringVar()
+        self.dropdown_text.set('Desktop')
+        self.category_menu = OptionMenu(self.equipment_mainframe, self.dropdown_text, *equipment_options, command=self.present_data)
         self.category_menu.config(activebackground='#C4A484')
         self.category_menu.place(x=70, y=195)
 
@@ -128,6 +127,32 @@ class EquipmentPage(tk.Frame):
         self.equipment_searchframe = tk.Frame(self.equipment_mainframe, bg="white", highlightbackground="#363030",
                                            highlightthickness=2, width=1780, height=680)\
             .place(x=70, y=250)
+
+    # Function to pull data from database based on category selection & show results on screen
+    def present_data(self, category):
+        category = self.get_category_selection()
+        print('Return value from helper method: ' + category)
+        # NOTE: use 'category' as value for retrieving data from database then show on screen here
+        #       (assign returned value of retrieve_data() to a variable)
+        self.retrieve_data(category)
+
+    # Function to obtain the currently-selected option in the 'Categories' dropdown menu
+    def get_category_selection(self):
+        selection = self.dropdown_text.get()
+        print(selection)
+        return selection
+
+    # Function to pull data from database
+    # Parameter: category is used to determine which section of database to pull data from
+    def retrieve_data(self, category):
+        print()
+        # NOTE: return proper structs here
+
+
+
+
+
+
 
 
 class EmployeePage(tk.Frame):
