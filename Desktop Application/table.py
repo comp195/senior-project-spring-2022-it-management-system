@@ -73,18 +73,16 @@ class dataTable:
                 baseCMD += "'" + str(i) + "', "
             j += 1
 
-        #print(baseCMD)
+        print(baseCMD)
         self.cursor.execute(baseCMD)
+
 
 def main():
     tick = dataTable("Tickets")
     print(tick.get_cols())
 
-    data = [2, "Broken Keyboard"]
+    data = ['2', 1, 'John', 'Cena', '1', 'Mouses', 'Broken mouse', 'Left click not working', 'Maintenance', 'Medium', 'Supoort']
     tick.insert_data(data)
-
-    data2 = ["3", "Broken Mouse"]
-    tick.insert_data(data2)
 
     print(tick.get_rows())
 
