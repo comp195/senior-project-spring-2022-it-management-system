@@ -38,8 +38,7 @@ class GUIController(tk.Tk):
 
         # Initializing all of our frames within our container
         self.frames = {}
-        for F in (PageHeader, MainMenuPage, EquipmentPage, EmployeePage, TicketPage, HelpPage,
-                  ScrollableFrame):
+        for F in (PageHeader, MainMenuPage, EquipmentPage, EmployeePage, TicketPage, HelpPage):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             frame.config(bg=stormcloud)   # background color of individual frame
@@ -50,9 +49,6 @@ class GUIController(tk.Tk):
 
         # Frame visible at the start of the application
         self.show_frame("PageHeader")
-
-        # Add scrollable frame to screen
-        self.show_frame("ScrollableFrame")
 
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
@@ -103,7 +99,7 @@ class EquipmentPage(tk.Frame):
         # Subframe
         self.equipment_subframe = tk.Frame(self.equipment_mainframe, bg=gainsboro, highlightbackground=coconut,
                                            highlightthickness=1, width=1920, height=955) \
-            .place(x=0, y=125)
+            .place(x=0, y=500)
 
         # Add label and dropdown menu for selecting the equipment category
         self.category_label = Label(self.equipment_subframe, text="Category", font=('Rubik', 13), bg="#ECA62D", fg="#363030")\
@@ -126,13 +122,25 @@ class EquipmentPage(tk.Frame):
         self.search_button = Button(self.equipment_mainframe, text="Search", fg="#363030", width=15)\
             .place(x=1735, y=197)
 
-
+#NOTE:  COMMENTED OUT AS THE TEXTBOX+SCROLLBAR MAY REPLACE THIS
         # Frame for Equipment Tabs
-        self.equipment_searchframe = tk.Frame(self.equipment_mainframe, bg="white", highlightbackground="#363030",
-                                           highlightthickness=2, width=1780, height=680)\
-            .place(x=70, y=250)
+        # self.equipment_searchframe = tk.Frame(self.equipment_mainframe, bg="white", highlightbackground="#363030",
+        #                                    highlightthickness=2, width=1780, height=680)\
+        #     .place(x=70, y=250)
 
-        #POTENTIAL SCROLLBAR CODE HERE
+        # Add scrollbar & corresponding textbox
+        self.vertical_scrollbar = Scrollbar(self.equipment_mainframe, orient=VERTICAL)
+        self.vertical_scrollbar.pack(side=RIGHT, fill=BOTH)
+        # self.vertical_scrollbar.place(x=1000, y=200)
+
+        self.text_box = Text(self.equipment_mainframe, width=224, height=40, wrap=NONE,
+                             yscrollcommand=self.vertical_scrollbar.set, bg='orange')
+        for i in range(1000):
+            self.text_box.insert(END, "sample text " + str(i) + "\n")
+        self.text_box.pack(side=TOP)#, expand=TRUE)
+        # self.text_box.place(x=72, y=250)
+        self.vertical_scrollbar.config(command=self.text_box.yview)
+
 
     # Function to pull data from database based on category selection & show results on screen
     def present_data(self, category):
@@ -153,29 +161,6 @@ class EquipmentPage(tk.Frame):
     def retrieve_data(self, category):
         print()
         # NOTE: return proper structs here
-
-class ScrollableFrame(tk.Frame):
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
-        self.controller = controller
-
-        # self refers to root?
-        vertical_scrollbar = Scrollbar(self)
-        vertical_scrollbar.pack(side=RIGHT, fill=Y)
-
-        text_box = Text(self, width=15, height=15, wrap=NONE,
-                           yscrollcommand=vertical_scrollbar.set, bg='orange')
-        for i in range(50):
-            text_box.insert(END,"sample text 123\n")
-        text_box.pack(side=TOP, fill=X)
-
-
-        vertical_scrollbar.config(command=text_box.yview)
-
-
-
-
 
 class EmployeePage(tk.Frame):
     def __init__(self, parent, controller):
