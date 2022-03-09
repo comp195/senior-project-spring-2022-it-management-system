@@ -2,7 +2,7 @@ from playsound import playsound
 import tkinter as tk
 from tkinter import font  as tkfont # python 3
 from tkinter import *   # for 'Button'
-from re import *
+# from re import *
 
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
@@ -38,7 +38,8 @@ class GUIController(tk.Tk):
 
         # Initializing all of our frames within our container
         self.frames = {}
-        for F in (PageHeader, MainMenuPage, EquipmentPage, EmployeePage, TicketPage, HelpPage):
+        for F in (PageHeader, MainMenuPage, EquipmentPage, EmployeePage, TicketPage, HelpPage,
+                  ScrollableFrame):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             frame.config(bg=stormcloud)   # background color of individual frame
@@ -49,6 +50,9 @@ class GUIController(tk.Tk):
 
         # Frame visible at the start of the application
         self.show_frame("PageHeader")
+
+        # Add scrollable frame to screen
+        self.show_frame("ScrollableFrame")
 
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
@@ -128,6 +132,8 @@ class EquipmentPage(tk.Frame):
                                            highlightthickness=2, width=1780, height=680)\
             .place(x=70, y=250)
 
+        #POTENTIAL SCROLLBAR CODE HERE
+
     # Function to pull data from database based on category selection & show results on screen
     def present_data(self, category):
         category = self.get_category_selection()
@@ -148,8 +154,24 @@ class EquipmentPage(tk.Frame):
         print()
         # NOTE: return proper structs here
 
+class ScrollableFrame(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
+        self.controller = controller
+
+        # self refers to root?
+        vertical_scrollbar = Scrollbar(self)
+        vertical_scrollbar.pack(side=RIGHT, fill=Y)
+
+        text_box = Text(self, width=15, height=15, wrap=NONE,
+                           yscrollcommand=vertical_scrollbar.set, bg='orange')
+        for i in range(50):
+            text_box.insert(END,"sample text 123\n")
+        text_box.pack(side=TOP, fill=X)
 
 
+        vertical_scrollbar.config(command=text_box.yview)
 
 
 
