@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import font  as tkfont # python 3
 from tkinter import *   # for 'Button'
 # from re import *
+import table
 
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
@@ -140,6 +141,13 @@ class EquipmentPage(tk.Frame):
         self.text_box.pack(side=TOP)#, expand=TRUE)
         # self.text_box.place(x=72, y=250)
         self.vertical_scrollbar.config(command=self.text_box.yview)
+
+        # Create 'table' instance as part of equipment screen
+        # NOTE: change table name of "Devices" to "Equipment" in db
+        equipment_table = table.dataTable("Devices")
+        equipment_data = ["1", "Monitor", "456", "Tom", "Jerry", "1", "Support", "365", "2021-03-12", "300.0"]
+        equipment_table.insert_data(equipment_data)
+        print(equipment_table.get_rows())
 
 
     # Function to pull data from database based on category selection & show results on screen
