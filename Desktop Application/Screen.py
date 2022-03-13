@@ -147,8 +147,14 @@ class EquipmentPage(tk.Frame):
         equipment_table = table.dataTable("Devices")
         equipment_data = ["1", "Monitor", "456", "Tom", "Jerry", "1", "Support", "365", "2021-03-12", "300.0"]
         equipment_table.insert_data(equipment_data)
-        print(equipment_table.get_rows())
-
+        list_of_equipment_rows = equipment_table.get_rows()
+        print(list_of_equipment_rows)
+        print()
+        parsed_equipment_row = equipment_table.obtain_parsed_equipment_row(list_of_equipment_rows[0])
+        print(parsed_equipment_row)
+        self.text_box.insert('1.0', "\n")
+        self.text_box.insert('1.0', parsed_equipment_row)
+        # Text widget insert index notation: 'line.column'
 
     # Function to pull data from database based on category selection & show results on screen
     def present_data(self, category):

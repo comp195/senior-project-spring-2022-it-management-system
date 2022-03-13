@@ -76,6 +76,23 @@ class dataTable:
         print(baseCMD)
         self.cursor.execute(baseCMD)
 
+    # Function to parse a row of EQUIPMENT data
+    # Args:     a list containing attributes of only a single row of data
+    # Return:   a list pairing each attribute value to its category (EX. "ID: 123")
+    # NOTE:     Size of 'row' must be equal to 10
+    # NOTE:     currently referring to attributes of "Devices" table; update as necessary
+    def obtain_parsed_equipment_row(self, row):
+        # attributes = ["equipment_id: ", "category: ", "status: ", "date_purchased: ", "days_in_rotation: ", "cost: ",
+        #               "current_user_id: ", "current_department: "]
+        categorized_list = []
+        attributes = ["device_id: ", "category: ", "current_user_id: ", "user_first_name: ", "user_last_name: ",
+                      "department_id: ", "department: ", "days_since_purchase: ", "purchase_date: ", "cost: "]
+        for i in range(10):
+            paired_string = attributes[i] + str(row[i])     # must ensure row values are strings
+            categorized_list.append(paired_string)
+
+        return categorized_list
+
 
 def main():
     tick = dataTable("Tickets")
