@@ -11,6 +11,9 @@ class dataTable:
         self.db_connect()
         self.valid_table = self.check_table(table_name)
 
+    def get_cursor(self):
+        return self.cursor
+
     def check_table(self, name):
         check = "SHOW TABLES LIKE '{}'".format(name)
         self.cursor.execute(check)
