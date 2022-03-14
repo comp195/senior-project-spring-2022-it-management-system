@@ -11,6 +11,9 @@ class dataTable:
         self.db_connect()
         self.valid_table = self.check_table(table_name)
 
+    def get_cursor(self):
+        return self.cursor
+
     def check_table(self, name):
         check = "SHOW TABLES LIKE '{}'".format(name)
         self.cursor.execute(check)
@@ -73,18 +76,33 @@ class dataTable:
                 baseCMD += "'" + str(i) + "', "
             j += 1
 
-        #print(baseCMD)
+        print(baseCMD)
         self.cursor.execute(baseCMD)
+
+    # Function to parse a row of EQUIPMENT data
+    # Args:     a list containing attributes of only a single row of data
+    # Return:   a list pairing each attribute value to its category (EX. "ID: 123")
+    # NOTE:     Size of 'row' must be equal to 10
+    # NOTE:     currently referring to attributes of "Devices" table; update as necessary
+    def obtain_parsed_equipment_row(self, row):
+        # attributes = ["equipment_id: ", "category: ", "status: ", "date_purchased: ", "days_in_rotation: ", "cost: ",
+        #               "current_user_id: ", "current_department: "]
+        categorized_list = []
+        attributes = ["device_id: ", "category: ", "current_user_id: ", "user_first_name: ", "user_last_name: ",
+                      "department_id: ", "department: ", "days_since_purchase: ", "purchase_date: ", "cost: "]
+        for i in range(10):
+            paired_string = attributes[i] + str(row[i])     # must ensure row values are strings
+            categorized_list.append(paired_string)
+
+        return categorized_list
+
 
 def main():
     tick = dataTable("Tickets")
     print(tick.get_cols())
 
-    data = [2, "Broken Keyboard"]
+    data = ['2', 1, 'John', 'Cena', '1', 'Mouses', 'Broken mouse', 'Left click not working', 'Maintenance', 'Medium', 'Supoort']
     tick.insert_data(data)
-
-    data2 = ["3", "Broken Mouse"]
-    tick.insert_data(data2)
 
     print(tick.get_rows())
 
