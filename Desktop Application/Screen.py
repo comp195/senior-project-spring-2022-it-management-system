@@ -158,18 +158,41 @@ class EquipmentPage(tk.Frame):
 
         cursor = equipment_table.get_cursor()
         cursor.execute("SELECT * FROM Devices")
-        i = 0
+        # i = 0
+
+        # Add column headers for data display
+        id_label = Label(self, text="device_id", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        category_label = Label(self, text="category", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        user_id_label = Label(self, text="current_user_id", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        first_name_label = Label(self, text="user_first_name", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        last_name_label = Label(self, text="user_last_name", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        department_id_label = Label(self, text="department_id", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        department_label = Label(self, text="department", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        days_since_purchase_label = Label(self, text="days_since_purchase", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        purchase_date_label = Label(self, text="purchase_date", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        cost_label = Label(self, text="cost", borderwidth=2, relief='ridge', anchor='w', bg='green')
+
+        id_label.grid(row=0, column=0)
+        category_label.grid(row=0, column=1)
+        user_id_label.grid(row=0, column=2)
+        first_name_label.grid(row=0, column=3)
+        last_name_label.grid(row=0, column=4)
+        department_id_label.grid(row=0, column=5)
+        department_label.grid(row=0, column=6)
+        days_since_purchase_label.grid(row=0, column=7)
+        purchase_date_label.grid(row=0, column=8)
+        cost_label.grid(row=0, column=9)
+
+        i = 1
         for device in cursor:
             print("Device: ")
             print(device)
             print("testing\n")
             for j in range(len(device)):
-                entry = Entry(self, width=10, fg='red')
+                entry = Entry(self, width=10, fg='red', justify=CENTER)
                 entry.grid(row=i, column=j, sticky=W)
                 entry.insert(END, device[j])
             i = i + 1
-
-
 
     # Function to pull data from database based on category selection & show results on screen
     def present_data(self, category):
