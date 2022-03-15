@@ -147,7 +147,18 @@ class EquipmentPage(tk.Frame):
         # NOTE: change table name of "Devices" to "Equipment" in db
         equipment_table = table.dataTable("Devices")
         equipment_data = ["1", "Monitor", "456", "Tom", "Jerry", "1", "Support", "365", "2021-03-12", "300.0"]
+        equipment_data2 = ["2", "Laptop", "456", "A", "V", "1", "Support", "365", "2021-06-06", "200.0"]
         equipment_table.insert_data(equipment_data)
+        equipment_table.insert_data(equipment_data2)
+
+        next_id = 3
+        for i in range(15):
+            equipment_data = [next_id] + ["Monitor", "456", "Tom", "Jerry", "1", "Support", "365", "2021-03-12", "300.0"]
+            next_id = next_id + 1
+            equipment_data2 = [next_id] + ["Laptop", "456", "A", "V", "1", "Support", "365", "2021-06-06", "200.0"]
+            next_id = next_id + 1
+            equipment_table.insert_data(equipment_data)
+            equipment_table.insert_data(equipment_data2)
         list_of_equipment_rows = equipment_table.get_rows()
         # print(list_of_equipment_rows)
         # print()
@@ -162,71 +173,86 @@ class EquipmentPage(tk.Frame):
         # i = 0
 
         # Add column headers for data display
-        id_label = Label(self.equipment_mainframe, text="device_id", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        category_label = Label(self.equipment_mainframe, text="category", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        user_id_label = Label(self.equipment_mainframe, text="current_user_id", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        first_name_label = Label(self.equipment_mainframe, text="user_first_name", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        last_name_label = Label(self.equipment_mainframe, text="user_last_name", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        department_id_label = Label(self.equipment_mainframe, text="department_id", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        department_label = Label(self.equipment_mainframe, text="department", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        days_since_purchase_label = Label(self.equipment_mainframe, text="days_since_purchase", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        purchase_date_label = Label(self.equipment_mainframe, text="purchase_date", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        cost_label = Label(self.equipment_mainframe, text="cost", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        id_label = Label(self.equipment_mainframe, text="device_id", borderwidth=2, relief='ridge', anchor='center', bg='#b5651d', width=12)
+        category_label = Label(self.equipment_mainframe, text="category", borderwidth=2, relief='ridge', anchor='center', bg='#b5651d', width=12)
+        user_id_label = Label(self.equipment_mainframe, text="current_user_id", borderwidth=2, relief='ridge', anchor='center', bg='#b5651d', width=13)
+        first_name_label = Label(self.equipment_mainframe, text="user_first_name", borderwidth=2, relief='ridge', anchor='center', bg='#b5651d', width=13)
+        last_name_label = Label(self.equipment_mainframe, text="user_last_name", borderwidth=2, relief='ridge', anchor='center', bg='#b5651d', width=13)
+        department_id_label = Label(self.equipment_mainframe, text="department_id", borderwidth=2, relief='ridge', anchor='center', bg='#b5651d', width=12)
+        department_label = Label(self.equipment_mainframe, text="department", borderwidth=2, relief='ridge', anchor='center', bg='#b5651d', width=12)
+        days_since_purchase_label = Label(self.equipment_mainframe, text="days_since_purchase", borderwidth=2, relief='ridge', anchor='center', bg='#b5651d', width=17)
+        purchase_date_label = Label(self.equipment_mainframe, text="purchase_date", borderwidth=2, relief='ridge', anchor='center', bg='#b5651d', width=12)
+        cost_label = Label(self.equipment_mainframe, text="cost", borderwidth=2, relief='ridge', anchor='center', bg='#b5651d', width=12)
 
+        # Need to store x-coordinate for starting positions of data values in table
+        x_positions = []
         starting_x = 72
         starting_y = 252
         curr_x = starting_x
+        curr_y = starting_y
+        x_positions.append(curr_x)
 
         id_label.place(x=starting_x, y=starting_y)
         self.update()
         curr_x = curr_x + id_label.winfo_width()
+        x_positions.append(curr_x)
 
         category_label.place(x=curr_x, y=starting_y)
         self.update()
         curr_x = curr_x + category_label.winfo_width()
+        x_positions.append(curr_x)
 
         user_id_label.place(x=curr_x, y=starting_y)
         self.update()
         curr_x = curr_x + user_id_label.winfo_width()
+        x_positions.append(curr_x)
 
         first_name_label.place(x=curr_x, y=starting_y)
         self.update()
         curr_x = curr_x + first_name_label.winfo_width()
+        x_positions.append(curr_x)
 
         last_name_label.place(x=curr_x, y=starting_y)
         self.update()
         curr_x = curr_x + last_name_label.winfo_width()
+        x_positions.append(curr_x)
 
         department_id_label.place(x=curr_x, y=starting_y)
         self.update()
         curr_x = curr_x + department_id_label.winfo_width()
+        x_positions.append(curr_x)
 
         department_label.place(x=curr_x, y=starting_y)
         self.update()
         curr_x = curr_x + department_label.winfo_width()
+        x_positions.append(curr_x)
 
         days_since_purchase_label.place(x=curr_x, y=starting_y)
         self.update()
         curr_x = curr_x + days_since_purchase_label.winfo_width()
+        x_positions.append(curr_x)
 
         purchase_date_label.place(x=curr_x, y=starting_y)
         self.update()
         curr_x = curr_x + purchase_date_label.winfo_width()
+        x_positions.append(curr_x)
 
         cost_label.place(x=curr_x, y=starting_y)
         self.update()
         curr_x = curr_x + cost_label.winfo_width()
 
-        i = 1
         for device in cursor:
+            x_iterator = 0
+            curr_y = curr_y + cost_label.winfo_height()
             print("Device: ")
             print(device)
-            print("testing\n")
             for j in range(len(device)):
-                entry = Entry(self, width=10, fg='red', justify=CENTER)
-                entry.grid(row=i, column=j, sticky=W)
+                entry = Entry(self.equipment_mainframe, width=14, fg='red', justify=CENTER)
+                # entry.grid(row=i, column=j, sticky=W)
+                entry.place(x=x_positions[x_iterator], y=curr_y)
+                x_iterator = x_iterator + 1
                 entry.insert(END, device[j])
-            i = i + 1
+
 
     # Function to pull data from database based on category selection & show results on screen
     def present_data(self, category):
