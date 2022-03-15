@@ -29,12 +29,13 @@ class GUIController(tk.Tk):
         # Initializing container that stacks our frames
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
+
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
         # Implementation of Root Tk() Configurations
         self.title(self.window_title)
-        # self.geometry(self.resolution)
+        self.geometry(self.resolution)
         self['bg'] = stormcloud       # background color of ROOT
 
         # Initializing all of our frames within our container
@@ -42,7 +43,7 @@ class GUIController(tk.Tk):
         for F in (PageHeader, MainMenuPage, EquipmentPage, EmployeePage, TicketPage, HelpPage):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
-            # frame.config(bg=stormcloud)   # background color of individual frame
+            frame.config(bg=stormcloud)   # background color of individual frame
             self.frames[page_name] = frame
 
             # Putting all of our frames in the same place on the screen with the top one being active
@@ -94,40 +95,40 @@ class EquipmentPage(tk.Frame):
         button_font = tkfont.Font(size=30, weight='bold')
 
         # Create the Equipment screen title label
-        # self.title_label = Label(self.equipment_mainframe, text="Equipment", font=('Rubik', 40, "bold"), bg=stormcloud, fg=gainsboro)\
-        #     .place(x=65, y=30)
-        #
-        # # Subframe
-        # self.equipment_subframe = tk.Frame(self.equipment_mainframe, bg=gainsboro, highlightbackground=coconut,
-        #                                    highlightthickness=1, width=1920, height=955) \
-        #     .place(x=0, y=500)
-        #
-        # # Add label and dropdown menu for selecting the equipment category
-        # self.category_label = Label(self.equipment_subframe, text="Category", font=('Rubik', 13), bg="#ECA62D", fg="#363030")\
-        #     .place(x=77, y=170)
-        #
-        # # Category Dropdown List
-        # equipment_options = ['Desktop', 'Laptop', 'VoIP Phone', 'Monitor', 'Headset', 'Webcam']
-        # self.dropdown_text = StringVar()
-        # self.dropdown_text.set('Desktop')
-        # self.category_menu = OptionMenu(self.equipment_mainframe, self.dropdown_text, *equipment_options, command=self.present_data)
-        # self.category_menu.config(activebackground='#C4A484')
-        # self.category_menu.place(x=70, y=195)
-        #
-        # # Search Bar
-        # self.search_bar = Entry(self.equipment_mainframe, highlightbackground="#363030", highlightthickness=1,
-        #                         width=258)\
-        #     .place(x=170, y=200)
-        #
-        # # Search Button
-        # self.search_button = Button(self.equipment_mainframe, text="Search", fg="#363030", width=15)\
-        #     .place(x=1735, y=197)
+        self.title_label = Label(self.equipment_mainframe, text="Equipment", font=('Rubik', 40, "bold"), bg=stormcloud, fg=gainsboro)\
+            .place(x=65, y=30)
+
+        # Subframe
+        self.equipment_subframe = tk.Frame(self.equipment_mainframe, bg=gainsboro, highlightbackground=coconut,
+                                           highlightthickness=1, width=1920, height=1000) \
+            .place(x=0, y=100)
+
+        # Add label and dropdown menu for selecting the equipment category
+        self.category_label = Label(self.equipment_mainframe, text="Category", font=('Rubik', 13), bg="#ECA62D", fg="#363030")\
+            .place(x=77, y=170)
+
+        # Category Dropdown List
+        equipment_options = ['Desktop', 'Laptop', 'VoIP Phone', 'Monitor', 'Headset', 'Webcam']
+        self.dropdown_text = StringVar()
+        self.dropdown_text.set('Desktop')
+        self.category_menu = OptionMenu(self.equipment_mainframe, self.dropdown_text, *equipment_options, command=self.present_data)
+        self.category_menu.config(activebackground='#C4A484')
+        self.category_menu.place(x=70, y=195)
+
+        # Search Bar
+        self.search_bar = Entry(self.equipment_mainframe, highlightbackground="#363030", highlightthickness=1,
+                                width=258)\
+            .place(x=170, y=200)
+
+        # Search Button
+        self.search_button = Button(self.equipment_mainframe, text="Search", fg="#363030", width=15)\
+            .place(x=1735, y=197)
 
 #NOTE:  COMMENTED OUT AS THE TEXTBOX+SCROLLBAR MAY REPLACE THIS
         # Frame for Equipment Tabs
-        # self.equipment_searchframe = tk.Frame(self.equipment_mainframe, bg="white", highlightbackground="#363030",
-        #                                    highlightthickness=2, width=1780, height=680)\
-        #     .place(x=70, y=250)
+        self.equipment_searchframe = tk.Frame(self.equipment_mainframe, bg="white", highlightbackground="#363030",
+                                           highlightthickness=2, width=960, height=680)\
+            .place(x=70, y=250)
 
         # Add scrollbar & corresponding textbox
         # self.vertical_scrollbar = Scrollbar(self.equipment_mainframe, orient=VERTICAL)
@@ -161,27 +162,60 @@ class EquipmentPage(tk.Frame):
         # i = 0
 
         # Add column headers for data display
-        id_label = Label(self, text="device_id", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        category_label = Label(self, text="category", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        user_id_label = Label(self, text="current_user_id", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        first_name_label = Label(self, text="user_first_name", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        last_name_label = Label(self, text="user_last_name", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        department_id_label = Label(self, text="department_id", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        department_label = Label(self, text="department", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        days_since_purchase_label = Label(self, text="days_since_purchase", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        purchase_date_label = Label(self, text="purchase_date", borderwidth=2, relief='ridge', anchor='w', bg='green')
-        cost_label = Label(self, text="cost", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        id_label = Label(self.equipment_mainframe, text="device_id", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        category_label = Label(self.equipment_mainframe, text="category", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        user_id_label = Label(self.equipment_mainframe, text="current_user_id", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        first_name_label = Label(self.equipment_mainframe, text="user_first_name", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        last_name_label = Label(self.equipment_mainframe, text="user_last_name", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        department_id_label = Label(self.equipment_mainframe, text="department_id", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        department_label = Label(self.equipment_mainframe, text="department", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        days_since_purchase_label = Label(self.equipment_mainframe, text="days_since_purchase", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        purchase_date_label = Label(self.equipment_mainframe, text="purchase_date", borderwidth=2, relief='ridge', anchor='w', bg='green')
+        cost_label = Label(self.equipment_mainframe, text="cost", borderwidth=2, relief='ridge', anchor='w', bg='green')
 
-        id_label.grid(row=0, column=0)
-        category_label.grid(row=0, column=1)
-        user_id_label.grid(row=0, column=2)
-        first_name_label.grid(row=0, column=3)
-        last_name_label.grid(row=0, column=4)
-        department_id_label.grid(row=0, column=5)
-        department_label.grid(row=0, column=6)
-        days_since_purchase_label.grid(row=0, column=7)
-        purchase_date_label.grid(row=0, column=8)
-        cost_label.grid(row=0, column=9)
+        starting_x = 72
+        starting_y = 252
+        curr_x = starting_x
+
+        id_label.place(x=starting_x, y=starting_y)
+        self.update()
+        curr_x = curr_x + id_label.winfo_width()
+
+        category_label.place(x=curr_x, y=starting_y)
+        self.update()
+        curr_x = curr_x + category_label.winfo_width()
+
+        user_id_label.place(x=curr_x, y=starting_y)
+        self.update()
+        curr_x = curr_x + user_id_label.winfo_width()
+
+        first_name_label.place(x=curr_x, y=starting_y)
+        self.update()
+        curr_x = curr_x + first_name_label.winfo_width()
+
+        last_name_label.place(x=curr_x, y=starting_y)
+        self.update()
+        curr_x = curr_x + last_name_label.winfo_width()
+
+        department_id_label.place(x=curr_x, y=starting_y)
+        self.update()
+        curr_x = curr_x + department_id_label.winfo_width()
+
+        department_label.place(x=curr_x, y=starting_y)
+        self.update()
+        curr_x = curr_x + department_label.winfo_width()
+
+        days_since_purchase_label.place(x=curr_x, y=starting_y)
+        self.update()
+        curr_x = curr_x + days_since_purchase_label.winfo_width()
+
+        purchase_date_label.place(x=curr_x, y=starting_y)
+        self.update()
+        curr_x = curr_x + purchase_date_label.winfo_width()
+
+        cost_label.place(x=curr_x, y=starting_y)
+        self.update()
+        curr_x = curr_x + cost_label.winfo_width()
 
         i = 1
         for device in cursor:
