@@ -2,6 +2,7 @@ import mysql
 from mysql.connector import errorcode
 
 
+
 class dataTable:
     def __init__(self, table_name):
         self.cursor = None
@@ -110,6 +111,7 @@ def main():
     data3 = ["1", "Monitor", "123", "Kawhi", "Leonard", "1", "Support", "365", "2021-03-05", "300.0"]
     dev.insert_data(data3)
     print(dev.get_rows())
+
 
 if __name__ == "__main__":
     main()

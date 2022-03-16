@@ -129,24 +129,8 @@ class EquipmentPage(tk.Frame):
 #NOTE:  COMMENTED OUT AS THE TEXTBOX+SCROLLBAR MAY REPLACE THIS
         # Frame for Equipment Tabs
         self.equipment_searchframe = tk.Frame(self.equipment_mainframe, bg="white", highlightbackground="#363030",
-                                           highlightthickness=2, width=960, height=680)\
+                                           highlightthickness=2, width=960, height=655)\
             .place(x=70, y=250)
-
-        # Add scrollbar & corresponding textbox
-        # self.vertical_scrollbar = Scrollbar(self.equipment_mainframe, orient=VERTICAL)
-        # self.vertical_scrollbar.pack(side=RIGHT, fill=BOTH)
-        # # self.vertical_scrollbar.place(x=1000, y=200)
-        #
-        # self.text_box = Text(self.equipment_mainframe, width=224, height=40, wrap=NONE,
-        #                      yscrollcommand=self.vertical_scrollbar.set, bg='orange')
-        # for i in range(1000):
-        #     self.text_box.insert(END, "sample text " + str(i) + "\n")
-        # self.text_box.pack(side=TOP)#, expand=TRUE)
-        # # self.text_box.place(x=72, y=250)
-        # self.vertical_scrollbar.config(command=self.text_box.yview)
-
-        # Create 'table' instance as part of equipment screen
-        # NOTE: change table name of "Devices" to "Equipment" in db
         equipment_table = table.dataTable("Devices")
         equipment_data = ["1", "Monitor", "456", "Tom", "Jerry", "1", "Support", "365", "2021-03-12", "300.0"]
         equipment_data2 = ["2", "Laptop", "456", "A", "V", "1", "Support", "365", "2021-06-06", "200.0"]
@@ -154,7 +138,7 @@ class EquipmentPage(tk.Frame):
         equipment_table.insert_data(equipment_data2)
 
         next_id = 3
-        for i in range(15):
+        for i in range(14):
             equipment_data = [next_id] + ["Monitor", "456", "Tom", "Jerry", "1", "Support", "365", "2021-03-12", "300.0"]
             next_id = next_id + 1
             equipment_data2 = [next_id] + ["Laptop", "456", "A", "V", "1", "Support", "365", "2021-06-06", "200.0"]
@@ -175,6 +159,7 @@ class EquipmentPage(tk.Frame):
         # i = 0
 
         # Add column headers for data display
+
         id_label = Label(self.equipment_mainframe, text="device_id", borderwidth=2, relief='ridge', anchor='center', bg='#b5651d', width=12)
         category_label = Label(self.equipment_mainframe, text="category", borderwidth=2, relief='ridge', anchor='center', bg='#b5651d', width=12)
         user_id_label = Label(self.equipment_mainframe, text="current_user_id", borderwidth=2, relief='ridge', anchor='center', bg='#b5651d', width=13)
@@ -186,6 +171,8 @@ class EquipmentPage(tk.Frame):
         purchase_date_label = Label(self.equipment_mainframe, text="purchase_date", borderwidth=2, relief='ridge', anchor='center', bg='#b5651d', width=12)
         cost_label = Label(self.equipment_mainframe, text="cost", borderwidth=2, relief='ridge', anchor='center', bg='#b5651d', width=12)
 
+        labels = ColumnLabels(self.equipment_mainframe, self)
+
         # Need to store x-coordinate for starting positions of data values in table
         x_positions = []
         starting_x = 72
@@ -194,54 +181,60 @@ class EquipmentPage(tk.Frame):
         curr_y = starting_y
         x_positions.append(curr_x)
 
-        id_label.place(x=starting_x, y=starting_y)
-        self.update()
-        curr_x = curr_x + id_label.winfo_width()
-        x_positions.append(curr_x)
+        for i in range(len(labels.labels)):
+            labels.labels[i].place(x=starting_x, y=starting_y)
+            self.update()
+            curr_x = curr_x + id_label.winfo_width()
+            x_positions.append(curr_x)
 
-        category_label.place(x=curr_x, y=starting_y)
-        self.update()
-        curr_x = curr_x + category_label.winfo_width()
-        x_positions.append(curr_x)
-
-        user_id_label.place(x=curr_x, y=starting_y)
-        self.update()
-        curr_x = curr_x + user_id_label.winfo_width()
-        x_positions.append(curr_x)
-
-        first_name_label.place(x=curr_x, y=starting_y)
-        self.update()
-        curr_x = curr_x + first_name_label.winfo_width()
-        x_positions.append(curr_x)
-
-        last_name_label.place(x=curr_x, y=starting_y)
-        self.update()
-        curr_x = curr_x + last_name_label.winfo_width()
-        x_positions.append(curr_x)
-
-        department_id_label.place(x=curr_x, y=starting_y)
-        self.update()
-        curr_x = curr_x + department_id_label.winfo_width()
-        x_positions.append(curr_x)
-
-        department_label.place(x=curr_x, y=starting_y)
-        self.update()
-        curr_x = curr_x + department_label.winfo_width()
-        x_positions.append(curr_x)
-
-        days_since_purchase_label.place(x=curr_x, y=starting_y)
-        self.update()
-        curr_x = curr_x + days_since_purchase_label.winfo_width()
-        x_positions.append(curr_x)
-
-        purchase_date_label.place(x=curr_x, y=starting_y)
-        self.update()
-        curr_x = curr_x + purchase_date_label.winfo_width()
-        x_positions.append(curr_x)
-
-        cost_label.place(x=curr_x, y=starting_y)
-        self.update()
-        curr_x = curr_x + cost_label.winfo_width()
+        # id_label.place(x=starting_x, y=starting_y)
+        # self.update()
+        # curr_x = curr_x + id_label.winfo_width()
+        # x_positions.append(curr_x)
+        #
+        # category_label.place(x=curr_x, y=starting_y)
+        # self.update()
+        # curr_x = curr_x + category_label.winfo_width()
+        # x_positions.append(curr_x)
+        #
+        # user_id_label.place(x=curr_x, y=starting_y)
+        # self.update()
+        # curr_x = curr_x + user_id_label.winfo_width()
+        # x_positions.append(curr_x)
+        #
+        # first_name_label.place(x=curr_x, y=starting_y)
+        # self.update()
+        # curr_x = curr_x + first_name_label.winfo_width()
+        # x_positions.append(curr_x)
+        #
+        # last_name_label.place(x=curr_x, y=starting_y)
+        # self.update()
+        # curr_x = curr_x + last_name_label.winfo_width()
+        # x_positions.append(curr_x)
+        #
+        # department_id_label.place(x=curr_x, y=starting_y)
+        # self.update()
+        # curr_x = curr_x + department_id_label.winfo_width()
+        # x_positions.append(curr_x)
+        #
+        # department_label.place(x=curr_x, y=starting_y)
+        # self.update()
+        # curr_x = curr_x + department_label.winfo_width()
+        # x_positions.append(curr_x)
+        #
+        # days_since_purchase_label.place(x=curr_x, y=starting_y)
+        # self.update()
+        # curr_x = curr_x + days_since_purchase_label.winfo_width()
+        # x_positions.append(curr_x)
+        #
+        # purchase_date_label.place(x=curr_x, y=starting_y)
+        # self.update()
+        # curr_x = curr_x + purchase_date_label.winfo_width()
+        # x_positions.append(curr_x)
+        #
+        # cost_label.place(x=curr_x, y=starting_y)
+        # self.update()
+        # curr_x = curr_x + cost_label.winfo_width()
 
         for device in cursor:
             x_iterator = 0
@@ -249,7 +242,11 @@ class EquipmentPage(tk.Frame):
             print("Device: ")
             print(device)
             for j in range(len(device)):
-                entry = Entry(self.equipment_mainframe, width=14, fg='red', justify=CENTER)
+                my_width = 14
+                if j == 7:
+                    my_width = 20
+
+                entry = Entry(self.equipment_mainframe, width=my_width, fg='red', justify=CENTER)
                 # entry.grid(row=i, column=j, sticky=W)
                 entry.place(x=x_positions[x_iterator], y=curr_y)
                 x_iterator = x_iterator + 1
@@ -298,6 +295,31 @@ class HelpPage(tk.Frame):
         global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
         # Initializing GUI Controller
         self.controller = controller
+
+
+class ColumnLabels:
+    def __init__(self, frame=None, page=None):
+        self.frame = frame
+        self.titles = self.get_headers(page)
+        self.labels = []
+
+        for i in range(len(self.titles)):
+            self.labels.append(Label(self.frame, text=self.titles[i], borderwidth=2, relief='ridge', anchor='center', bg='#b5651d', width=12))
+
+    def get_headers(self, page):
+        if isinstance(page, EquipmentPage):
+            columns = ["device_id", "category", "current_user_id", "user_first_name", "user_last_name", "department_id", "department", "days_since_purchase", "purchase_date", "cost"]
+        elif isinstance(page, EmployeePage):
+            columns = []
+        elif isinstance(page, TicketPage):
+            columns = []
+        else:
+            columns = []
+        return columns
+
+
+
+
 
 
 if __name__ == "__main__":

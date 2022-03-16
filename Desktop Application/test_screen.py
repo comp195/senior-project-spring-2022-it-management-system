@@ -1,27 +1,31 @@
+#Import the required libraries
 from tkinter import *
 from tkinter import ttk
 
+#Create an instance of Tkinter Frame
+win = Tk()
 
-# CONNECTING TO MYSQL SERVER USING CONNECTOR/PYTHON
-# import mysql.connector
-# connection = mysql.connector.connect(user='user_here', password='password_here',
-#                                      host='111.1.1.1',
-#                                      database='employees')
-# connection.close()
+#Set the geometry of Tkinter Frame
+win.geometry("700x350")
 
-# QUERIES
-# connection = mysql.connector.connect(user='user_here', database='employees')
-# cursor = connection.cursor()
-# query = ("SELECT f_name, l_name, IT_status FROM employees "
-#          "WHERE IT_status = 1")
-# cursor.execute(query)
-# for listing in cursor:
-#     print(listing)
+#Create an object of Scrollbar widget
+s = Scrollbar()
 
+#Create a horizontal scrollbar
+scrollbar = ttk.Scrollbar(win, orient= 'vertical')
+scrollbar.pack(side=RIGHT, fill=BOTH)
 
-root = Tk()
-frame = ttk.Frame(root, padding=400)
-frame.grid()
-ttk.Label(frame, text="Testing").grid(column=0, row=0)
-ttk.Button(frame, text="Exit", command=root.destroy).grid(column=0, row=20)
-root.mainloop()
+#Add a Listbox Widget
+listbox = Listbox(win, width= 350, font=('Helvetica 15 bold'))
+listbox.pack(side=LEFT, fill=BOTH)
+
+#Add values to the Listbox
+for values in range(1,101):
+   listbox.insert(END, values)
+
+listbox.config(yscrollcommand= scrollbar.set)
+
+#Configure the scrollbar
+scrollbar.config(command=listbox.yview)
+
+win.mainloop()
