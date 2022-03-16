@@ -318,10 +318,6 @@ class ColumnLabels:
         return columns
 
 
-
-
-
-
 if __name__ == "__main__":
     app = GUIController()
     app.mainloop()

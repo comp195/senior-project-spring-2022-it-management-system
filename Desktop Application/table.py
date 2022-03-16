@@ -2,7 +2,6 @@ import mysql
 from mysql.connector import errorcode
 
 
-
 class dataTable:
     def __init__(self, table_name):
         self.cursor = None
