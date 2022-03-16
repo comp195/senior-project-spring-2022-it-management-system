@@ -1,6 +1,7 @@
 from playsound import playsound
+from fuzzywuzzy import fuzz
 import tkinter as tk
-from tkinter import font  as tkfont # python 3
+from tkinter import font as tkfont # python 3
 from tkinter import *   # for 'Button'
 # from re import *
 import table
@@ -82,6 +83,7 @@ class MainMenuPage(tk.Frame):
         global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
         # Initializing GUI Controller
         self.controller = controller
+
 
 class EquipmentPage(tk.Frame):
     def __init__(self, parent, controller):
