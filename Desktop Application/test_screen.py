@@ -14,16 +14,6 @@ rajah = "#F5B15E"
 stormcloud = "#4D646A"
 
 
-class MsgPanel(ttk.Frame):
-    def __init__(self, master, msgtxt):
-      ttk.Frame.__init__(self, master)
-      self.pack(side=TOP, fill=X)
-
-      msg = Label(self, wraplength='4i', justify=LEFT)
-      msg['text'] = ''.join(msgtxt)
-      msg.pack(fill=X, padx=5, pady=5)
-
-
 class SeeDismissPanel(ttk.Frame):
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
@@ -46,7 +36,7 @@ class GUIController(tk.Tk):
 
         # Initializing container that stacks our frames
         header = PageHeader(parent=self, controller=self)
-        header.pack()
+        header.pack(side="top", anchor="nw")
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
 
@@ -83,20 +73,29 @@ class GUIController(tk.Tk):
 class PageHeader(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
+        global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, quick_silver, gainsboro, stormcloud
         # Initializing GUI Controller
         self.controller = controller
-        self.equipment_button = tk.Button(self, text="Equipment",
-                                          command=lambda: controller.show_frame("EquipmentPage"))
-        self.equipment_button.grid(row=0, column=0)
+        self.button_names = ["Equipment", "Employees", "Tickets", "Help"]
+        self.buttons = []
+        for i in range(len(self.button_names)):
+            button = tk.Button(self, text=self.button_names[i], command=lambda: self.press_button(i), bg=stormcloud,
+                               fg=gainsboro, highlightthickness=0, bd=0)
+            button.config(width=15, height=4, font=("Montserrat", 20))
+            button.grid(row=0, column=i, sticky=W)
+            self.buttons.append(button)
+        self.buttons[0].config(fg=quick_silver)
 
-        self.employees_button = tk.Button(self, text="Employees",
-                                          command=lambda: controller.show_frame("EquipmentPage"))
-        self.employees_button.grid(row=0, column=1)
+    def press_button(self, index):
+        for button in self.buttons:
+            button.config(fg=gainsboro)
+        print(index)
+        self.buttons[index].config(fg=quick_silver)
+        button_name = self.button_names[index]
+        # page_name = button_name+"Page"
+        # self.controller.show_frame(page_name)
 
-        self.tickets_button = tk.Button(self, text="Tickets",
-                                          command=lambda: controller.show_frame("EquipmentPage"))
-        self.tickets_button.grid(row=0, column=2)
+
 
 
 class MainPage(tk.Frame):
