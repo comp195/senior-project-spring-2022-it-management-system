@@ -140,8 +140,16 @@ class DetailFrame(tk.Frame):
         # Initializing GUI Controller
         self.controller = controller
         self.detail_frame = tk.Frame(self, bg="white", highlightbackground="#363030", highlightthickness=2, width=1300, height=670)
+        self.detail_frame.grid_propagate(False)     # Needed so that detail frame does not resize to minimum space needed
         self.detail_frame.pack(side=tk.RIGHT)
 
+        self.create_entry()
+
+    def create_entry(self):
+        self.user_id_label = Label(self.detail_frame, text="user_id", font=("Montserrat", 14), width=25, borderwidth=2, relief='ridge', anchor='center', bg='#b5651d')
+        self.user_id_label.grid(row=0, column=0)
+        self.user_id_entry = Entry(self.detail_frame, font=("Montserrat", 14), width=80, bg='#C4A484', borderwidth=2, relief='solid')
+        self.user_id_entry.grid(row=0, column=1)
 
 class SearchFrame(tk.Frame):
     def __init__(self, parent, controller):
