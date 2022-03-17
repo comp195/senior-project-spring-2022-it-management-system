@@ -78,24 +78,26 @@ class PageHeader(tk.Frame):
         self.controller = controller
         self.button_names = ["Equipment", "Employees", "Tickets", "Help"]
         self.buttons = []
+        self.button_dict = {}   # Maps button name to button index
         for i in range(len(self.button_names)):
-            button = tk.Button(self, text=self.button_names[i], command=lambda: self.press_button(i), bg=stormcloud,
+            curr_button_name = self.button_names[i]
+            button = tk.Button(self, text=curr_button_name, command=lambda identifier=curr_button_name: self.press_button(identifier), bg=stormcloud,
                                fg=gainsboro, highlightthickness=0, bd=0)
             button.config(width=15, height=4, font=("Montserrat", 20))
             button.grid(row=0, column=i, sticky=W)
             self.buttons.append(button)
-        self.buttons[0].config(fg=quick_silver)
+            self.button_dict[curr_button_name] = i
+        # self.buttons[0].config(fg=quick_silver)
 
-    def press_button(self, index):
+    def press_button(self, identifier):
         for button in self.buttons:
             button.config(fg=gainsboro)
-        print(index)
-        self.buttons[index].config(fg=quick_silver)
-        button_name = self.button_names[index]
+        print(identifier)
+        self.buttons[self.button_dict.get(identifier)].config(fg=quick_silver)
+
+        # button_name = self.button_names[index]
         # page_name = button_name+"Page"
         # self.controller.show_frame(page_name)
-
-
 
 
 class MainPage(tk.Frame):
