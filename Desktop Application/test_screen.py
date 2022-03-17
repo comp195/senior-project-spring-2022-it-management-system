@@ -143,13 +143,63 @@ class DetailFrame(tk.Frame):
         self.detail_frame.grid_propagate(False)     # Needed so that detail frame does not resize to minimum space needed
         self.detail_frame.pack(side=tk.RIGHT)
 
-        self.create_entry()
+        # Variables to keep track of grid positions
+        self.curr_row = 0
+        self.curr_col = 0
 
-    def create_entry(self):
-        self.user_id_label = Label(self.detail_frame, text="user_id", font=("Montserrat", 14), width=25, borderwidth=2, relief='ridge', anchor='center', bg='#b5651d')
-        self.user_id_label.grid(row=0, column=0)
-        self.user_id_entry = Entry(self.detail_frame, font=("Montserrat", 14), width=80, bg='#C4A484', borderwidth=2, relief='solid')
-        self.user_id_entry.grid(row=0, column=1)
+        # Create instance of DetailsStruct and retrieve labels & entries
+        self.details_struct = DetailsStruct(self.detail_frame, "Equipment")
+        self.labels_to_add = self.details_struct.get_labels()
+        self.add_labels()
+
+        # Update grid positions to handle entries (to the right of the labels)
+        self.update_grid_positions()
+
+        self.entries_to_add = self.details_struct.get_entries()
+        self.add_entries()
+
+    def add_labels(self):
+        for label in self.labels_to_add:
+            label.grid(row=self.curr_row, column=self.curr_col)
+            self.curr_row = self.curr_row + 1
+
+    def update_grid_positions(self):
+        self.curr_row = 0
+        self.curr_col = 1
+
+    def add_entries(self):
+        for entry in self.entries_to_add:
+            entry.grid(row=self.curr_row, column=self.curr_col)
+            self.curr_row = self.curr_row + 1
+
+
+# Struct used to handle creating the appropriate Label & Entry objects based on indicated screen type
+class DetailsStruct:
+    # NOTE: 'frame' will always be the detail frame
+    # NOTE: 'screen_type' refers to a string indicating the screen in which labels & entries are needed
+    def __init__(self, frame, screen_type):
+        self.frame = frame
+        self.screen_type = screen_type
+        self.column_titles = None
+        self.labels = []
+        self.entries = []
+
+    def get_labels(self):
+        if self.screen_type == "Equipment":
+            self.column_titles = ["device_id", "category", "current_user_id", "user_first_name", "user_last_name", "department_id", "department", "days_since_purchase", "purchase_date", "cost"]
+            # Create appropriate Label objects
+            for title in self.column_titles:
+                new_label = Label(self.frame, text=title, font=("Montserrat", 14), width=25, borderwidth=2, relief='ridge', anchor='center', bg='#b5651d')
+                self.labels.append(new_label)
+        return self.labels
+
+    # Create Entry objects based on number of columns to be displayed in Details Subframe
+    def get_entries(self):
+        for i in range(len(self.column_titles)):
+            new_entry = Entry(self.frame, font=("Montserrat", 14), width=80, bg='#C4A484', borderwidth=2, relief='solid')
+            self.entries.append(new_entry)
+        return self.entries
+
 
 class SearchFrame(tk.Frame):
     def __init__(self, parent, controller):
