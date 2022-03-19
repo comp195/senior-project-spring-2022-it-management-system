@@ -87,12 +87,11 @@ class PageHeader(tk.Frame):
             button.grid(row=0, column=i, sticky=W)
             self.buttons.append(button)
             self.button_dict[curr_button_name] = i
-        # self.buttons[0].config(fg=quick_silver)
+        self.buttons[0].config(fg=quick_silver)
 
     def press_button(self, identifier):
         for button in self.buttons:
             button.config(fg=gainsboro)
-        print(identifier)
         self.buttons[self.button_dict.get(identifier)].config(fg=quick_silver)
 
         # button_name = self.button_names[index]
