@@ -98,18 +98,21 @@ class dataTable:
 
 
 def main():
-    tick = dataTable("Tickets")
-    print(tick.get_cols())
+    equipment = dataTable("Equipment")
+    print(equipment.get_rows())
 
-    data = ['2', 1, 'John', 'Cena', '1', 'Mouses', 'Broken mouse', 'Left click not working', 'Maintenance', 'Medium', 'Supoort']
-    tick.insert_data(data)
-
-    print(tick.get_rows())
-
-    dev = dataTable("Devices")
-    data3 = ["1", "Monitor", "123", "Kawhi", "Leonard", "1", "Support", "365", "2021-03-05", "300.0"]
-    dev.insert_data(data3)
-    print(dev.get_rows())
+    # tick = dataTable("Tickets")
+    # print(tick.get_cols())
+    #
+    # data = ['2', 1, 'John', 'Cena', '1', 'Mouses', 'Broken mouse', 'Left click not working', 'Maintenance', 'Medium', 'Supoort']
+    # tick.insert_data(data)
+    #
+    # print(tick.get_rows())
+    #
+    # dev = dataTable("Devices")
+    # data3 = ["1", "Monitor", "123", "Kawhi", "Leonard", "1", "Support", "365", "2021-03-05", "300.0"]
+    # dev.insert_data(data3)
+    # print(dev.get_rows())
 
 
 if __name__ == "__main__":
