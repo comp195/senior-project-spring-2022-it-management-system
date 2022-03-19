@@ -139,7 +139,65 @@ class DetailFrame(tk.Frame):
         # Initializing GUI Controller
         self.controller = controller
         self.detail_frame = tk.Frame(self, bg="white", highlightbackground="#363030", highlightthickness=2, width=1300, height=670)
+        self.detail_frame.grid_propagate(False)     # Needed so that detail frame does not resize to minimum space needed
         self.detail_frame.pack(side=tk.RIGHT)
+
+        # Variables to keep track of grid positions
+        self.curr_row = 0
+        self.curr_col = 0
+
+        # Create instance of DetailsStruct and retrieve labels & entries
+        self.details_struct = DetailsStruct(self.detail_frame, "Equipment")
+        self.labels_to_add = self.details_struct.get_labels()
+        self.add_labels()
+
+        # Update grid positions to handle entries (to the right of the labels)
+        self.update_grid_positions()
+
+        self.entries_to_add = self.details_struct.get_entries()
+        self.add_entries()
+
+    def add_labels(self):
+        for label in self.labels_to_add:
+            label.grid(row=self.curr_row, column=self.curr_col)
+            self.curr_row = self.curr_row + 1
+
+    def update_grid_positions(self):
+        self.curr_row = 0
+        self.curr_col = 1
+
+    def add_entries(self):
+        for entry in self.entries_to_add:
+            entry.grid(row=self.curr_row, column=self.curr_col)
+            self.curr_row = self.curr_row + 1
+
+
+# Struct used to handle creating the appropriate Label & Entry objects based on indicated screen type
+class DetailsStruct:
+    # NOTE: 'frame' will always be the detail frame
+    # NOTE: 'screen_type' refers to a string indicating the screen in which labels & entries are needed
+    def __init__(self, frame, screen_type):
+        self.frame = frame
+        self.screen_type = screen_type
+        self.column_titles = None
+        self.labels = []
+        self.entries = []
+
+    def get_labels(self):
+        if self.screen_type == "Equipment":
+            self.column_titles = ["device_id", "category", "current_user_id", "user_first_name", "user_last_name", "department_id", "department", "days_since_purchase", "purchase_date", "cost"]
+            # Create appropriate Label objects
+            for title in self.column_titles:
+                new_label = Label(self.frame, text=title, font=("Montserrat", 14), width=25, borderwidth=2, relief='ridge', anchor='center', bg='#b5651d')
+                self.labels.append(new_label)
+        return self.labels
+
+    # Create Entry objects based on number of columns to be displayed in Details Subframe
+    def get_entries(self):
+        for i in range(len(self.column_titles)):
+            new_entry = Entry(self.frame, font=("Montserrat", 14), width=80, bg='#C4A484', borderwidth=2, relief='solid')
+            self.entries.append(new_entry)
+        return self.entries
 
 
 class SearchFrame(tk.Frame):
@@ -164,8 +222,10 @@ class MCListDemo(ttk.Frame):
         # ttk.Frame.__init__(self, name=name)
         ttk.Frame.__init__(self, parent, name=name)
         self.pack(expand=Y, fill=BOTH)
-        # self.pack(side=tk.LEFT)
         self.isapp = isapp
+#test
+        self.tree = None
+##
         self._create_widgets()
 
     def _create_widgets(self):
@@ -177,18 +237,15 @@ class MCListDemo(ttk.Frame):
     def _create_demo_panel(self):
         demoPanel = Frame(self)
         demoPanel.pack(side=TOP, fill=BOTH, expand=Y)
-        # demoPanel.pack(side=tk.LEFT)
-
         self._create_treeview(demoPanel)
         self._load_data()
 
     def _create_treeview(self, parent):
         f = ttk.Frame(parent)
         f.pack(side=TOP, fill=BOTH, expand=Y)
-        # f.pack(side=tk.LEFT)
 
         # create the tree and scrollbars
-        self.dataCols = ('country', 'capital', 'currency')
+        self.dataCols = ('device_id', 'category', 'department')
         self.tree = ttk.Treeview(columns=self.dataCols,
                                show='headings', height=31)
 
@@ -208,21 +265,30 @@ class MCListDemo(ttk.Frame):
 
     def _load_data(self):
         self.data = [
-            ("Argentina", "Buenos Aires", "ARS"),
-            ("Australia", "Canberra", "AUD"),
-            ("Brazil", "Brazilia", "BRL"),
-            ("Canada", "Ottawa", "CAD"),
-            ("China", "Beijing", "CNY"),
-            ("France", "Paris", "EUR"),
-            ("Germany", "Berlin", "EUR"),
-            ("India", "New Delhi", "INR"),
-            ("Italy", "Rome", "EUR"),
-            ("Japan", "Tokyo", "JPY"),
-            ("Mexico", "Mexico City", "MXN"),
-            ("Russia", "Moscow", "RUB"),
-            ("South Africa", "Pretoria", "ZAR"),
-            ("United Kingdom", "London", "GBP"),
-            ("United States", "Washington, D.C.", "USD")]
+            ("1", "Monitor", "Support"),
+            ("2", "Laptop", "Support"),
+            ("3", "Monitor", "Support"),
+            ("4", "Laptop", "Support"),
+            ("5", "Monitor", "Support"),
+            ("6", "Laptop", "Support"),
+            ("7", "Monitor", "Support"),
+            ("8", "Laptop", "Support"),
+            ("9", "Monitor", "Support"),
+            ("10", "Laptop", "Support"),
+            ("11", "Monitor", "Support"),
+            ("12", "Laptop", "Support"),
+            ("13", "Monitor", "Support"),
+            ("14", "Laptop", "Support"),
+            ("15", "Monitor", "Support")]
+
+        curr_id = 16
+        for i in range(20):
+            temp_tuple = (str(curr_id), "Laptop", "Support")
+            curr_id = curr_id + 1
+            self.data.append(temp_tuple)
+            temp_tuple = (str(curr_id), "Monitor", "Human Resources")
+            curr_id = curr_id + 1
+            self.data.append(temp_tuple)
 
         # configure column headings
         for c in self.dataCols:
@@ -240,6 +306,9 @@ class MCListDemo(ttk.Frame):
             if self.tree.column(self.dataCols[idx], 'width') < width:
                 self.tree.column(self.dataCols[idx], width=width)
 
+        # Apply binding so that currently-selected values can be retrieved
+        self.tree.bind('<<TreeviewSelect>>', self.obtain_selected_row)
+
     def _column_sort(self, col, descending=False):
         # grab values to sort as a list of tuples (column value, column id)
         # e.g. [('Argentina', 'I001'), ('Australia', 'I002'), ('Brazil', 'I003')]
@@ -254,6 +323,16 @@ class MCListDemo(ttk.Frame):
 
         # reverse sort direction for next sort operation
         MCListDemo.SortDir = not descending
+
+    # NOTE: Row is obtained as a dictionary in the following format:
+    # {'text': '', 'image': '', 'values': [13, 'Monitor', 'Support'], 'open': 0, 'tags': ''}
+    def obtain_selected_row(self, event):
+        curr_item = self.tree.focus()
+        curr_row = (self.tree.item(curr_item))      # Obtain row as dictionary
+        print(curr_row)
+        list_of_values = curr_row.get('values')
+        print(list_of_values)
+
 
 if __name__ == "__main__":
     app = GUIController()
