@@ -206,10 +206,10 @@ class SearchFrame(tk.Frame):
         global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
         # Initializing GUI Controller
         self.controller = controller
-        # TODO
         self.search_grid = MCListDemo(self)
-        self.search_grid.pack()
-        # self.search_grid.pack(side=tk.LEFT)
+        # self.search_grid.pack()
+        self.search_grid._delete_tree()
+        self.search_grid._load_data()
 
 
 class MCListDemo(ttk.Frame):
@@ -233,6 +233,17 @@ class MCListDemo(ttk.Frame):
             SeeDismissPanel(self)
 
         self._create_demo_panel()
+
+    def _set_data(self, data):
+        self.data = data
+
+    def _set_columns(self, columns):
+        self.columns = columns
+
+    def _delete_tree(self):
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
 
     def _create_demo_panel(self):
         demoPanel = Frame(self)
@@ -264,6 +275,7 @@ class MCListDemo(ttk.Frame):
         f.columnconfigure(0, weight=1)
 
     def _load_data(self):
+        self._delete_tree(self)
         self.data = [
             ("1", "Monitor", "Support"),
             ("2", "Laptop", "Support"),
