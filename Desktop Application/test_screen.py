@@ -47,6 +47,7 @@ class GUIController(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         # Basic Configuration Values for Root Tk()
+        self.active_table = "Equipment"
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
         self.window_title = "Application"
         # self.resolution = str(SCREEN_WIDTH) + "x" + str(SCREEN_HEIGHT)
@@ -86,6 +87,11 @@ class GUIController(tk.Tk):
         frame = self.frames[page_name]
         frame.tkraise()
 
+    def set_active_table(self, table_name):
+        self.active_table = table_name
+        self.frames("MainPage").update_on_button_press(table_name)
+
+
 
 class PageHeader(tk.Frame):
     def __init__(self, parent, controller):
@@ -110,10 +116,7 @@ class PageHeader(tk.Frame):
         for button in self.buttons:
             button.config(fg=gainsboro)
         self.buttons[self.button_dict.get(identifier)].config(fg=quick_silver)
-
-        # button_name = self.button_names[index]
-        # page_name = button_name+"Page"
-        # self.controller.show_frame(page_name)
+        self.container.set_active_table(identifier)
 
 
 class MainPage(tk.Frame):
@@ -121,9 +124,9 @@ class MainPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         # Initializing GUI Controller
         self.controller = controller
-
         # Create instance of database connection and use the data as argument
         self.equipment_table = table.dataTable("Equipment")
+
         global equipment_data_rows
         equipment_data_rows = self.equipment_table.get_rows()
 
@@ -140,6 +143,12 @@ class MainPage(tk.Frame):
 
         self.search_table = SearchFrame(self, controller, self.frames)
         self.search_table.pack(side=tk.LEFT)
+
+    def update_on_button_press(self, screen_name):
+        self.equipment_table = table.dataTable(screen_name)
+        # TODO: Change Table and Details to correspond with screen_name
+        
+        # self.search_table.search_grid._replace_contents(columns, data)
 
 
 class SearchBarFrame(tk.Frame):
