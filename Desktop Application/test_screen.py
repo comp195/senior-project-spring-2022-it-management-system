@@ -9,6 +9,7 @@ SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 
 # CONSTANTS TO KEEP TRACK OF INDICES OF EACH DB TABLE FIELD WITHIN THE LIST(S)
+ID_INDEX = 0
 EQUIPMENT_ID_INDEX = 0
 CATEGORY_INDEX = 1
 STATUS_INDEX = 2
@@ -120,6 +121,7 @@ class MainPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         # Initializing GUI Controller
         self.controller = controller
+
         # Create instance of database connection and use the data as argument
         self.equipment_table = table.dataTable("Equipment")
         global equipment_data_rows
@@ -127,10 +129,16 @@ class MainPage(tk.Frame):
 
         self.search = SearchBarFrame(self, controller)
         self.search.pack(side=tk.TOP)
-        self.search_table = SearchFrame(self, controller)
-        self.search_table.pack(side=tk.LEFT)
         self.detail_frame = DetailFrame(self, controller)
         self.detail_frame.pack(side=tk.RIGHT)
+
+        # Create frames dictionary so the SearchFrame/MCList can access the DetailFrame's functions
+        # (needed to update the details based on a click within the MCList)
+        self.frames = {}
+        self.frames["DetailFrame"] = self.detail_frame
+
+        self.search_table = SearchFrame(self, controller, self.frames)
+        self.search_table.pack(side=tk.LEFT)
 
 
 class SearchBarFrame(tk.Frame):
@@ -191,6 +199,29 @@ class DetailFrame(tk.Frame):
         for entry in self.entries_to_add:
             entry.grid(row=self.curr_row, column=self.curr_col)
             self.curr_row = self.curr_row + 1
+        # self.update_entries()
+
+    # Function used to update the details of a specific item when the corresponding row is clicked in the Treeview
+    # NOTE: This function is called from the MCList class
+    # args: item ID (such as equipment_id), passed from ID obtained from the MCList row-click
+    def update_entries(self, id):
+        self.clear_entries()    # first clear the entry boxes' texts
+
+        # Find the data row that matches the row clicked in the treeview (based on ID), then update the details according
+        # to that specific data row
+        global equipment_data_rows
+        row_to_use = []
+        for row in equipment_data_rows:
+            if row[ID_INDEX] == id:
+                row_to_use = row
+
+        # Insert that row's data into the entries
+        for i in range(len(self.entries_to_add)):
+            self.entries_to_add[i].insert(0, row_to_use[i])
+
+    def clear_entries(self):
+        for entry in self.entries_to_add:
+            entry.delete(0, len(entry.get()))
 
 
 # Struct used to handle creating the appropriate Label & Entry objects based on indicated screen type
@@ -215,9 +246,11 @@ class DetailFrameValuesStruct:
 
     # Create Entry objects based on number of columns to be displayed in Details Subframe
     def get_entries(self):
-        for i in range(len(self.column_titles)):
-            new_entry = Entry(self.frame, font=("Montserrat", 14), width=80, bg='#C4A484', borderwidth=2, relief='solid')
-            self.entries.append(new_entry)
+        if self.screen_type == "Equipment":
+            for i in range(len(self.column_titles)):
+                new_entry = Entry(self.frame, font=("Montserrat", 14), width=80, bg='#C4A484', borderwidth=2, relief='solid')
+                # new_entry.insert(0, "test1231312215215512")
+                self.entries.append(new_entry)
         return self.entries
 
 
@@ -237,12 +270,12 @@ class MCListValuesStruct:
 
 
 class SearchFrame(tk.Frame):
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller, frames):
         tk.Frame.__init__(self, parent)
         global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
         # Initializing GUI Controller
         self.controller = controller
-        self.search_grid = MCListDemo(self)
+        self.search_grid = MCListDemo(self, controller, frames)
         # self.search_grid.pack()
         self.search_grid._delete_tree()
         self.search_grid._load_data()
@@ -254,9 +287,11 @@ class MCListDemo(ttk.Frame):
     SortDir = True  # descending
 
     # def __init__(self, isapp=True, name='mclistdemo'):
-    def __init__(self, parent, isapp=True, name='mclistdemo'):
+    def __init__(self, parent, controller, frames, isapp=True, name='mclistdemo'):
         # ttk.Frame.__init__(self, name=name)
         ttk.Frame.__init__(self, parent, name=name)
+        self.controller = controller
+        self.frames = frames
         self.pack(expand=Y, fill=BOTH)
         self.isapp = isapp
         self.tree = None
@@ -290,7 +325,7 @@ class MCListDemo(ttk.Frame):
         f.pack(side=TOP, fill=BOTH, expand=Y)
 
         # create the tree and scrollbars
-        self.dataCols = ('device_id', 'category', 'department')
+        self.dataCols = ('equipment_id', 'category', 'department')
         self.tree = ttk.Treeview(columns=self.dataCols,
                                show='headings', height=31)
 
@@ -360,7 +395,7 @@ class MCListDemo(ttk.Frame):
         print(curr_row)
         list_of_values = curr_row.get('values')
         print(list_of_values)
-
+        self.frames["DetailFrame"].update_entries(list_of_values[ID_INDEX])
 
 if __name__ == "__main__":
     app = GUIController()
