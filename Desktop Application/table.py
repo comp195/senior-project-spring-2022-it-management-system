@@ -11,6 +11,9 @@ class dataTable:
         self.db_connect()
         self.valid_table = self.check_table(table_name)
 
+    def commit(self):
+        self.connection.commit()
+
     def get_cursor(self):
         return self.cursor
 
@@ -56,6 +59,11 @@ class dataTable:
             col.append(i[0])
         return col
 
+    def print_rows(self):
+        rows = self.get_rows()
+        for i in rows:
+            print(i)
+
     def insert_data(self, data):
         baseCMD = "INSERT INTO dbmanagementsystem." + self.name + " ("
         # build cmd
@@ -98,25 +106,21 @@ class dataTable:
 
 
 def main():
+    # department = dataTable("Department")
+    # department.print_rows()
+    #
+    # employee = dataTable("Employee")
+    # employee.print_rows()
+    #
+    # equipment = dataTable("Equipment")
+    # equipment.print_rows()
+    #
+    # tickets = dataTable("Tickets")
+    # tickets.print_rows()
+
     department = dataTable("Department")
-    d_rows = department.get_rows()
-    for i in d_rows:
-        print(i)
-
-    employee = dataTable("Employee")
-    em_rows = employee.get_rows()
-    for i in em_rows:
-        print(i)
-
-    equipment = dataTable("Equipment")
-    eq_rows = equipment.get_rows()
-    for i in eq_rows:
-        print(i)
-
-    tickets = dataTable("Tickets")
-    ti_rows = tickets.get_rows()
-    for i in ti_rows:
-        print(i)
+    department.insert_data(["5","IT","Joe","So","208"])
+    department.print_rows()
 
     # tick = dataTable("Tickets")
     # print(tick.get_cols())
