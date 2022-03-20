@@ -137,6 +137,7 @@ class MainPage(tk.Frame):
         self.frames = {}
         self.frames["DetailFrame"] = self.detail_frame
 
+
         self.search_table = SearchFrame(self, controller, self.frames)
         self.search_table.pack(side=tk.LEFT)
 
@@ -234,23 +235,35 @@ class DetailFrameValuesStruct:
         self.column_titles = None
         self.labels = []
         self.entries = []
+        if self.screen_type == "Equipment":
+            self.column_titles = ["equipment_id", "category", "status", "current_user_id", "date_purchased",
+                                  "days_in_rotation", "cost", "user_first_name", "user_last_name", "department_id",
+                                  "department"]
+
+
+    # This function will run and return ONLY the column titles specified by the list of indices (ex. those needed for the treeview).
+    def get_specific_columns(self, column_indices_to_retrieve):
+        column_ret_list = []
+        for index in column_indices_to_retrieve:
+            column_ret_list.append(self.column_titles[index])
+        return column_ret_list
+
+    def get_columns(self):
+        return self.column_titles
 
     def get_labels(self):
-        if self.screen_type == "Equipment":
-            self.column_titles = ["equipment_id", "category", "status", "current_user_id", "date_purchased", "days_in_rotation", "cost", "user_first_name", "user_last_name", "department_id", "department"]
-            # Create appropriate Label objects
-            for title in self.column_titles:
-                new_label = Label(self.frame, text=title, font=("Montserrat", 14), width=25, borderwidth=2, relief='ridge', anchor='center', bg='#b5651d')
-                self.labels.append(new_label)
+        # Create appropriate Label objects
+        for title in self.column_titles:
+            new_label = Label(self.frame, text=title, font=("Montserrat", 14), width=25, borderwidth=2, relief='ridge', anchor='center', bg='#b5651d')
+            self.labels.append(new_label)
         return self.labels
 
     # Create Entry objects based on number of columns to be displayed in Details Subframe
     def get_entries(self):
-        if self.screen_type == "Equipment":
-            for i in range(len(self.column_titles)):
-                new_entry = Entry(self.frame, font=("Montserrat", 14), width=80, bg='#C4A484', borderwidth=2, relief='solid')
-                # new_entry.insert(0, "test1231312215215512")
-                self.entries.append(new_entry)
+        for i in range(len(self.column_titles)):
+            new_entry = Entry(self.frame, font=("Montserrat", 14), width=80, bg='#C4A484', borderwidth=2, relief='solid')
+            # new_entry.insert(0, "test1231312215215512")
+            self.entries.append(new_entry)
         return self.entries
 
 
@@ -275,12 +288,16 @@ class SearchFrame(tk.Frame):
         global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
         # Initializing GUI Controller
         self.controller = controller
+        self.frames = frames
         self.search_grid = MCListDemo(self, controller, frames)
-        MCList_values_struct = MCListValuesStruct("Equipment")
 
-        #TODO: First parameter: List of headers, Second parameter: Table contents
-        self.search_grid._replace_contents([], [])
-
+        # Default values to appear
+        self.MCList_values_struct = MCListValuesStruct("Equipment")
+        self.data_tuples_list = self.MCList_values_struct.get_tuple_list()
+        self.details_struct = DetailFrameValuesStruct(self.frames["DetailFrame"], "Equipment")
+        self.column_indices_to_retrieve = [ID_INDEX, CATEGORY_INDEX, DEPARTMENT_INDEX]
+        self.column_titles = self.details_struct.get_specific_columns(self.column_indices_to_retrieve)
+        self.search_grid._replace_contents(self.column_titles, self.data_tuples_list)
 
 class MCListDemo(ttk.Frame):
     # class variable to track direction of column
