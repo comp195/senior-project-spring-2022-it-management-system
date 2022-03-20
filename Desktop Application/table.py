@@ -98,18 +98,38 @@ class dataTable:
 
 
 def main():
-    tick = dataTable("Tickets")
-    print(tick.get_cols())
+    department = dataTable("Department")
+    d_rows = department.get_rows()
+    for i in d_rows:
+        print(i)
 
-    data = ['2', 1, 'John', 'Cena', '1', 'Mouses', 'Broken mouse', 'Left click not working', 'Maintenance', 'Medium', 'Supoort']
-    tick.insert_data(data)
+    employee = dataTable("Employee")
+    em_rows = employee.get_rows()
+    for i in em_rows:
+        print(i)
 
-    print(tick.get_rows())
+    equipment = dataTable("Equipment")
+    eq_rows = equipment.get_rows()
+    for i in eq_rows:
+        print(i)
 
-    dev = dataTable("Devices")
-    data3 = ["1", "Monitor", "123", "Kawhi", "Leonard", "1", "Support", "365", "2021-03-05", "300.0"]
-    dev.insert_data(data3)
-    print(dev.get_rows())
+    tickets = dataTable("Tickets")
+    ti_rows = tickets.get_rows()
+    for i in ti_rows:
+        print(i)
+
+    # tick = dataTable("Tickets")
+    # print(tick.get_cols())
+    #
+    # data = ['2', 1, 'John', 'Cena', '1', 'Mouses', 'Broken mouse', 'Left click not working', 'Maintenance', 'Medium', 'Supoort']
+    # tick.insert_data(data)
+    #
+    # print(tick.get_rows())
+    #
+    # dev = dataTable("Devices")
+    # data3 = ["1", "Monitor", "123", "Kawhi", "Leonard", "1", "Support", "365", "2021-03-05", "300.0"]
+    # dev.insert_data(data3)
+    # print(dev.get_rows())
 
 
 if __name__ == "__main__":

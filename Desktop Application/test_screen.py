@@ -3,9 +3,26 @@ import tkinter as tk
 from tkinter import *
 from tkinter.font import Font
 from tkinter import font as tkfont, ttk  # python 3
+import table
 
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
+
+# CONSTANTS TO KEEP TRACK OF INDICES OF EACH DB TABLE FIELD WITHIN THE LIST(S)
+ID_INDEX = 0
+EQUIPMENT_ID_INDEX = 0
+CATEGORY_INDEX = 1
+STATUS_INDEX = 2
+CURRENT_USER_ID_INDEX = 3
+DATE_PURCHASED_INDEX = 4
+DAYS_IN_ROTATION_INDEX = 5
+COST_INDEX = 6
+USER_FIRST_NAME_INDEX = 7
+USER_LAST_NAME_INDEX = 8
+DEPARTMENT_ID_INDEX = 9
+DEPARTMENT_INDEX = 10
+
+global equipment_data_rows
 
 coconut = "#9B582E"
 quick_silver = "#A7A39E"
@@ -104,12 +121,24 @@ class MainPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         # Initializing GUI Controller
         self.controller = controller
+
+        # Create instance of database connection and use the data as argument
+        self.equipment_table = table.dataTable("Equipment")
+        global equipment_data_rows
+        equipment_data_rows = self.equipment_table.get_rows()
+
         self.search = SearchBarFrame(self, controller)
         self.search.pack(side=tk.TOP)
-        self.search_table = SearchFrame(self, controller)
-        self.search_table.pack(side=tk.LEFT)
         self.detail_frame = DetailFrame(self, controller)
         self.detail_frame.pack(side=tk.RIGHT)
+
+        # Create frames dictionary so the SearchFrame/MCList can access the DetailFrame's functions
+        # (needed to update the details based on a click within the MCList)
+        self.frames = {}
+        self.frames["DetailFrame"] = self.detail_frame
+
+        self.search_table = SearchFrame(self, controller, self.frames)
+        self.search_table.pack(side=tk.LEFT)
 
 
 class SearchBarFrame(tk.Frame):
@@ -147,7 +176,7 @@ class DetailFrame(tk.Frame):
         self.curr_col = 0
 
         # Create instance of DetailsStruct and retrieve labels & entries
-        self.details_struct = DetailsStruct(self.detail_frame, "Equipment")
+        self.details_struct = DetailFrameValuesStruct(self.detail_frame, "Equipment")
         self.labels_to_add = self.details_struct.get_labels()
         self.add_labels()
 
@@ -170,10 +199,33 @@ class DetailFrame(tk.Frame):
         for entry in self.entries_to_add:
             entry.grid(row=self.curr_row, column=self.curr_col)
             self.curr_row = self.curr_row + 1
+        # self.update_entries()
+
+    # Function used to update the details of a specific item when the corresponding row is clicked in the Treeview
+    # NOTE: This function is called from the MCList class
+    # args: item ID (such as equipment_id), passed from ID obtained from the MCList row-click
+    def update_entries(self, id):
+        self.clear_entries()    # first clear the entry boxes' texts
+
+        # Find the data row that matches the row clicked in the treeview (based on ID), then update the details according
+        # to that specific data row
+        global equipment_data_rows
+        row_to_use = []
+        for row in equipment_data_rows:
+            if row[ID_INDEX] == id:
+                row_to_use = row
+
+        # Insert that row's data into the entries
+        for i in range(len(self.entries_to_add)):
+            self.entries_to_add[i].insert(0, row_to_use[i])
+
+    def clear_entries(self):
+        for entry in self.entries_to_add:
+            entry.delete(0, len(entry.get()))
 
 
 # Struct used to handle creating the appropriate Label & Entry objects based on indicated screen type
-class DetailsStruct:
+class DetailFrameValuesStruct:
     # NOTE: 'frame' will always be the detail frame
     # NOTE: 'screen_type' refers to a string indicating the screen in which labels & entries are needed
     def __init__(self, frame, screen_type):
@@ -185,7 +237,7 @@ class DetailsStruct:
 
     def get_labels(self):
         if self.screen_type == "Equipment":
-            self.column_titles = ["device_id", "category", "current_user_id", "user_first_name", "user_last_name", "department_id", "department", "days_since_purchase", "purchase_date", "cost"]
+            self.column_titles = ["equipment_id", "category", "status", "current_user_id", "date_purchased", "days_in_rotation", "cost", "user_first_name", "user_last_name", "department_id", "department"]
             # Create appropriate Label objects
             for title in self.column_titles:
                 new_label = Label(self.frame, text=title, font=("Montserrat", 14), width=25, borderwidth=2, relief='ridge', anchor='center', bg='#b5651d')
@@ -194,22 +246,39 @@ class DetailsStruct:
 
     # Create Entry objects based on number of columns to be displayed in Details Subframe
     def get_entries(self):
-        for i in range(len(self.column_titles)):
-            new_entry = Entry(self.frame, font=("Montserrat", 14), width=80, bg='#C4A484', borderwidth=2, relief='solid')
-            self.entries.append(new_entry)
+        if self.screen_type == "Equipment":
+            for i in range(len(self.column_titles)):
+                new_entry = Entry(self.frame, font=("Montserrat", 14), width=80, bg='#C4A484', borderwidth=2, relief='solid')
+                # new_entry.insert(0, "test1231312215215512")
+                self.entries.append(new_entry)
         return self.entries
 
 
+# Struct used to handle obtaining the database values needed for the SearchFrame (NOT the DetailFrame)
+class MCListValuesStruct:
+    def __init__(self, screen_type):
+        self.screen_type = screen_type
+        self.data_tuple_list = []
+    # Function to obtain the list of tuples of data to be shown in the SearchFrame (formatted appropriately)
+    def get_tuple_list(self):
+        if self.screen_type == "Equipment":
+            global equipment_data_rows
+            for row in equipment_data_rows:
+                curr_tuple = (row[EQUIPMENT_ID_INDEX], row[CATEGORY_INDEX], row[DEPARTMENT_INDEX])
+                self.data_tuple_list.append(curr_tuple)
+        return self.data_tuple_list
+
+
 class SearchFrame(tk.Frame):
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller, frames):
         tk.Frame.__init__(self, parent)
         global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
         # Initializing GUI Controller
         self.controller = controller
-        self.search_grid = MCListDemo(self)
-        # self.search_grid.pack()
+        self.search_grid = MCListDemo(self, controller, frames)
+        MCList_values_struct = MCListValuesStruct("Equipment")
 
-        # self.search_grid._load_data()
+        #TODO: First parameter: List of headers, Second parameter: Table contents
         self.search_grid._replace_contents([], [])
 
 
@@ -219,9 +288,11 @@ class MCListDemo(ttk.Frame):
     SortDir = True  # descending
 
     # def __init__(self, isapp=True, name='mclistdemo'):
-    def __init__(self, parent, isapp=True, name='mclistdemo', columns=[], grid=[]):
+    def __init__(self, parent, controller, frames, isapp=True, name='mclistdemo', columns=[], grid=[]):
         # ttk.Frame.__init__(self, name=name)
         self.parent = parent
+        self.controller = controller
+        self.frames = frames
         self.name = name
         ttk.Frame.__init__(self, self.parent, name=self.name)
         self.pack(expand=Y, fill=BOTH)
@@ -276,7 +347,6 @@ class MCListDemo(ttk.Frame):
     def _create_treeview(self, parent, columns):
         f = ttk.Frame(parent)
         f.pack(side=TOP, fill=BOTH, expand=Y)
-
         # create the tree and scrollbars
         self.dataCols = columns
         self.tree = ttk.Treeview(columns=self.dataCols,
@@ -368,7 +438,7 @@ class MCListDemo(ttk.Frame):
         print(curr_row)
         list_of_values = curr_row.get('values')
         print(list_of_values)
-
+        self.frames["DetailFrame"].update_entries(list_of_values[ID_INDEX])
 
 if __name__ == "__main__":
     app = GUIController()
