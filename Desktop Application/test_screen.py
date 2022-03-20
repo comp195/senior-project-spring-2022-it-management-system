@@ -240,6 +240,14 @@ class DetailFrameValuesStruct:
                                   "days_in_rotation", "cost", "user_first_name", "user_last_name", "department_id",
                                   "department"]
 
+        elif self.screen_type == "Employee":
+            self.column_titles = ["employee_id", "first_name", "last_name", "email", "num_equipment_used", "department",
+                                  "phone_extension"]
+
+        elif self.screen_type == "Tickets":
+            self.column_titles = ["ticket_number", "ticket_status", "client_id", "client_first_name", "client_last_name",
+                                   "equipment_id", "ticket_category", "short_description", "full_description", "issue_scope",
+                                   "priority", "department"]
 
     # This function will run and return ONLY the column titles specified by the list of indices (ex. those needed for the treeview).
     def get_specific_columns(self, column_indices_to_retrieve):
@@ -273,11 +281,15 @@ class MCListValuesStruct:
         self.screen_type = screen_type
         self.data_tuple_list = []
     # Function to obtain the list of tuples of data to be shown in the SearchFrame (formatted appropriately)
-    def get_tuple_list(self):
+    # args:     list of indices to retrieve from
+    def get_tuple_list(self, indices):
         if self.screen_type == "Equipment":
             global equipment_data_rows
             for row in equipment_data_rows:
-                curr_tuple = (row[EQUIPMENT_ID_INDEX], row[CATEGORY_INDEX], row[DEPARTMENT_INDEX])
+                data_list = []
+                for index in indices:
+                    data_list.append(row[index])
+                curr_tuple = tuple(data_list)
                 self.data_tuple_list.append(curr_tuple)
         return self.data_tuple_list
 
@@ -292,10 +304,13 @@ class SearchFrame(tk.Frame):
         self.search_grid = MCListDemo(self, controller, frames)
 
         # Default values to appear
+        # NOTE: this index list will be used in both MCListValuesStruct AND DetailFrameValuesStruct
+        self.column_indices_to_retrieve = [ID_INDEX, CATEGORY_INDEX, STATUS_INDEX, DAYS_IN_ROTATION_INDEX, COST_INDEX,
+                                           DEPARTMENT_INDEX]
         self.MCList_values_struct = MCListValuesStruct("Equipment")
-        self.data_tuples_list = self.MCList_values_struct.get_tuple_list()
+        self.data_tuples_list = self.MCList_values_struct.get_tuple_list(self.column_indices_to_retrieve)
         self.details_struct = DetailFrameValuesStruct(self.frames["DetailFrame"], "Equipment")
-        self.column_indices_to_retrieve = [ID_INDEX, CATEGORY_INDEX, DEPARTMENT_INDEX]
+        # self.column_indices_to_retrieve = [ID_INDEX, CATEGORY_INDEX, DEPARTMENT_INDEX]
         self.column_titles = self.details_struct.get_specific_columns(self.column_indices_to_retrieve)
         self.search_grid._replace_contents(self.column_titles, self.data_tuples_list)
 
