@@ -241,23 +241,23 @@ class MCListDemo(ttk.Frame):
         self.data = data
 
     def _replace_contents(self, columns, grid):
-        columns = ('device_id', 'category', 'department')
-        grid = [
-            ("1", "Monitor", "Support"),
-            ("2", "Laptop", "Support"),
-            ("3", "Monitor", "Support"),
-            ("4", "Laptop", "Support"),
-            ("5", "Monitor", "Support"),
-            ("6", "Laptop", "Support"),
-            ("7", "Monitor", "Support"),
-            ("8", "Laptop", "Support"),
-            ("9", "Monitor", "Support"),
-            ("10", "Laptop", "Support"),
-            ("11", "Monitor", "Support"),
-            ("12", "Laptop", "Support"),
-            ("13", "Monitor", "Support"),
-            ("14", "Laptop", "Support"),
-            ("15", "Monitor", "Support")]
+        # columns = ('device_id', 'category', 'department')
+        # grid = [
+        #     ("1", "Monitor", "Support"),
+        #     ("2", "Laptop", "Support"),
+        #     ("3", "Monitor", "Support"),
+        #     ("4", "Laptop", "Support"),
+        #     ("5", "Monitor", "Support"),
+        #     ("6", "Laptop", "Support"),
+        #     ("7", "Monitor", "Support"),
+        #     ("8", "Laptop", "Support"),
+        #     ("9", "Monitor", "Support"),
+        #     ("10", "Laptop", "Support"),
+        #     ("11", "Monitor", "Support"),
+        #     ("12", "Laptop", "Support"),
+        #     ("13", "Monitor", "Support"),
+        #     ("14", "Laptop", "Support"),
+        #     ("15", "Monitor", "Support")]
         self.destroy()
         ttk.Frame.__init__(self, self.parent, name=self.name)
         self.pack(expand=Y, fill=BOTH)
