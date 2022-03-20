@@ -208,8 +208,9 @@ class SearchFrame(tk.Frame):
         self.controller = controller
         self.search_grid = MCListDemo(self)
         # self.search_grid.pack()
-        self.search_grid._delete_tree()
-        self.search_grid._load_data()
+
+        # self.search_grid._load_data()
+        self.search_grid._replace_contents([], [])
 
 
 class MCListDemo(ttk.Frame):
@@ -218,45 +219,66 @@ class MCListDemo(ttk.Frame):
     SortDir = True  # descending
 
     # def __init__(self, isapp=True, name='mclistdemo'):
-    def __init__(self, parent, isapp=True, name='mclistdemo'):
+    def __init__(self, parent, isapp=True, name='mclistdemo', columns=[], grid=[]):
         # ttk.Frame.__init__(self, name=name)
-        ttk.Frame.__init__(self, parent, name=name)
+        self.parent = parent
+        self.name = name
+        ttk.Frame.__init__(self, self.parent, name=self.name)
         self.pack(expand=Y, fill=BOTH)
         self.isapp = isapp
-#test
+        # test
         self.tree = None
-##
-        self._create_widgets()
+        ##
+        self._create_widgets(columns, grid)
 
-    def _create_widgets(self):
+    def _create_widgets(self, columns, grid):
         if self.isapp:
             SeeDismissPanel(self)
 
-        self._create_demo_panel()
+        self._create_demo_panel(columns, grid)
 
     def _set_data(self, data):
         self.data = data
 
-    def _set_columns(self, columns):
-        self.columns = columns
+    def _replace_contents(self, columns, grid):
+        columns = ('device_id', 'category', 'department')
+        grid = [
+            ("1", "Monitor", "Support"),
+            ("2", "Laptop", "Support"),
+            ("3", "Monitor", "Support"),
+            ("4", "Laptop", "Support"),
+            ("5", "Monitor", "Support"),
+            ("6", "Laptop", "Support"),
+            ("7", "Monitor", "Support"),
+            ("8", "Laptop", "Support"),
+            ("9", "Monitor", "Support"),
+            ("10", "Laptop", "Support"),
+            ("11", "Monitor", "Support"),
+            ("12", "Laptop", "Support"),
+            ("13", "Monitor", "Support"),
+            ("14", "Laptop", "Support"),
+            ("15", "Monitor", "Support")]
+        self.destroy()
+        ttk.Frame.__init__(self, self.parent, name=self.name)
+        self.pack(expand=Y, fill=BOTH)
+        self._create_widgets(columns, grid)
 
     def _delete_tree(self):
         for item in self.tree.get_children():
             self.tree.delete(item)
 
-
-    def _create_demo_panel(self):
+    def _create_demo_panel(self, columns, grid):
         demoPanel = Frame(self)
         demoPanel.pack(side=TOP, fill=BOTH, expand=Y)
-        self._create_treeview(demoPanel)
-        self._load_data()
+        self._create_treeview(demoPanel, columns)
+        self._load_data(grid)
 
-    def _create_treeview(self, parent):
+    def _create_treeview(self, parent, columns):
         f = ttk.Frame(parent)
         f.pack(side=TOP, fill=BOTH, expand=Y)
 
         # create the tree and scrollbars
-        self.dataCols = ('device_id', 'category', 'department')
+        self.dataCols = columns
         self.tree = ttk.Treeview(columns=self.dataCols,
                                show='headings', height=31)
 
@@ -274,52 +296,54 @@ class MCListDemo(ttk.Frame):
         f.rowconfigure(0, weight=1)
         f.columnconfigure(0, weight=1)
 
-    def _load_data(self):
-        self._delete_tree(self)
-        self.data = [
-            ("1", "Monitor", "Support"),
-            ("2", "Laptop", "Support"),
-            ("3", "Monitor", "Support"),
-            ("4", "Laptop", "Support"),
-            ("5", "Monitor", "Support"),
-            ("6", "Laptop", "Support"),
-            ("7", "Monitor", "Support"),
-            ("8", "Laptop", "Support"),
-            ("9", "Monitor", "Support"),
-            ("10", "Laptop", "Support"),
-            ("11", "Monitor", "Support"),
-            ("12", "Laptop", "Support"),
-            ("13", "Monitor", "Support"),
-            ("14", "Laptop", "Support"),
-            ("15", "Monitor", "Support")]
+    def _load_data(self, grid):
+        self.data = grid
+        # self._delete_tree()
+        # self.data = [
+        #     ("1", "Monitor", "Support"),
+        #     ("2", "Laptop", "Support"),
+        #     ("3", "Monitor", "Support"),
+        #     ("4", "Laptop", "Support"),
+        #     ("5", "Monitor", "Support"),
+        #     ("6", "Laptop", "Support"),
+        #     ("7", "Monitor", "Support"),
+        #     ("8", "Laptop", "Support"),
+        #     ("9", "Monitor", "Support"),
+        #     ("10", "Laptop", "Support"),
+        #     ("11", "Monitor", "Support"),
+        #     ("12", "Laptop", "Support"),
+        #     ("13", "Monitor", "Support"),
+        #     ("14", "Laptop", "Support"),
+        #     ("15", "Monitor", "Support")]
+        #
+        # curr_id = 16
+        # for i in range(20):
+        #     temp_tuple = (str(curr_id), "Laptop", "Support")
+        #     curr_id = curr_id + 1
+        #     self.data.append(temp_tuple)
+        #     temp_tuple = (str(curr_id), "Monitor", "Human Resources")
+        #     curr_id = curr_id + 1
+        #     self.data.append(temp_tuple)
 
-        curr_id = 16
-        for i in range(20):
-            temp_tuple = (str(curr_id), "Laptop", "Support")
-            curr_id = curr_id + 1
-            self.data.append(temp_tuple)
-            temp_tuple = (str(curr_id), "Monitor", "Human Resources")
-            curr_id = curr_id + 1
-            self.data.append(temp_tuple)
+        if self.data != []:
+            # configure column headings
+            for c in self.dataCols:
+                self.tree.heading(c, text=c.title(),
+                                  command=lambda c=c: self._column_sort(c, MCListDemo.SortDir))
+                self.tree.column(c, width=Font().measure(c.title()))
 
-        # configure column headings
-        for c in self.dataCols:
-             self.tree.heading(c, text=c.title(),
-                               command=lambda c=c: self._column_sort(c, MCListDemo.SortDir))
-             self.tree.column(c, width=Font().measure(c.title()))
+            # add data to the tree
+            for item in self.data:
+                self.tree.insert('', 'end', values=item)
 
-        # add data to the tree
-        for item in self.data:
-            self.tree.insert('', 'end', values=item)
+            # and adjust column widths if necessary
+            for idx, val in enumerate(item):
+                width = Font().measure(val)
+                if self.tree.column(self.dataCols[idx], 'width') < width:
+                    self.tree.column(self.dataCols[idx], width=width)
 
-        # and adjust column widths if necessary
-        for idx, val in enumerate(item):
-            width = Font().measure(val)
-            if self.tree.column(self.dataCols[idx], 'width') < width:
-                self.tree.column(self.dataCols[idx], width=width)
-
-        # Apply binding so that currently-selected values can be retrieved
-        self.tree.bind('<<TreeviewSelect>>', self.obtain_selected_row)
+            # Apply binding so that currently-selected values can be retrieved
+            self.tree.bind('<<TreeviewSelect>>', self.obtain_selected_row)
 
     def _column_sort(self, col, descending=False):
         # grab values to sort as a list of tuples (column value, column id)
