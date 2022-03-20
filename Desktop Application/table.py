@@ -98,8 +98,25 @@ class dataTable:
 
 
 def main():
+    department = dataTable("Department")
+    d_rows = department.get_rows()
+    for i in d_rows:
+        print(i)
+
+    employee = dataTable("Employee")
+    em_rows = employee.get_rows()
+    for i in em_rows:
+        print(i)
+
     equipment = dataTable("Equipment")
-    print(equipment.get_rows())
+    eq_rows = equipment.get_rows()
+    for i in eq_rows:
+        print(i)
+
+    tickets = dataTable("Tickets")
+    ti_rows = tickets.get_rows()
+    for i in ti_rows:
+        print(i)
 
     # tick = dataTable("Tickets")
     # print(tick.get_cols())
