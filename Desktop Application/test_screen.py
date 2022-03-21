@@ -22,7 +22,7 @@ USER_LAST_NAME_INDEX = 8
 DEPARTMENT_ID_INDEX = 9
 DEPARTMENT_INDEX = 10
 
-global equipment_data_rows
+global current_data_rows
 
 coconut = "#9B582E"
 quick_silver = "#A7A39E"
@@ -89,7 +89,7 @@ class GUIController(tk.Tk):
 
     def set_active_table(self, table_name):
         self.active_table = table_name
-        self.frames("MainPage").update_on_button_press(table_name)
+        self.frames["MainPage"].update_on_button_press(table_name)
 
 
 
@@ -104,6 +104,10 @@ class PageHeader(tk.Frame):
         self.button_dict = {}   # Maps button name to button index
         for i in range(len(self.button_names)):
             curr_button_name = self.button_names[i]
+            # Temp conditions; change table names possibly
+            if curr_button_name == "Employees":
+                curr_button_name = "Employee"
+
             button = tk.Button(self, text=curr_button_name, command=lambda identifier=curr_button_name: self.press_button(identifier), bg=stormcloud,
                                fg=gainsboro, highlightthickness=0, bd=0)
             button.config(width=15, height=4, font=("Montserrat", 20))
@@ -116,7 +120,7 @@ class PageHeader(tk.Frame):
         for button in self.buttons:
             button.config(fg=gainsboro)
         self.buttons[self.button_dict.get(identifier)].config(fg=quick_silver)
-        self.container.set_active_table(identifier)
+        self.controller.set_active_table(identifier)
 
 
 class MainPage(tk.Frame):
@@ -127,8 +131,8 @@ class MainPage(tk.Frame):
         # Create instance of database connection and use the data as argument
         self.equipment_table = table.dataTable("Equipment")
 
-        global equipment_data_rows
-        equipment_data_rows = self.equipment_table.get_rows()
+        global current_data_rows
+        current_data_rows = self.equipment_table.get_rows()
 
         self.search = SearchBarFrame(self, controller)
         self.search.pack(side=tk.TOP)
@@ -147,7 +151,21 @@ class MainPage(tk.Frame):
     def update_on_button_press(self, screen_name):
         self.equipment_table = table.dataTable(screen_name)
         # TODO: Change Table and Details to correspond with screen_name
-        
+#TEST
+        # Update the global current_data_rows value based on the new table
+        global current_data_rows
+        current_data_rows = self.equipment_table.get_rows()
+
+        # Update the labels and entry boxes that appear based on the new table
+        self.detail_frame.refresh_detail_components(screen_name)
+
+        self.column_indices_to_retrieve = [ID_INDEX, 1, 2, 3, 4]
+        self.MCList_values_struct = MCListValuesStruct(screen_name)
+        self.data_tuples_list = self.MCList_values_struct.get_tuple_list(self.column_indices_to_retrieve)
+        self.details_struct = DetailFrameValuesStruct(self.frames["DetailFrame"], screen_name)
+        self.column_titles = self.details_struct.get_specific_columns(self.column_indices_to_retrieve)
+        self.search_table.search_grid._replace_contents(self.column_titles, self.data_tuples_list)
+
         # self.search_table.search_grid._replace_contents(columns, data)
 
 
@@ -196,6 +214,30 @@ class DetailFrame(tk.Frame):
         self.entries_to_add = self.details_struct.get_entries()
         self.add_entries()
 
+    # Function is called when switching from one screen to another (ex. Equipment to Employees)
+    def refresh_detail_components(self, new_screen_type):
+        self.clear_screen_components()
+        self.details_struct.clear_component_lists()
+        self.details_struct.set_screen_type(new_screen_type)
+        self.curr_row = 0
+        self.curr_col = 0
+        self.refresh_labels()
+        self.refresh_entries()
+
+    def clear_screen_components(self):
+        for label in self.labels_to_add:
+            label.destroy()
+        for entry in self.entries_to_add:
+            entry.destroy()
+
+    def refresh_labels(self):
+        self.labels_to_add = self.details_struct.get_labels()
+        self.add_labels()
+
+    def refresh_entries(self):
+        self.entries_to_add = self.details_struct.get_entries()
+        self.add_entries()
+
     def add_labels(self):
         for label in self.labels_to_add:
             label.grid(row=self.curr_row, column=self.curr_col)
@@ -219,9 +261,9 @@ class DetailFrame(tk.Frame):
 
         # Find the data row that matches the row clicked in the treeview (based on ID), then update the details according
         # to that specific data row
-        global equipment_data_rows
+        global current_data_rows
         row_to_use = []
-        for row in equipment_data_rows:
+        for row in current_data_rows:
             if row[ID_INDEX] == id:
                 row_to_use = row
 
@@ -244,19 +286,32 @@ class DetailFrameValuesStruct:
         self.column_titles = None
         self.labels = []
         self.entries = []
-        if self.screen_type == "Equipment":
-            self.column_titles = ["equipment_id", "category", "status", "current_user_id", "date_purchased",
+        self.equipment_columns = ["equipment_id", "category", "status", "current_user_id", "date_purchased",
                                   "days_in_rotation", "cost", "user_first_name", "user_last_name", "department_id",
                                   "department"]
-
+        self.employee_columns = ["employee_id", "first_name", "last_name", "email", "num_equipment_used", "department",
+                                "phone_extension"]
+        self.tickets_columns = ["ticket_number", "ticket_status", "client_id", "client_first_name", "client_last_name",
+                                "equipment_id", "ticket_category", "short_description", "full_description", "issue_scope",
+                                "priority", "department"]
+        if self.screen_type == "Equipment":
+            self.column_titles = self.equipment_columns
         elif self.screen_type == "Employee":
-            self.column_titles = ["employee_id", "first_name", "last_name", "email", "num_equipment_used", "department",
-                                  "phone_extension"]
-
+            self.column_titles = self.employee_columns
         elif self.screen_type == "Tickets":
-            self.column_titles = ["ticket_number", "ticket_status", "client_id", "client_first_name", "client_last_name",
-                                   "equipment_id", "ticket_category", "short_description", "full_description", "issue_scope",
-                                   "priority", "department"]
+            self.column_titles = self.tickets_columns
+
+    def set_screen_type(self, screen_type):
+        if screen_type == "Equipment":
+            self.column_titles = self.equipment_columns
+        elif screen_type == "Employee":
+            self.column_titles = self.employee_columns
+        elif screen_type == "Tickets":
+            self.column_titles = self.tickets_columns
+
+    def clear_component_lists(self):
+        self.labels = []
+        self.entries = []
 
     # This function will run and return ONLY the column titles specified by the list of indices (ex. those needed for the treeview).
     def get_specific_columns(self, column_indices_to_retrieve):
@@ -292,14 +347,14 @@ class MCListValuesStruct:
     # Function to obtain the list of tuples of data to be shown in the SearchFrame (formatted appropriately)
     # args:     list of indices to retrieve from
     def get_tuple_list(self, indices):
-        if self.screen_type == "Equipment":
-            global equipment_data_rows
-            for row in equipment_data_rows:
-                data_list = []
-                for index in indices:
-                    data_list.append(row[index])
-                curr_tuple = tuple(data_list)
-                self.data_tuple_list.append(curr_tuple)
+        global current_data_rows
+        print(current_data_rows)
+        for row in current_data_rows:
+            data_list = []
+            for index in indices:
+                data_list.append(row[index])
+            curr_tuple = tuple(data_list)
+            self.data_tuple_list.append(curr_tuple)
         return self.data_tuple_list
 
 
