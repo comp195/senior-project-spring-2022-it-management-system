@@ -219,9 +219,9 @@ class DetailFrame(tk.Frame):
         self.clear_screen_components()
         self.details_struct.clear_component_lists()
         self.details_struct.set_screen_type(new_screen_type)
-        self.curr_row = 0
-        self.curr_col = 0
+        self.refresh_grid_positions()
         self.refresh_labels()
+        self.update_grid_positions()
         self.refresh_entries()
 
     def clear_screen_components(self):
@@ -229,6 +229,10 @@ class DetailFrame(tk.Frame):
             label.destroy()
         for entry in self.entries_to_add:
             entry.destroy()
+
+    def refresh_grid_positions(self):
+        self.curr_row = 0
+        self.curr_col = 0
 
     def refresh_labels(self):
         self.labels_to_add = self.details_struct.get_labels()
