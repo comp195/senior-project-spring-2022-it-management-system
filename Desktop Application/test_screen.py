@@ -55,9 +55,11 @@ class GUIController(tk.Tk):
         self.window_title = "Application"
         # self.resolution = str(SCREEN_WIDTH) + "x" + str(SCREEN_HEIGHT)
 
+        # self.geometry(self.resolution)
         # Initializing container that stacks our frames
 
-        container = tk.Frame(self)
+        container = tk.Frame(self, bg=stormcloud)
+
         container.pack(side="top", fill="both", expand=True)
 
         container.grid_rowconfigure(0, weight=1)
@@ -70,7 +72,7 @@ class GUIController(tk.Tk):
         # Initializing all of our frames within our container
         self.frames = {}
 
-        for F in (LoginPage, MainPage, SearchBarFrame):
+        for F in (MainPage, LoginPage):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             frame.config(bg=stormcloud)   # background color of individual frame
@@ -85,8 +87,11 @@ class GUIController(tk.Tk):
 
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
+        for f in self.frames.values():
+            f.grid_forget()
+
         frame = self.frames[page_name]
-        frame.tkraise()
+        frame.grid(row=0, column=0)
 
     def login_verification(self):
         self.show_frame("MainPage")
@@ -97,15 +102,17 @@ class LoginPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.parent = parent
         self.controller = controller
+        self.config(width=self.controller.winfo_reqwidth(), height=self.controller.winfo_reqheight())
         global username_verify, password_verify
-        # self.user_label = tk.Label(self, text="Username * ").pack()
-        # self.username_login_entry = tk.Entry(self, textvariable=username_verify).pack()
-        # self.space_label = tk.Label(self, text="").pack()
-        # self.password_label = tk.Label(self, text="Password * ").pack()
-        # self.password_login_entry = tk.Entry(self, textvariable=password_verify, show='*')
-        # self.password_login_entry.pack()
-        # self.space_label_2 = Label(self, text="").pack()
-        # self.login_button = Button(self, text="Login", width=10, height=1, command=self.controller.login_verification).pack()
+
+        self.user_label = tk.Label(self, text="Username * ").pack()
+        self.username_login_entry = tk.Entry(self, textvariable=username_verify).pack()
+        self.space_label = tk.Label(self, text="").pack()
+        self.password_label = tk.Label(self, text="Password * ").pack()
+        self.password_login_entry = tk.Entry(self, textvariable=password_verify, show='*')
+        self.password_login_entry.pack()
+        self.space_label_2 = Label(self, text="").pack()
+        self.login_button = Button(self, text="Login", width=10, height=1, command=self.controller.login_verification).pack()
 
 
 class PageHeader(tk.Frame):
