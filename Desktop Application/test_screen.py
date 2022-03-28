@@ -53,8 +53,7 @@ class GUIController(tk.Tk):
         # self.resolution = str(SCREEN_WIDTH) + "x" + str(SCREEN_HEIGHT)
 
         # Initializing container that stacks our frames
-        header = PageHeader(parent=self, controller=self)
-        header.pack(side="top", anchor="nw")
+
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
 
@@ -63,9 +62,7 @@ class GUIController(tk.Tk):
 
         # Implementation of Root Tk() Configurations
         self.title(self.window_title)
-        #self.geometry(self.resolution)
         self['bg'] = stormcloud       # background color of ROOT
-
 
         # Initializing all of our frames within our container
         self.frames = {}
@@ -75,6 +72,7 @@ class GUIController(tk.Tk):
             frame = F(parent=container, controller=self)
             frame.config(bg=stormcloud)   # background color of individual frame
             self.frames[page_name] = frame
+            print(page_name)
 
             # Putting all of our frames in the same place on the screen with the top one being active
             frame.grid(row=0, column=0)
@@ -86,11 +84,6 @@ class GUIController(tk.Tk):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
         frame.tkraise()
-
-    def set_active_table(self, table_name):
-        self.active_table = table_name
-        self.frames["MainPage"].update_on_button_press(table_name)
-
 
 
 class PageHeader(tk.Frame):
@@ -120,7 +113,7 @@ class PageHeader(tk.Frame):
         for button in self.buttons:
             button.config(fg=gainsboro)
         self.buttons[self.button_dict.get(identifier)].config(fg=quick_silver)
-        self.controller.set_active_table(identifier)
+        self.controller.frames["MainPage"].update_on_button_press(identifier)
 
 
 class MainPage(tk.Frame):
@@ -130,6 +123,9 @@ class MainPage(tk.Frame):
         self.controller = controller
         # Create instance of database connection and use the data as argument
         self.equipment_table = table.dataTable("Equipment")
+
+        header = PageHeader(parent=self, controller=self.controller)
+        header.pack(side="top", anchor="nw")
 
         global current_data_rows
         current_data_rows = self.equipment_table.get_rows()
@@ -143,7 +139,6 @@ class MainPage(tk.Frame):
         # (needed to update the details based on a click within the MCList)
         self.frames = {}
         self.frames["DetailFrame"] = self.detail_frame
-
 
         self.search_table = SearchFrame(self, controller, self.frames)
         self.search_table.pack(side=tk.LEFT)
@@ -261,8 +256,8 @@ class DetailFrame(tk.Frame):
     # NOTE: This function is called from the MCList class
     # args: item ID (such as equipment_id), passed from ID obtained from the MCList row-click
     def update_entries(self, id):
-        self.clear_entries()    # first clear the entry boxes' texts
 
+        self.clear_entries()    # first clear the entry boxes' texts
         # Find the data row that matches the row clicked in the treeview (based on ID), then update the details according
         # to that specific data row
         global current_data_rows
@@ -350,6 +345,7 @@ class MCListValuesStruct:
         self.data_tuple_list = []
     # Function to obtain the list of tuples of data to be shown in the SearchFrame (formatted appropriately)
     # args:     list of indices to retrieve from
+
     def get_tuple_list(self, indices):
         global current_data_rows
         print(current_data_rows)
@@ -382,12 +378,13 @@ class SearchFrame(tk.Frame):
         self.column_titles = self.details_struct.get_specific_columns(self.column_indices_to_retrieve)
         self.search_grid._replace_contents(self.column_titles, self.data_tuples_list)
 
+
 class MCListDemo(ttk.Frame):
     # class variable to track direction of column
     # header sort
     SortDir = True  # descending
-
     # def __init__(self, isapp=True, name='mclistdemo'):
+
     def __init__(self, parent, controller, frames, isapp=True, name='mclistdemo', columns=[], grid=[]):
         # ttk.Frame.__init__(self, name=name)
         self.parent = parent
@@ -412,23 +409,6 @@ class MCListDemo(ttk.Frame):
         self.data = data
 
     def _replace_contents(self, columns, grid):
-        # columns = ('device_id', 'category', 'department')
-        # grid = [
-        #     ("1", "Monitor", "Support"),
-        #     ("2", "Laptop", "Support"),
-        #     ("3", "Monitor", "Support"),
-        #     ("4", "Laptop", "Support"),
-        #     ("5", "Monitor", "Support"),
-        #     ("6", "Laptop", "Support"),
-        #     ("7", "Monitor", "Support"),
-        #     ("8", "Laptop", "Support"),
-        #     ("9", "Monitor", "Support"),
-        #     ("10", "Laptop", "Support"),
-        #     ("11", "Monitor", "Support"),
-        #     ("12", "Laptop", "Support"),
-        #     ("13", "Monitor", "Support"),
-        #     ("14", "Laptop", "Support"),
-        #     ("15", "Monitor", "Support")]
         self.destroy()
         ttk.Frame.__init__(self, self.parent, name=self.name)
         self.pack(expand=Y, fill=BOTH)
@@ -539,6 +519,13 @@ class MCListDemo(ttk.Frame):
         list_of_values = curr_row.get('values')
         print(list_of_values)
         self.frames["DetailFrame"].update_entries(list_of_values[ID_INDEX])
+
+
+class login_screen:
+    def __init__(self, parent, controller):
+        self.parent = parent
+        self.controller = controller
+
 
 if __name__ == "__main__":
     app = GUIController()
