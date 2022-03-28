@@ -2,9 +2,53 @@
 <html>
 	<head>
 		<title>Web Form</title>
+		<h1>Ticket Submission Form</h1>
+		<style>
+			h1
+			{
+				font-family: "helvetica, sans-serif";
+				font-size: 300%;
+			}
+
+			body
+			{
+				background-color: lightsteelblue;
+			}
+
+			label
+			{
+				display: flex;
+				flex-direction: row;
+				justify-content: flex-end;
+				text-align: right;
+				width: 350px;		/* change to move label & inputs left/right on page */
+				line-height: 26px;
+				margin-bottom-10px;
+			}
+
+			input
+			{
+				height: 20px;
+				flex: 0 0 100px;	/* refers to length of input boxes */
+				margin-left: 35px;
+			}
+		</style>
 	</head>
 	
 	<body>
-		
+		<div class='container'>
+<!--			NOTE: may need to add ids to inputs-->
+			<label>
+				Employee ID <input type="text" name="eid"/>
+			</label>
+
+			<label>
+				First Name <input type="text" name="f_name"/>
+			</label>
+
+			<label>
+				Last Name <input type="text" name="l_name"/>
+			</label>
+		</div>
 	</body>
 </html>
