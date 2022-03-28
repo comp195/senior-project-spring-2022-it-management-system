@@ -94,7 +94,11 @@ class GUIController(tk.Tk):
         frame.grid(row=0, column=0)
 
     def login_verification(self):
-        self.show_frame("MainPage")
+        # TODO: Implement login credential verification checks
+        verified = True
+
+        if verified:
+            self.show_frame("MainPage")
 
 
 class LoginPage(tk.Frame):
@@ -103,15 +107,15 @@ class LoginPage(tk.Frame):
         self.parent = parent
         self.controller = controller
         self.config(width=self.controller.winfo_reqwidth(), height=self.controller.winfo_reqheight())
-        global username_verify, password_verify
+        global username_verify, password_verify, stormcloud
 
-        self.user_label = tk.Label(self, text="Username * ").pack()
+        self.user_label = tk.Label(self, text="Username:",bg=stormcloud).pack()
         self.username_login_entry = tk.Entry(self, textvariable=username_verify).pack()
-        self.space_label = tk.Label(self, text="").pack()
-        self.password_label = tk.Label(self, text="Password * ").pack()
+        self.space_label = tk.Label(self, text="", bg=stormcloud).pack()
+        self.password_label = tk.Label(self, text="Password:",bg=stormcloud).pack()
         self.password_login_entry = tk.Entry(self, textvariable=password_verify, show='*')
         self.password_login_entry.pack()
-        self.space_label_2 = Label(self, text="").pack()
+        self.space_label_2 = Label(self, text="", bg=stormcloud).pack()
         self.login_button = Button(self, text="Login", width=10, height=1, command=self.controller.login_verification).pack()
 
 
