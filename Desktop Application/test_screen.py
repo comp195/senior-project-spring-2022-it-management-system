@@ -30,6 +30,9 @@ gainsboro = "#E0DDD9"
 rajah = "#F5B15E"
 stormcloud = "#4D646A"
 
+username_verify = ""
+password_verify = ""
+
 
 class SeeDismissPanel(ttk.Frame):
     def __init__(self, master):
@@ -67,7 +70,7 @@ class GUIController(tk.Tk):
         # Initializing all of our frames within our container
         self.frames = {}
 
-        for F in (MainPage, SearchBarFrame):
+        for F in (LoginPage, MainPage, SearchBarFrame):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             frame.config(bg=stormcloud)   # background color of individual frame
@@ -78,12 +81,31 @@ class GUIController(tk.Tk):
             frame.grid(row=0, column=0)
 
         # Frame visible at the start of the application
-        self.show_frame("MainPage")
+        self.show_frame("LoginPage")
 
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
         frame.tkraise()
+
+    def login_verification(self):
+        self.show_frame("MainPage")
+
+
+class LoginPage(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.parent = parent
+        self.controller = controller
+        global username_verify, password_verify
+        # self.user_label = tk.Label(self, text="Username * ").pack()
+        # self.username_login_entry = tk.Entry(self, textvariable=username_verify).pack()
+        # self.space_label = tk.Label(self, text="").pack()
+        # self.password_label = tk.Label(self, text="Password * ").pack()
+        # self.password_login_entry = tk.Entry(self, textvariable=password_verify, show='*')
+        # self.password_login_entry.pack()
+        # self.space_label_2 = Label(self, text="").pack()
+        # self.login_button = Button(self, text="Login", width=10, height=1, command=self.controller.login_verification).pack()
 
 
 class PageHeader(tk.Frame):
@@ -113,7 +135,8 @@ class PageHeader(tk.Frame):
         for button in self.buttons:
             button.config(fg=gainsboro)
         self.buttons[self.button_dict.get(identifier)].config(fg=quick_silver)
-        self.controller.frames["MainPage"].update_on_button_press(identifier)
+        if identifier != "Help":
+            self.controller.frames["MainPage"].update_on_button_press(identifier)
 
 
 class MainPage(tk.Frame):
@@ -521,10 +544,7 @@ class MCListDemo(ttk.Frame):
         self.frames["DetailFrame"].update_entries(list_of_values[ID_INDEX])
 
 
-class login_screen:
-    def __init__(self, parent, controller):
-        self.parent = parent
-        self.controller = controller
+
 
 
 if __name__ == "__main__":
