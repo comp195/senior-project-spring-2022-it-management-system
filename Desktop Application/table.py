@@ -1,4 +1,5 @@
 import mysql
+import bcrypt
 from mysql.connector import errorcode
 
 
@@ -117,10 +118,9 @@ def main():
     #
     # tickets = dataTable("Tickets")
     # tickets.print_rows()
-
-    department = dataTable("Department")
-    department.insert_data(["5","IT","Joe","So","208"])
-    department.print_rows()
+    #
+    # department = dataTable("Department")
+    # department.print_rows()
 
     # tick = dataTable("Tickets")
     # print(tick.get_cols())
@@ -134,6 +134,32 @@ def main():
     # data3 = ["1", "Monitor", "123", "Kawhi", "Leonard", "1", "Support", "365", "2021-03-05", "300.0"]
     # dev.insert_data(data3)
     # print(dev.get_rows())
+
+    # password encryption
+    password = "juice"
+    print(password)
+
+    # encode password
+    password = password.encode('utf-8')
+    print(password)
+
+    # encrypt pasword
+    hashed = bcrypt.hashpw(password, bcrypt.gensalt(10))
+    print(hashed)
+
+    # password input
+    check = "juice"
+    print(check)
+
+    # encode the authenticating password
+    check = check.encode('utf-8')
+    print(check)
+
+    # check:
+    if bcrypt.checkpw(check, hashed):
+        print("correct password")
+    else:
+        print("incorrect password")
 
 
 if __name__ == "__main__":
