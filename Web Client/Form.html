@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
 		<title>Web Form</title>
 		<h1>Ticket Submission Form</h1>
 		<style>
@@ -73,15 +75,15 @@
 <!--			NOTE: may need to add ids to inputs-->
 			<form id="submission_form">
 				<label>
-					Employee ID <input type="text" name="eid"/>
+					Employee ID <input type="text" name="eid" id="eid"/>
 				</label>
 
 				<label>
-					First Name <input type="text" name="f_name"/>
+					First Name <input type="text" name="f_name" id="f_name"/>
 				</label>
 
 				<label>
-					Last Name <input type="text" name="l_name"/>
+					Last Name <input type="text" name="l_name" id="l_name"/>
 				</label>
 
 				<label style="width:870px; margin-top:100px; margin-bottom:0px;">
@@ -103,31 +105,55 @@
 
 				<input type="button" name="submit_button" id="submit_button" value="Submit" class="submit_button"/>
 			</form>
+			<div id="response"></div>
 		</div>
 	</body>
 </html>
 
 <!-- Javascript -->
-<!--<script>-->
-<!--	$(document).ready(function()-->
-<!--	{-->
+<script>
+	$(document).ready(function()
+	{
+		$('#submit_button').click(function()
+		{
+			//Confirm that all fields are filled
+			var e_id = $('#eid').val();
+			var f_name = $('#f_name').val();
+			var l_name = $('#l_name').val();
+			//TODO: add the rest of the fields
+			if (e_id == "" || f_name == "" || l_name == "")
+			{
+				$('#response').html('<span>Missing at least one field!</span>');
+			}
+			//If all fields are filled, proceed with insertion request
+			else
+			{
+				send_insertion_request();
+			}
+		});
+	});
 
-<!--	});-->
-
-<!--	function send_insertion_request()-->
-<!--	{-->
-<!--		$.ajax({-->
-<!--			url:		"database_access.php",-->
-<!--			type:		"post",-->
-<!--			data:		$(,-->
-<!--			success:	function (data)-->
-<!--			{-->
-
-<!--			},-->
-<!--			error: function ()-->
-<!--			{-->
-<!--				console.log("Error occurred! Insertion request failed...");-->
-<!--			}-->
-<!--		});-->
-<!--	}-->
-<!--</script>-->
+	function send_insertion_request()
+	{
+		$.ajax({
+			url:		"database_access.php",
+			type:		"POST",
+			data:		$('#submission_form').serialize(),
+			beforeSend: function()
+			{
+				$('#response').html('<span>Submitting ticket...</span>');
+			},
+			success:	function (data)
+			{
+				console.log("this is data");
+				//console.log(data);
+				$('form').trigger("reset");
+				$('#response').fadeIn().html(data);
+			},
+			error: function ()
+			{
+				console.log("Error occurred! Insertion request failed...");
+			}
+		});
+	}
+</script>
