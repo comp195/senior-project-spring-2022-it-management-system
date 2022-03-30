@@ -17,59 +17,117 @@
 				background-color: lightsteelblue;
 			}
 
-			label
+			/*
+			NOTE:	Currently assuming screen is max size of 1920x1080 (standard resolution).
+				 	Larger screen resolutions will NOT be formatted correctly.
+			*/
+			@media (max-width: 1920px)
 			{
-				display: flex;
-				flex-direction: row;
-				justify-content: flex-end;
-				text-align: right;
-				width: 1080px;		/* change to move label & inputs left/right on page (moves input with it) */
-				line-height: 26px;
-				margin-bottom: 12px;
+				label
+				{
+					display: flex;
+					flex-direction: row;
+					justify-content: flex-end;
+					text-align: right;
+					width: 1080px;		/* change to move label & inputs left/right on page (moves input with it) */
+					line-height: 26px;
+					margin-bottom: 12px;
+				}
+
+				input
+				{
+					height: 20px;
+					flex: 0 0 100px;	/* refers to length of input boxes */
+					margin-left: 30px;
+				}
 			}
 
-			input
+			.submit_button
 			{
-				height: 20px;
-				flex: 0 0 100px;	/* refers to length of input boxes */
-				margin-left: 30px;
+				display: block;
+				height: 60px;
+				width: 150px;
+				/* border: 4px solid LightGreen; */
+				border-radius: 20px;
+				font-family: verdana;
+				font-size: 170%;
+				background-color: LightGreen;
+				color: MidnightBlue;
+
+				margin: 0;
+				position: absolute;
+				left: 80%;
+				transform: translate(-40%, -400%);
 			}
+
+			.submit_button:hover
+			{
+				background-color: DarkCyan;
+			}
+
 		</style>
 	</head>
 	
 	<body>
 		<div class='container'>
 <!--			NOTE: may need to add ids to inputs-->
-			<label>
-				Employee ID <input type="text" name="eid"/>
-			</label>
+			<form id="submission_form">
+				<label>
+					Employee ID <input type="text" name="eid"/>
+				</label>
 
-			<label>
-				First Name <input type="text" name="f_name"/>
-			</label>
+				<label>
+					First Name <input type="text" name="f_name"/>
+				</label>
 
-			<label>
-				Last Name <input type="text" name="l_name"/>
-			</label>
+				<label>
+					Last Name <input type="text" name="l_name"/>
+				</label>
 
-			<label style="width:870px; margin-top:100px; margin-bottom:0px;">
-				Short Description
-			</label>
-			<textarea name="short_description" style="margin-top:-30px; margin-left:900px; resize:none; height:40px; width:300px;"></textarea>
+				<label style="width:870px; margin-top:100px; margin-bottom:0px;">
+					Short Description
+				</label>
+				<textarea name="short_description" style="margin-top:-30px; margin-left:900px; resize:none; height:40px; width:300px;"></textarea>
 
-			<label style="width:870px; margin-top:40px;">
-				Long Description
-			</label>
-			<textarea name="long_description" style="margin-top:-40px; margin-left:900px; resize:none; height:120px; width:300px;"></textarea>
+				<label style="width:870px; margin-top:40px;">
+					Long Description
+				</label>
+				<textarea name="long_description" style="margin-top:-40px; margin-left:900px; resize:none; height:120px; width:300px;"></textarea>
 
-			<!-- Dropdown List -->
-			<label for="categories" style="width:870px; margin-top:20px; margin-bottom:-22px;"> Ticket Category:</label>
-			<select id="categories" name="categories" style="margin-top:-20px; margin-left:900px;">
-				<option value="new_equipment">New Equipment</option>
-				<option value="damaged_equipment">Damaged Equipment</option>
-			</select>
+				<!-- Dropdown List -->
+				<label for="categories" style="width:870px; margin-top:20px; margin-bottom:-22px;"> Ticket Category:</label>
+				<select id="categories" name="categories" style="margin-top:-20px; margin-left:900px;">
+					<option value="new_equipment">New Equipment</option>
+					<option value="damaged_equipment">Damaged Equipment</option>
+				</select>
 
-
+				<input type="button" name="submit_button" id="submit_button" value="Submit" class="submit_button"/>
+			</form>
 		</div>
 	</body>
 </html>
+
+<!-- Javascript -->
+<!--<script>-->
+<!--	$(document).ready(function()-->
+<!--	{-->
+
+<!--	});-->
+
+<!--	function send_insertion_request()-->
+<!--	{-->
+<!--		$.ajax({-->
+<!--			url:		"database_access.php",-->
+<!--			type:		"post",-->
+<!--			data:		$(,-->
+<!--			success:	function (data)-->
+<!--			{-->
+
+<!--			},-->
+<!--			error: function ()-->
+<!--			{-->
+<!--				console.log("Error occurred! Insertion request failed...");-->
+<!--			}-->
+<!--		});-->
+<!--	}-->
+<!--</script>-->
