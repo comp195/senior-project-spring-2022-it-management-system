@@ -105,6 +105,20 @@ class dataTable:
 
         return categorized_list
 
+    def insert_password(self, pw):
+        print("inserting password")
+
+    def encrypt_password(self, pw):
+        password = pw
+        # encode password
+        password = password.encode('utf-8')
+        # encrypt pasword
+        hashed = bcrypt.hashpw(password, bcrypt.gensalt(10))
+        return hashed
+
+    # def password_check(self, user,pw):
+
+
 
 def main():
     # department = dataTable("Department")
