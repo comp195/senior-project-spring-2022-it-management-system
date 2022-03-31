@@ -122,25 +122,27 @@ class dataTable:
             valid = True
         else:
             valid = False
-            print("Not the correct table!")
+            print("Invalid table")
 
         if valid:
             row = self.filter_rows("username",user)
-            print(row)
-            check = pw.encode('utf-8')
-            hashed = row[0][2]
-            hashed = str.encode(hashed)
-            if bcrypt.checkpw(check, hashed):
-                print("correct password")
-                return True
+            if row:
+                check = pw.encode('utf-8')
+                hashed = row[0][2]
+                hashed = str.encode(hashed)
+                if bcrypt.checkpw(check, hashed):
+                    print("Correct password")
+                    return True
+                else:
+                    print("Invalid username or password")
+                    return False
             else:
-                print("incorrect password")
-                return False
+                print("Invalid username or password")
 
 
     def filter_rows(self, col, value):
         cmd = "select * from dbmanagementsystem." + self.name + " where " + col + " = " + "'" + str(value) + "'"
-        print(cmd)
+        # print(cmd)
         if col in self.get_cols():
             self.cursor.execute(cmd)
             result = self.cursor.fetchall()
@@ -149,6 +151,7 @@ class dataTable:
             #     print(i)
         else:
             print("Column doesn't exist")
+            return None
 
 
 
@@ -196,7 +199,10 @@ def main():
 
     login = dataTable("Login_Credentials")
     login.password_check("k_leonard","juice")
+    login.password_check("k_leonard","weong")
     login.password_check("j_brabham", "sauce")
+    login.password_check("hello", "sauce")
+    login.password_check("hi","123")
 
 
 if __name__ == "__main__":
