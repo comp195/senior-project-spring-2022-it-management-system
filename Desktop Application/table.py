@@ -35,7 +35,7 @@ class dataTable:
                 host="rds-management-system-mysql.c1frdktaj1ae.us-west-1.rds.amazonaws.com",
                 user="admin", password="password", database='dbmanagementsystem')
             self.cursor = self.connection.cursor()
-            #print("Connected", self.connection)
+            # print("Connected", self.connection)
         except mysql.connector.Error as db_err:
             if db_err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
                 print("Check login credentials!")
@@ -100,7 +100,7 @@ class dataTable:
         attributes = ["device_id: ", "category: ", "current_user_id: ", "user_first_name: ", "user_last_name: ",
                       "department_id: ", "department: ", "days_since_purchase: ", "purchase_date: ", "cost: "]
         for i in range(10):
-            paired_string = attributes[i] + str(row[i])     # must ensure row values are strings
+            paired_string = attributes[i] + str(row[i])  # must ensure row values are strings
             categorized_list.append(paired_string)
 
         return categorized_list
@@ -117,7 +117,7 @@ class dataTable:
         de_hashed = hashed.decode()
         return de_hashed
 
-    def password_check(self, user,pw):
+    def password_check(self, user, pw):
         if self.name == "Login_Credentials":
             valid = True
         else:
@@ -125,7 +125,7 @@ class dataTable:
             print("Invalid table")
 
         if valid:
-            row = self.filter_rows("username",user)
+            row = self.filter_rows("username", user)
             if row:
                 check = pw.encode('utf-8')
                 hashed = row[0][2]
@@ -139,10 +139,9 @@ class dataTable:
             else:
                 print("Invalid username or password")
 
-
     def filter_rows(self, col, value):
         cmd = "select * from dbmanagementsystem." + self.name + " where " + col + " = " + "'" + str(value) + "'"
-        # print(cmd)
+        print(cmd)
         if col in self.get_cols():
             self.cursor.execute(cmd)
             result = self.cursor.fetchall()
@@ -153,7 +152,11 @@ class dataTable:
             print("Column doesn't exist")
             return None
 
-
+    def alter_row(self, column_to_change, new_value, column_to_filter, filter_value):
+        # UPDATE dbmanagementsystem.Login_Credentials SET admin = 'False' WHERE employee_id = 1
+        cmd = "UPDATE dbmanagementsystem." + self.name + " SET " + column_to_change + " = '" + new_value + "' WHERE " + column_to_filter + " = '" + filter_value + "'"
+        print(cmd)
+        self.cursor.execute(cmd)
 
 def main():
     # tick = dataTable("Tickets")
@@ -198,12 +201,13 @@ def main():
     #     print("incorrect password")
 
     login = dataTable("Login_Credentials")
-    login.password_check("k_leonard","juice")
-    login.password_check("k_leonard","weong")
-    login.password_check("j_brabham", "sauce")
-    login.password_check("hello", "sauce")
-    login.password_check("hi","123")
-
+    # login.password_check("k_leonard", "juice")
+    # login.password_check("k_leonard", "weong")
+    # login.password_check("j_brabham", "sauce")
+    # login.password_check("hi", "123")
+    print(login.filter_rows("employee_id", "1"))
+    login.alter_row("admin","False","employee_id","1")
+    login.print_rows()
 
 if __name__ == "__main__":
     main()
