@@ -35,7 +35,7 @@ class dataTable:
                 host="rds-management-system-mysql.c1frdktaj1ae.us-west-1.rds.amazonaws.com",
                 user="admin", password="password", database='dbmanagementsystem')
             self.cursor = self.connection.cursor()
-            #print("Connected", self.connection)
+            # print("Connected", self.connection)
         except mysql.connector.Error as db_err:
             if db_err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
                 print("Check login credentials!")
@@ -100,28 +100,65 @@ class dataTable:
         attributes = ["device_id: ", "category: ", "current_user_id: ", "user_first_name: ", "user_last_name: ",
                       "department_id: ", "department: ", "days_since_purchase: ", "purchase_date: ", "cost: "]
         for i in range(10):
-            paired_string = attributes[i] + str(row[i])     # must ensure row values are strings
+            paired_string = attributes[i] + str(row[i])  # must ensure row values are strings
             categorized_list.append(paired_string)
 
         return categorized_list
 
+    def insert_password(self, pw):
+        print("inserting password")
+
+    def encrypt_password(self, pw):
+        password = pw
+        # encode password
+        password = password.encode('utf-8')
+        # encrypt pasword
+        hashed = bcrypt.hashpw(password, bcrypt.gensalt(10))
+        de_hashed = hashed.decode()
+        return de_hashed
+
+    def password_check(self, user, pw):
+        if self.name == "Login_Credentials":
+            valid = True
+        else:
+            valid = False
+            print("Invalid table")
+
+        if valid:
+            row = self.filter_rows("username", user)
+            if row:
+                check = pw.encode('utf-8')
+                hashed = row[0][2]
+                hashed = str.encode(hashed)
+                if bcrypt.checkpw(check, hashed):
+                    print("Correct password")
+                    return True
+                else:
+                    print("Invalid username or password")
+                    return False
+            else:
+                print("Invalid username or password")
+
+    def filter_rows(self, col, value):
+        cmd = "select * from dbmanagementsystem." + self.name + " where " + col + " = " + "'" + str(value) + "'"
+        print(cmd)
+        if col in self.get_cols():
+            self.cursor.execute(cmd)
+            result = self.cursor.fetchall()
+            return result
+            # for i in result:
+            #     print(i)
+        else:
+            print("Column doesn't exist")
+            return None
+
+    def alter_row(self, column_to_change, new_value, column_to_filter, filter_value):
+        # UPDATE dbmanagementsystem.Login_Credentials SET admin = 'False' WHERE employee_id = 1
+        cmd = "UPDATE dbmanagementsystem." + self.name + " SET " + column_to_change + " = '" + new_value + "' WHERE " + column_to_filter + " = '" + filter_value + "'"
+        print(cmd)
+        self.cursor.execute(cmd)
 
 def main():
-    # department = dataTable("Department")
-    # department.print_rows()
-    #
-    # employee = dataTable("Employee")
-    # employee.print_rows()
-    #
-    # equipment = dataTable("Equipment")
-    # equipment.print_rows()
-    #
-    # tickets = dataTable("Tickets")
-    # tickets.print_rows()
-    #
-    # department = dataTable("Department")
-    # department.print_rows()
-
     # tick = dataTable("Tickets")
     # print(tick.get_cols())
     #
@@ -135,32 +172,42 @@ def main():
     # dev.insert_data(data3)
     # print(dev.get_rows())
 
-    # password encryption
-    password = "juice"
-    print(password)
+    # # password encryption
+    # password = "juice"
+    # print(password)
+    #
+    # # encode password
+    # password = password.encode('utf-8')
+    # print(password)
+    #
+    # # encrypt pasword
+    # hashed = bcrypt.hashpw(password, bcrypt.gensalt(10))
+    # print(hashed)
+    # de_hashed = hashed.decode()
+    # print(de_hashed)
+    #
+    # # password input
+    # check = "juice"
+    # print(check)
+    #
+    # # encode the authenticating password
+    # check = check.encode('utf-8')
+    # print(check)
+    #
+    # # check:
+    # if bcrypt.checkpw(check, hashed):
+    #     print("correct password")
+    # else:
+    #     print("incorrect password")
 
-    # encode password
-    password = password.encode('utf-8')
-    print(password)
-
-    # encrypt pasword
-    hashed = bcrypt.hashpw(password, bcrypt.gensalt(10))
-    print(hashed)
-
-    # password input
-    check = "juice"
-    print(check)
-
-    # encode the authenticating password
-    check = check.encode('utf-8')
-    print(check)
-
-    # check:
-    if bcrypt.checkpw(check, hashed):
-        print("correct password")
-    else:
-        print("incorrect password")
-
+    login = dataTable("Login_Credentials")
+    # login.password_check("k_leonard", "juice")
+    # login.password_check("k_leonard", "weong")
+    # login.password_check("j_brabham", "sauce")
+    # login.password_check("hi", "123")
+    print(login.filter_rows("employee_id", "1"))
+    login.alter_row("admin","False","employee_id","1")
+    login.print_rows()
 
 if __name__ == "__main__":
     main()
