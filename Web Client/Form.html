@@ -49,7 +49,7 @@
 			{
 				padding: 2px;
 				text-align: right;
-				margin-bottom: 19px;
+				margin-bottom: 26px;
 				margin-right: 25px;
 			}
 
@@ -57,6 +57,7 @@
 			#container form .column textarea
 			{
 				align-self: flex-start;
+				height:20px;
 				width: 200px;
 				margin-bottom: 23px;
 			}
@@ -78,11 +79,11 @@
 				font-size: 170%;
 				background-color: LightGreen;
 				color: MidnightBlue;
-
-				margin: 0;
-				position: absolute;
-				left: 80%;
-				transform: translate(-40%, -400%);
+				position: relative;				
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, 50%);				
+				
 			}
 
 			.submit_button:hover
@@ -106,13 +107,15 @@
 						<label for="eid">Employee ID</label>
 						<label for="f_name">First Name</label>
 						<label for="l_name">Last Name</label>
-						<label for="short_description" style="margin-top:14px; margin-bottom:80px;">Short Description</label>
+						<label for="equipment_id">Associated Equipment ID</label>						
+						<label for="short_description" style="margin-top:6px; margin-bottom:80px;">Short Description</label>
 						<label for="long_description">Long Description</label>
 					</div>
 					<div class="column">
 						<input type="text" name="eid" id="eid"/>
 						<input type="text" name="f_name" id="f_name"/>
 						<input type="text" name="l_name" id="l_name"/>
+						<input type="text" name="equipment_id" id="equipment_id"/>
 						<textarea name="short_description" style="width:300px; height:40px; resize:none;"></textarea>
 						<textarea name="long_description" style="width:300px; height:120px; resize:none;"></textarea>
 					</div>
@@ -120,18 +123,30 @@
 			</div>
 		</div>
 
-		<!-- Dropdown List -->
-		<label for="categories" style="text-align:center; margin-top:30px;"> Ticket Category:</label>
-		
+		<!-- Dropdown List for Ticket Category -->
+		<label for="categories" style="text-align:center; margin-top:30px;">Ticket Category:</label>
 		<div style="text-align:center;">
-		<select id="categories" name="categories">
-			<option value="new_equipment">New Equipment</option>
-			<option value="damaged_equipment">Damaged Equipment</option>
-		</select>
+			<select id="categories" name="categories">
+				<option value="new_equipment">New Equipment</option>
+				<option value="damaged_equipment">Damaged Equipment</option>
+			</select>
 		</div>
 
+		<!-- Dropdown List for Issue Scope -->
+		<label for="scope" style="text-align:center; margin-top:30px;">Issue Scope:</label>
+		<div style="text-align:center;">
+			<select id="scope" name="scope">
+				<option value="new_equipment">Individual</option>
+				<option value="damaged_equipment">Team</option>
+				<option value="damaged_equipment">Departmental</option>
+			</select>
+		</div>
+
+		<!-- Submit Button -->
 		<input type="button" name="submit_button" id="submit_button" value="Submit" class="submit_button"/>
-		<div id="response" style="margin-top:-400px; margin-left:200px;"></div>
+		
+		<!-- Response text -->
+		<div id="response" style="margin-top:-700px; margin-left:200px;"></div>
 	</body>
 </html>
 
