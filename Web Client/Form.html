@@ -104,20 +104,20 @@
 			<div class="form-container">
 				<form>
 					<div class="column">
-						<label for="eid">Employee ID</label>
-						<label for="f_name">First Name</label>
-						<label for="l_name">Last Name</label>
+						<label for="eid" id="eid_label">Employee ID</label>
+						<label for="f_name" id="f_name_label">First Name</label>
+						<label for="l_name" id="l_name_label">Last Name</label>
 						<label for="equipment_id">Associated Equipment ID</label>						
-						<label for="short_description" style="margin-top:6px; margin-bottom:80px;">Short Description</label>
-						<label for="long_description">Long Description</label>
+						<label for="short_description" id="short_description_label" style="margin-top:6px; margin-bottom:80px;">Short Description</label>
+						<label for="long_description" id="long_description_label">Long Description</label>
 					</div>
 					<div class="column">
 						<input type="text" name="eid" id="eid"/>
 						<input type="text" name="f_name" id="f_name"/>
 						<input type="text" name="l_name" id="l_name"/>
 						<input type="text" name="equipment_id" id="equipment_id"/>
-						<textarea name="short_description" style="width:300px; height:40px; resize:none;"></textarea>
-						<textarea name="long_description" style="width:300px; height:120px; resize:none;"></textarea>
+						<textarea name="short_description" id="short_description" style="width:300px; height:40px; resize:none;"></textarea>
+						<textarea name="long_description" id="long_description" style="width:300px; height:120px; resize:none;"></textarea>
 					</div>
 				</form>
 			</div>
@@ -160,10 +160,22 @@
 			var e_id = $('#eid').val();
 			var f_name = $('#f_name').val();
 			var l_name = $('#l_name').val();
-			//TODO: add the rest of the fields
-			if (e_id == "" || f_name == "" || l_name == "")
+			var short_description = $('#short_description').val();			
+			var long_description = $('#long_description').val();
+						
+			if (e_id == "" || f_name == "" || l_name == "" || short_description == "" || long_description == "")
 			{
-				$('#response').html('<span>Missing at least one field!</span>');
+				$('#response').html('<span>Check the required fields (<span class=asterisk>*</span>)!</span>');
+				var eid_label = document.getElementById('eid_label');
+				eid_label.innerHTML = "Employee ID <span class=asterisk>*</span>";
+				var f_name_label = document.getElementById('f_name_label');
+				f_name_label.innerHTML = "First Name <span class=asterisk>*</span>";
+				var l_name_label = document.getElementById('l_name_label');
+				l_name_label.innerHTML = "Last Name <span class=asterisk>*</span>";
+				var short_description_label = document.getElementById('short_description_label');
+				short_description_label.innerHTML = "Short Description <span class=asterisk>*</span>";
+				var long_description_label = document.getElementById('long_description_label');
+				long_description_label.innerHTML = "Long Description <span class=asterisk>*</span>";
 			}
 			//If all fields are filled, proceed with insertion request
 			else
