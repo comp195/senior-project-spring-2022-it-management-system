@@ -123,30 +123,36 @@
 			</div>
 		</div>
 
-		<!-- Dropdown List for Ticket Category -->
-		<label for="categories" style="text-align:center; margin-top:30px;">Ticket Category:</label>
-		<div style="text-align:center;">
-			<select id="categories" name="categories">
-				<option value="new_equipment">New Equipment</option>
-				<option value="damaged_equipment">Damaged Equipment</option>
-			</select>
-		</div>
+		<form>
+			<!-- Dropdown List for Ticket Category -->
+			<label for="categories" style="text-align:center; margin-top:30px;">Ticket Category:</label>
+			<div style="text-align:center;">
+				<select id="categories" name="categories">
+					<option value="New equipment request">New Equipment Request</option>
+					<option value="Damaged equipment">Damaged Equipment</option>
+					<option value="Equipment replacement">Equipment Replacement</option>
+					<option value="Equipment troubleshooting">Equipment Troubleshooting</option>
+					<option value="Equipment setup">Equipment Setup</option>
+					<option value="Software issue">Software Issue</option>
+				</select>
+			</div>
 
-		<!-- Dropdown List for Issue Scope -->
-		<label for="scope" style="text-align:center; margin-top:30px;">Issue Scope:</label>
-		<div style="text-align:center;">
-			<select id="scope" name="scope">
-				<option value="new_equipment">Individual</option>
-				<option value="damaged_equipment">Team</option>
-				<option value="damaged_equipment">Departmental</option>
-			</select>
-		</div>
+			<!-- Dropdown List for Issue Scope -->
+			<label for="scope" style="text-align:center; margin-top:30px;">Issue Scope:</label>
+			<div style="text-align:center;">
+				<select id="scope" name="scope">
+					<option value="Single User">Single User</option>
+					<option value="Team">Team</option>
+					<option value="Departmental">Departmental</option>
+				</select>
+			</div>
 
-		<!-- Submit Button -->
-		<input type="button" name="submit_button" id="submit_button" value="Submit" class="submit_button"/>
-		
-		<!-- Response text -->
-		<div id="response" style="margin-top:-700px; margin-left:200px;"></div>
+			<!-- Submit Button -->
+			<input type="button" name="submit_button" id="submit_button" value="Submit" class="submit_button"/>
+			
+			<!-- Response text -->
+			<div id="response" style="margin-top:-700px; margin-left:200px;"></div>
+		</form>
 	</body>
 </html>
 
@@ -179,12 +185,38 @@
 			}
 			//If all fields are filled, proceed with insertion request
 			else
-			{
+			{				
+				//send_retrieval_request();
 				send_insertion_request();
 			}
 		});
 	});
 
+	function send_retrieval_request()
+	{
+		$.ajax({
+			url:		"database_access.php",
+			type:		"POST",
+			data:		$('form').serialize(),
+			beforeSend: function()
+			{
+				$('#response').html('<span>Retrieving ticket data...</span>');
+			},
+			success:	function (data)
+			{
+				console.log("this is data");
+				//console.log(data);
+				$('form').trigger("reset");
+				$('#response').fadeIn().html(data);
+			},
+			error: function ()
+			{
+				console.log("Error occurred! Insertion request failed...");
+			}
+		});
+	}
+	
+	//Function used to initiate insertion of new ticket row to 'Tickets' table
 	function send_insertion_request()
 	{
 		$.ajax({
@@ -197,10 +229,10 @@
 			},
 			success:	function (data)
 			{
-				console.log("this is data");
-				//console.log(data);
+				console.log("Success");
+				console.log(data);
 				$('form').trigger("reset");
-				$('#response').fadeIn().html(data);
+				<!-- $('#response').fadeIn().html(data); -->
 			},
 			error: function ()
 			{
