@@ -30,8 +30,7 @@ gainsboro = "#E0DDD9"
 rajah = "#F5B15E"
 stormcloud = "#4D646A"
 
-username_verify = ""
-password_verify = ""
+global username_verify, password_verify
 
 
 class SeeDismissPanel(ttk.Frame):
@@ -95,8 +94,11 @@ class GUIController(tk.Tk):
 
     def login_verification(self):
         # TODO: Implement login credential verification checks
-        verified = True
-
+        global username_verify, password_verify
+        username = str(username_verify.get())
+        password = str(password_verify.get())
+        login = table.dataTable("Login_Credentials")
+        verified = login.password_check(username, password)
         if verified:
             self.show_frame("MainPage")
 
@@ -122,12 +124,14 @@ class LoginPage(tk.Frame):
 class PageHeader(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, quick_silver, gainsboro, stormcloud
+        global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, quick_silver, gainsboro, stormcloud, username_verify, password_verify
         # Initializing GUI Controller
         self.controller = controller
         self.button_names = ["Equipment", "Employees", "Tickets", "Help"]
         self.buttons = []
         self.button_dict = {}   # Maps button name to button index
+        username_verify = StringVar()
+        password_verify = StringVar()
         for i in range(len(self.button_names)):
             curr_button_name = self.button_names[i]
             # Temp conditions; change table names possibly

@@ -118,12 +118,7 @@ class dataTable:
         return de_hashed
 
     def password_check(self, user, pw):
-        if self.name == "Login_Credentials":
-            valid = True
-        else:
-            valid = False
-            print("Invalid table")
-
+        valid = (self.name == "Login_Credentials")
         if valid:
             row = self.filter_rows("username", user)
             if row:
@@ -131,13 +126,8 @@ class dataTable:
                 hashed = row[0][2]
                 hashed = str.encode(hashed)
                 if bcrypt.checkpw(check, hashed):
-                    print("Correct password")
                     return True
-                else:
-                    print("Invalid username or password")
-                    return False
-            else:
-                print("Invalid username or password")
+        return False
 
     def filter_rows(self, col, value):
         cmd = "select * from dbmanagementsystem." + self.name + " where " + col + " = " + "'" + str(value) + "'"
