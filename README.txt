@@ -20,8 +20,6 @@ Components:	 This system is separated into two components: The Desktop Applicati
 		
 		 The Desktop Application includes:
 			- A Login Section that limits access to users with sufficient permissions
-			- A Main Menu that provides general information about the software and gives users
-			  the ability to navigate between different tabs
 			- An Equipment Screen that gives users detailed information about company equipment
 			- An Employee Screen that gives users detailed information about employees
 			- A Ticket Screen that gives users detailed information about tickets submitted by
@@ -29,9 +27,6 @@ Components:	 This system is separated into two components: The Desktop Applicati
 
 		 The Web Application Includes:
 			- A Login section that limits access to users that are employees
-			- A Main Menu that provides general information about the web application and gives
-			  users the ability to navigate between different tabs
 			- A Ticket Screen that gives employees the ability to submit tickets about issues
-			- An Equipment tab that gives employees the ability to check out equipment
 
 Special Notes:   N/A
