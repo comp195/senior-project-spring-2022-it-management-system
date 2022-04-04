@@ -101,6 +101,7 @@ class GUIController(tk.Tk):
         verified = login.password_check(username, password)
         if verified:
             self.show_frame("MainPage")
+        return verified
 
 
 class LoginPage(tk.Frame):
@@ -114,11 +115,18 @@ class LoginPage(tk.Frame):
         self.user_label = tk.Label(self, text="Username:",bg=stormcloud).pack()
         self.username_login_entry = tk.Entry(self, textvariable=username_verify).pack()
         self.space_label = tk.Label(self, text="", bg=stormcloud).pack()
-        self.password_label = tk.Label(self, text="Password:",bg=stormcloud).pack()
+        self.password_label = tk.Label(self, text="Password:",bg=stormcloud)
+        self.password_label.pack()
         self.password_login_entry = tk.Entry(self, textvariable=password_verify, show='*')
         self.password_login_entry.pack()
-        self.space_label_2 = Label(self, text="", bg=stormcloud).pack()
-        self.login_button = Button(self, text="Login", width=10, height=1, command=self.controller.login_verification).pack()
+        self.space_label_2 = Label(self, text=" ", fg="red", bg=stormcloud)
+        self.space_label_2.pack()
+        self.login_button = Button(self, text="Login", width=10, height=1, command=self.login).pack()
+
+    def login(self):
+        texts = [" ", "Invalid Credentials"]
+        logged_in = self.controller.login_verification()
+        self.space_label_2['text'] = texts[int(not logged_in)]
 
 
 class PageHeader(tk.Frame):
@@ -181,6 +189,9 @@ class MainPage(tk.Frame):
         self.search_table = SearchFrame(self, controller, self.frames)
         self.search_table.pack(side=tk.LEFT)
 
+        self.tool_bar = ToolBarFrame(self, controller)
+        self.tool_bar.pack(side=BOTTOM)
+
     def update_on_button_press(self, screen_name):
         self.equipment_table = table.dataTable(screen_name)
         # TODO: Change Table and Details to correspond with screen_name
@@ -201,13 +212,30 @@ class MainPage(tk.Frame):
 
         # self.search_table.search_grid._replace_contents(columns, data)
 
+    def add_row(self):
+        return
+
+
+class ToolBarFrame(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        # Initializing GUI Controller
+        self.controller = controller
+        self.space_label_1 = tk.Label(self, width=100).grid(row=0, column=0)
+        self.add_button = tk.Button(self, text="Search", command=lambda: self.parent.add_row()).grid(row=0, column=1)
+
+
+
+
 
 class SearchBarFrame(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         # Initializing GUI Controller
         self.controller = controller
-        self.search_bar = tk.Entry(self, highlightbackground="#363030", highlightthickness=1,
+        self.search_var = StringVar()
+        self.search_text = ""
+        self.search_bar = tk.Entry(self, highlightbackground="#363030", textvariable=self.search_var, highlightthickness=1,
                               width=258)
         self.search_bar.grid(row=0, column=0)
 
