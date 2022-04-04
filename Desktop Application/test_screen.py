@@ -225,7 +225,7 @@ class MainPage(tk.Frame):
         self.data_tuples_list = self.MCList_values_struct.get_tuple_list(self.column_indices_to_retrieve)
         self.details_struct = DetailFrameValuesStruct(self.data_frame.frames["DetailFrame"], screen_name)
         self.column_titles = self.details_struct.get_specific_columns(self.column_indices_to_retrieve)
-        self.search_table.search_grid._replace_contents(self.column_titles, self.data_tuples_list)
+        self.data_frame.search_table.search_grid._replace_contents(self.column_titles, self.data_tuples_list)
 
         # self.search_table.search_grid._replace_contents(columns, data)
 
@@ -240,9 +240,6 @@ class ToolBarFrame(tk.Frame):
         self.controller = controller
         self.space_label_1 = tk.Label(self, width=100).grid(row=0, column=0)
         self.add_button = tk.Button(self, text="BUTTON", command=lambda: self.parent.add_row()).grid(row=0, column=1)
-
-
-
 
 
 class SearchBarFrame(tk.Frame):
