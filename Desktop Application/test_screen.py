@@ -82,7 +82,7 @@ class GUIController(tk.Tk):
             frame.grid(row=0, column=0)
 
         # Frame visible at the start of the application
-        self.show_frame("LoginPage")
+        self.show_frame("MainPage")
 
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
@@ -162,6 +162,21 @@ class PageHeader(tk.Frame):
             self.controller.frames["MainPage"].update_on_button_press(identifier)
 
 
+class DataFrame(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        # Initializing GUI Controller
+        self.controller = controller
+        self.detail_frame = DetailFrame(self, controller)
+        self.detail_frame.grid(row=0, column=1)
+
+        self.frames = {}
+        self.frames["DetailFrame"] = self.detail_frame
+
+        self.search_table = SearchFrame(self, controller, self.frames)
+        self.search_table.grid(row=0, column=0)
+
+
 class MainPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -178,35 +193,37 @@ class MainPage(tk.Frame):
 
         self.search = SearchBarFrame(self, controller)
         self.search.pack(side=tk.TOP)
-        self.detail_frame = DetailFrame(self, controller)
-        self.detail_frame.pack(side=tk.RIGHT)
+        # self.detail_frame = DetailFrame(self, controller)
+        # self.detail_frame.pack(side=tk.RIGHT)
 
         # Create frames dictionary so the SearchFrame/MCList can access the DetailFrame's functions
         # (needed to update the details based on a click within the MCList)
-        self.frames = {}
-        self.frames["DetailFrame"] = self.detail_frame
 
-        self.search_table = SearchFrame(self, controller, self.frames)
-        self.search_table.pack(side=tk.LEFT)
+        self.data_frame = DataFrame(self, controller)
+        self.data_frame.pack()
+
+        # self.frames = {}
+        # self.frames["DetailFrame"] = self.detail_frame
+        #
+        # self.search_table = SearchFrame(self, controller, self.frames)
+        # self.search_table.pack(side=tk.LEFT)
 
         self.tool_bar = ToolBarFrame(self, controller)
-        self.tool_bar.pack(side=BOTTOM)
+        self.tool_bar.pack(side=tk.BOTTOM)
 
     def update_on_button_press(self, screen_name):
         self.equipment_table = table.dataTable(screen_name)
-        # TODO: Change Table and Details to correspond with screen_name
-#TEST
         # Update the global current_data_rows value based on the new table
         global current_data_rows
         current_data_rows = self.equipment_table.get_rows()
 
         # Update the labels and entry boxes that appear based on the new table
-        self.detail_frame.refresh_detail_components(screen_name)
+        self.data_frame.detail_frame.refresh_detail_components(screen_name)
 
         self.column_indices_to_retrieve = [ID_INDEX, 1, 2, 3, 4]
         self.MCList_values_struct = MCListValuesStruct(screen_name)
         self.data_tuples_list = self.MCList_values_struct.get_tuple_list(self.column_indices_to_retrieve)
-        self.details_struct = DetailFrameValuesStruct(self.frames["DetailFrame"], screen_name)
+        self.details_struct = DetailFrameValuesStruct(self.data_frame.frames["DetailFrame"], screen_name)
         self.column_titles = self.details_struct.get_specific_columns(self.column_indices_to_retrieve)
         self.search_table.search_grid._replace_contents(self.column_titles, self.data_tuples_list)
 
@@ -222,7 +239,7 @@ class ToolBarFrame(tk.Frame):
         # Initializing GUI Controller
         self.controller = controller
         self.space_label_1 = tk.Label(self, width=100).grid(row=0, column=0)
-        self.add_button = tk.Button(self, text="Search", command=lambda: self.parent.add_row()).grid(row=0, column=1)
+        self.add_button = tk.Button(self, text="BUTTON", command=lambda: self.parent.add_row()).grid(row=0, column=1)
 
 
 
