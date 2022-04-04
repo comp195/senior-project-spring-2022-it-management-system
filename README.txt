@@ -1,7 +1,7 @@
 Senior Project - IT Management System
 
 
-Last Update:     04/3/2022
+Last Update:     04/03/2022
 
 Contributors:    Daniel Adler - d_adler@u.pacific.edu
 		 Vincent Tran - v_tran37@u.pacific.edu
