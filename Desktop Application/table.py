@@ -69,6 +69,7 @@ class dataTable:
         baseCMD = "INSERT INTO dbmanagementsystem." + self.name + " ("
         # build cmd
         col = self.get_cols()
+        col.pop(0)
         j = 0
         for i in col:
             if j == len(col) - 1:
@@ -148,6 +149,7 @@ class dataTable:
         print(cmd)
         self.cursor.execute(cmd)
 
+
 def main():
     # tick = dataTable("Tickets")
     # print(tick.get_cols())
@@ -196,8 +198,12 @@ def main():
     # login.password_check("j_brabham", "sauce")
     # login.password_check("hi", "123")
     print(login.filter_rows("employee_id", "1"))
-    login.alter_row("admin","False","employee_id","1")
+    login.alter_row("admin", "False", "employee_id", "1")
     login.print_rows()
+    data = ['test', 'test', 'False', 'False']
+    # login.insert_data(data)
+    login.print_rows()
+
 
 if __name__ == "__main__":
     main()
