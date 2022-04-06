@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Ticketing Login</title>
+		<h1>Welcome to __ Ticketing System</h1>
+		<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+		<style>
+			h1
+			{
+				font-family: "helvetica, sans-serif";
+				font-size: 300%;
+				color: DarkCyan;
+				white-space: nowrap;
+				text-align: center;
+			}
+			
+			body
+			{
+				font-family: verdana;
+				background-color: Bisque;
+			}						
+			
+			#container
+			{
+				text-align: center;    
+			}
+
+			#container .form-container
+			{
+				display: inline-block;
+			}
+
+			#container form
+			{
+				background: #eee;
+				background-color: LightBlue;
+				border: 4px solid DarkSlateGray;
+				display: flex;
+				flex-direction: row;
+				flex-wrap: nowrap;
+				padding: 20px;
+			}
+
+			#container form .column
+			{
+				display: flex;
+				flex-direction: column;
+				flex-wrap: nowrap;
+			}
+
+			#container form .column label
+			{
+				padding: 2px;
+				text-align: right;
+				margin-bottom: 26px;
+				margin-left: 65px;
+			}
+
+			#container form .column input, 
+			#container form .column textarea
+			{
+				align-self: flex-start;
+				height:20px;
+				width: 200px;
+				margin-bottom: 23px;
+				margin-left: 23px;
+			}
+			
+			.login_button
+			{
+				display: block;
+				height: 42px;
+				width: 130px;
+				/* border: 4px solid LightGreen; */
+				border-radius: 20px;
+				font-family: verdana;
+				font-size: 170%;
+				background-color: Turquoise;
+				color: MidnightBlue;
+				position: absolute;				
+				top: 31%;
+				left: 50%;
+				transform: translate(-50%, 50%);							
+			}
+			
+			.login_button:hover
+			{
+				background-color: DarkCyan;
+			}
+			
+		</style>
+	</head>
+	
+	<body>
+		<div id="container">
+			<div class="form-container">
+				<p>Enter your login credentials to proceed to the submission form.</p>
+				<form id="login_form" action="/login_verification.php" method="POST">
+					<div class="column">
+						<label for="username" id="username_label">Username</label>
+						<label for="password" id="password_label">Password</label>						
+					</div>    
+					<div class="column">
+						<input type="text" id="username" name="username"/>					
+						<input type="password" id="password" name="password"/>
+					</div>							
+					<!-- Log In Button -->
+					<input type="submit" name="login_button" id="login_button" value="Log In" class="login_button"/>
+				</form>
+			</div>
+		</div>					
+	</body>
+</html>
