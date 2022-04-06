@@ -53,7 +53,7 @@
 				padding: 2px;
 				text-align: right;
 				margin-bottom: 26px;
-				margin-left: 70px;
+				margin-left: 65px;
 			}
 
 			#container form .column input, 
@@ -66,24 +66,24 @@
 				margin-left: 23px;
 			}
 			
-			.submit_button
+			.login_button
 			{
 				display: block;
-				height: 60px;
-				width: 150px;
+				height: 42px;
+				width: 130px;
 				/* border: 4px solid LightGreen; */
 				border-radius: 20px;
 				font-family: verdana;
 				font-size: 170%;
 				background-color: Turquoise;
 				color: MidnightBlue;
-				position: relative;				
-				top: 50%;
+				position: absolute;				
+				top: 31%;
 				left: 50%;
 				transform: translate(-50%, 50%);							
 			}
 			
-			.submit_button:hover
+			.login_button:hover
 			{
 				background-color: DarkCyan;
 			}
@@ -95,7 +95,7 @@
 		<div id="container">
 			<div class="form-container">
 				<p>Enter your login credentials to proceed to the submission form.</p>
-				<form id="login_form">
+				<form id="login_form" action="/login_verification.php" method="POST">
 					<div class="column">
 						<label for="username" id="username_label">Username</label>
 						<label for="password" id="password_label">Password</label>						
@@ -104,11 +104,10 @@
 						<input type="text" id="username" name="username"/>					
 						<input type="password" id="password" name="password"/>
 					</div>							
+					<!-- Log In Button -->
+					<input type="submit" name="login_button" id="login_button" value="Log In" class="login_button"/>
 				</form>
 			</div>
-		</div>
-		
-		<!-- Submit Button -->
-		<input type="button" name="submit_button" id="submit_button" value="Submit" class="submit_button"/>
+		</div>					
 	</body>
 </html>
