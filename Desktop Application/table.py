@@ -145,6 +145,7 @@ class dataTable:
 
     def alter_row(self, column_to_change, new_value, column_to_filter, filter_value):
         # UPDATE dbmanagementsystem.Login_Credentials SET admin = 'False' WHERE employee_id = 1
+        # UPDATE `dbmanagementsystem`.`Login_Credentials` SET `admin` = 'False', `active` = 'False', `permission_level` = '2' WHERE (`employee_id` = '2');
         cmd = "UPDATE dbmanagementsystem." + self.name + " SET " + column_to_change + " = '" + new_value + "' WHERE " + column_to_filter + " = '" + filter_value + "'"
         print(cmd)
         self.cursor.execute(cmd)
@@ -161,6 +162,11 @@ class dataTable:
         self.cursor.execute(cmd)
         result = self.cursor.fetchall()
         return result
+
+    def cancel_row(self, column, value):
+        cmd = "DELETE from dbmanagementsystem." + self.name + " where " + column + " = '" + value + "'"
+        print(cmd)
+        self.cursor.execute(cmd)
 
 
 def main():
@@ -213,8 +219,11 @@ def main():
     # print(login.filter_rows("employee_id", "1"))
     # login.alter_row("admin", "False", "employee_id", "1")
     # login.print_rows()
-    # data = ['test', 'test', 'False', 'False']
+    # data = ['test', 'test', 'False', 'False',0]
     # login.insert_data(data)
+    # login.print_rows()
+    # login.cancel_row("username","test")
+    # login.print_rows()
     result = login.sort_table_ascending("username")
     print(result)
     result = login.sort_table_descending("employee_id")

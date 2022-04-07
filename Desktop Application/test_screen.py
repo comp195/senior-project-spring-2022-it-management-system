@@ -190,10 +190,26 @@ class DataFrame(tk.Frame):
 
     def add_row(self):
         # TODO: Implement Logic to add a row
+
+        # need a variable for table name like how the method update_on_button_press has an argument like screen_name
+        # create a datatable object
+        # self.current_table = table.dataTable("name of the table")
+        # should call method to check if all the fields are inputted and if so then it should put all the values within the fields into a list
+        # self.current_table.insert_data(a list of all the values the user has inputted into the fields)
+        # if this command runs without problem then it is good then
+        # you will probably need to run
+        # self.current_table.get_rows()
+        # to get a new list of the rows and then pass the list into whatever function to redisplay the rows
         return
 
     def cancel_row(self):
         # TODO: Implement Logic to cancel current row
+        # create a datatable object
+        # self.current_table = table.dataTable("name of the table")
+        # you should have a like a list of the ids of the newly added rows and then call a method to check if the row the user is highlighting is a newly added row that should return a bool
+        # if the above method is true then run the command at the bottom
+        # self.current_table.cancel_row(column,value) column can be like equipment_id and value is the id number u wawnt to delete
+        # if that command works then its good
         return
 
     def update_database(self):
