@@ -49,6 +49,7 @@ class GUIController(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         # Basic Configuration Values for Root Tk()
+        self.active_frame = "LoginPage"
         self.active_table = "Equipment"
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
         self.window_title = "Application"
@@ -82,10 +83,17 @@ class GUIController(tk.Tk):
             frame.grid(row=0, column=0)
 
         # Frame visible at the start of the application
-        self.show_frame("MainPage")
+        self.show_frame(self.active_frame)
+
+    def key_pressed(self, event):
+        print(event.char)
+        if event.keysym == 'Return' and self.active_frame == "LoginPage":
+            self.frames["LoginPage"].login()
+
 
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
+        self.active_frame = page_name
         for f in self.frames.values():
             f.grid_forget()
 
@@ -106,13 +114,14 @@ class GUIController(tk.Tk):
 
 class LoginPage(tk.Frame):
     def __init__(self, parent, controller):
+        global username_verify, password_verify, stormcloud
         tk.Frame.__init__(self, parent)
         self.parent = parent
         self.controller = controller
-        self.config(width=self.controller.winfo_reqwidth(), height=self.controller.winfo_reqheight())
-        global username_verify, password_verify, stormcloud
+        self.config(width=self.controller.winfo_reqwidth(), height=self.controller.winfo_reqheight(), bg=stormcloud)
 
-        self.user_label = tk.Label(self, text="Username:",bg=stormcloud).pack()
+
+        self.user_label = tk.Label(self, text="Username:", bg=stormcloud).pack()
         self.username_login_entry = tk.Entry(self, textvariable=username_verify).pack()
         self.space_label = tk.Label(self, text="", bg=stormcloud).pack()
         self.password_label = tk.Label(self, text="Password:",bg=stormcloud)
@@ -168,13 +177,44 @@ class DataFrame(tk.Frame):
         # Initializing GUI Controller
         self.controller = controller
         self.detail_frame = DetailFrame(self, controller)
-        self.detail_frame.grid(row=0, column=1)
+        self.detail_frame.grid(row=1, column=1)
 
         self.frames = {}
         self.frames["DetailFrame"] = self.detail_frame
 
         self.search_table = SearchFrame(self, controller, self.frames)
-        self.search_table.grid(row=0, column=0)
+        self.search_table.grid(row=1, column=0)
+
+        self.tool_bar = ToolBarFrame(self, controller)
+        self.tool_bar.grid(row=0, column=1, sticky="w")
+
+    def add_row(self):
+        # TODO: Implement Logic to add a row
+
+        # need a variable for table name like how the method update_on_button_press has an argument like screen_name
+        # create a datatable object
+        # self.current_table = table.dataTable("name of the table")
+        # should call method to check if all the fields are inputted and if so then it should put all the values within the fields into a list
+        # self.current_table.insert_data(a list of all the values the user has inputted into the fields)
+        # if this command runs without problem then it is good then
+        # you will probably need to run
+        # self.current_table.get_rows()
+        # to get a new list of the rows and then pass the list into whatever function to redisplay the rows
+        return
+
+    def cancel_row(self):
+        # TODO: Implement Logic to cancel current row
+        # create a datatable object
+        # self.current_table = table.dataTable("name of the table")
+        # you should have a like a list of the ids of the newly added rows and then call a method to check if the row the user is highlighting is a newly added row that should return a bool
+        # if the above method is true then run the command at the bottom
+        # self.current_table.cancel_row(column,value) column can be like equipment_id and value is the id number u wawnt to delete
+        # if that command works then its good
+        return
+
+    def update_database(self):
+        # TODO: Implement Logic to update database
+        return
 
 
 class MainPage(tk.Frame):
@@ -182,6 +222,7 @@ class MainPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         # Initializing GUI Controller
         self.controller = controller
+        self.config(bg=stormcloud)
         # Create instance of database connection and use the data as argument
         self.equipment_table = table.dataTable("Equipment")
 
@@ -192,24 +233,25 @@ class MainPage(tk.Frame):
         current_data_rows = self.equipment_table.get_rows()
 
         self.search = SearchBarFrame(self, controller)
-        self.search.pack(side=tk.TOP)
+        self.search.pack(side=tk.TOP, anchor="w")
+
+        self.data_frame = DataFrame(self, controller)
+        self.data_frame.pack(side=tk.BOTTOM)
+
+
         # self.detail_frame = DetailFrame(self, controller)
         # self.detail_frame.pack(side=tk.RIGHT)
 
         # Create frames dictionary so the SearchFrame/MCList can access the DetailFrame's functions
         # (needed to update the details based on a click within the MCList)
 
-        self.data_frame = DataFrame(self, controller)
-        self.data_frame.pack()
+
 
         # self.frames = {}
         # self.frames["DetailFrame"] = self.detail_frame
         #
         # self.search_table = SearchFrame(self, controller, self.frames)
         # self.search_table.pack(side=tk.LEFT)
-
-        self.tool_bar = ToolBarFrame(self, controller)
-        self.tool_bar.pack(side=tk.BOTTOM)
 
     def update_on_button_press(self, screen_name):
         self.equipment_table = table.dataTable(screen_name)
@@ -225,39 +267,44 @@ class MainPage(tk.Frame):
         self.data_tuples_list = self.MCList_values_struct.get_tuple_list(self.column_indices_to_retrieve)
         self.details_struct = DetailFrameValuesStruct(self.data_frame.frames["DetailFrame"], screen_name)
         self.column_titles = self.details_struct.get_specific_columns(self.column_indices_to_retrieve)
-        self.data_frame.search_table.search_grid._replace_contents(self.column_titles, self.data_tuples_list)
+        self.data_frame.search_table.search_grid.replace_contents(self.column_titles, self.data_tuples_list)
 
         # self.search_table.search_grid._replace_contents(columns, data)
-
-    def add_row(self):
-        return
 
 
 class ToolBarFrame(tk.Frame):
     def __init__(self, parent, controller):
+        global stormcloud
         tk.Frame.__init__(self, parent)
         # Initializing GUI Controller
         self.controller = controller
-        self.space_label_1 = tk.Label(self, width=100).grid(row=0, column=0)
-        self.add_button = tk.Button(self, text="BUTTON", command=lambda: self.parent.add_row()).grid(row=0, column=1)
+        self.parent = parent
+
+        self.add_button = tk.Button(self, text="Add Row", command=lambda: self.parent.add_row()).grid(row=0, column=0)
+        self.space_label_1 = tk.Label(self, width=1).grid(row=0, column=1)
+        self.update_button = tk.Button(self, text="Update", command=lambda: self.parent.update_database()).grid(row=0, column=2)
+        self.space_label_2 = tk.Label(self, width=1).grid(row=0, column=3)
+        self.cancel_button = tk.Button(self, text="Cancel", command=lambda: self.parent.cancel_row()).grid(row=0, column=4)
 
 
 class SearchBarFrame(tk.Frame):
     def __init__(self, parent, controller):
+        global stormcloud
         tk.Frame.__init__(self, parent)
+        self.config(bg=stormcloud)
         # Initializing GUI Controller
         self.controller = controller
+
         self.search_var = StringVar()
         self.search_text = ""
         self.search_bar = tk.Entry(self, highlightbackground="#363030", textvariable=self.search_var, highlightthickness=1,
                               width=258)
         self.search_bar.grid(row=0, column=0)
 
-        self.search_space = tk.Label(self, width=10)
+        self.search_space = tk.Label(self, width=1, bg=stormcloud)
         self.search_space.grid(row=0, column=1)
 
-        self.search_button = tk.Button(self, text="Search",
-                                      command=lambda: self.search())
+        self.search_button = tk.Button(self, text="Search", command=lambda: self.search(), width=10)
         self.search_button.grid(row=0, column=2)
 
     def search(self):
@@ -268,6 +315,7 @@ class DetailFrame(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
+        self.config(bg=stormcloud)
         # Initializing GUI Controller
         self.controller = controller
         self.detail_frame = tk.Frame(self, bg="white", highlightbackground="#363030", highlightthickness=2, width=1300, height=670)
@@ -441,6 +489,7 @@ class MCListValuesStruct:
 class SearchFrame(tk.Frame):
     def __init__(self, parent, controller, frames):
         tk.Frame.__init__(self, parent)
+        self.config(width=10)
         global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
         # Initializing GUI Controller
         self.controller = controller
@@ -456,7 +505,7 @@ class SearchFrame(tk.Frame):
         self.details_struct = DetailFrameValuesStruct(self.frames["DetailFrame"], "Equipment")
         # self.column_indices_to_retrieve = [ID_INDEX, CATEGORY_INDEX, DEPARTMENT_INDEX]
         self.column_titles = self.details_struct.get_specific_columns(self.column_indices_to_retrieve)
-        self.search_grid._replace_contents(self.column_titles, self.data_tuples_list)
+        self.search_grid.replace_contents(self.column_titles, self.data_tuples_list)
 
 
 class MCListDemo(ttk.Frame):
@@ -466,13 +515,14 @@ class MCListDemo(ttk.Frame):
     # def __init__(self, isapp=True, name='mclistdemo'):
 
     def __init__(self, parent, controller, frames, isapp=True, name='mclistdemo', columns=[], grid=[]):
-        # ttk.Frame.__init__(self, name=name)
         self.parent = parent
         self.controller = controller
         self.frames = frames
         self.name = name
         ttk.Frame.__init__(self, self.parent, name=self.name)
-        self.pack(expand=Y, fill=BOTH)
+        self.config(width=10)
+        self.pack(expand=Y )
+        """, fill=BOTH"""
         self.isapp = isapp
         # test
         self.tree = None
@@ -488,7 +538,7 @@ class MCListDemo(ttk.Frame):
     def _set_data(self, data):
         self.data = data
 
-    def _replace_contents(self, columns, grid):
+    def replace_contents(self, columns, grid):
         self.destroy()
         ttk.Frame.__init__(self, self.parent, name=self.name)
         self.pack(expand=Y, fill=BOTH)
@@ -528,34 +578,7 @@ class MCListDemo(ttk.Frame):
 
     def _load_data(self, grid):
         self.data = grid
-        # self._delete_tree()
-        # self.data = [
-        #     ("1", "Monitor", "Support"),
-        #     ("2", "Laptop", "Support"),
-        #     ("3", "Monitor", "Support"),
-        #     ("4", "Laptop", "Support"),
-        #     ("5", "Monitor", "Support"),
-        #     ("6", "Laptop", "Support"),
-        #     ("7", "Monitor", "Support"),
-        #     ("8", "Laptop", "Support"),
-        #     ("9", "Monitor", "Support"),
-        #     ("10", "Laptop", "Support"),
-        #     ("11", "Monitor", "Support"),
-        #     ("12", "Laptop", "Support"),
-        #     ("13", "Monitor", "Support"),
-        #     ("14", "Laptop", "Support"),
-        #     ("15", "Monitor", "Support")]
-        #
-        # curr_id = 16
-        # for i in range(20):
-        #     temp_tuple = (str(curr_id), "Laptop", "Support")
-        #     curr_id = curr_id + 1
-        #     self.data.append(temp_tuple)
-        #     temp_tuple = (str(curr_id), "Monitor", "Human Resources")
-        #     curr_id = curr_id + 1
-        #     self.data.append(temp_tuple)
-
-        if self.data != []:
+        if self.data:
             # configure column headings
             for c in self.dataCols:
                 self.tree.heading(c, text=c.title(),
@@ -601,9 +624,7 @@ class MCListDemo(ttk.Frame):
         self.frames["DetailFrame"].update_entries(list_of_values[ID_INDEX])
 
 
-
-
-
 if __name__ == "__main__":
     app = GUIController()
+    app.bind("<Key>", app.key_pressed)
     app.mainloop()

@@ -145,7 +145,26 @@ class dataTable:
 
     def alter_row(self, column_to_change, new_value, column_to_filter, filter_value):
         # UPDATE dbmanagementsystem.Login_Credentials SET admin = 'False' WHERE employee_id = 1
+        # UPDATE `dbmanagementsystem`.`Login_Credentials` SET `admin` = 'False', `active` = 'False', `permission_level` = '2' WHERE (`employee_id` = '2');
         cmd = "UPDATE dbmanagementsystem." + self.name + " SET " + column_to_change + " = '" + new_value + "' WHERE " + column_to_filter + " = '" + filter_value + "'"
+        print(cmd)
+        self.cursor.execute(cmd)
+
+    def sort_table_ascending(self, column):
+        cmd = "SELECT * from dbmanagementsystem." + self.name + " ORDER BY " + column + " ASC"
+        self.cursor.execute(cmd)
+        result = self.cursor.fetchall()
+        return result
+
+
+    def sort_table_descending(self, column):
+        cmd = "SELECT * from dbmanagementsystem." + self.name + " ORDER BY " + column + " DESC"
+        self.cursor.execute(cmd)
+        result = self.cursor.fetchall()
+        return result
+
+    def cancel_row(self, column, value):
+        cmd = "DELETE from dbmanagementsystem." + self.name + " where " + column + " = '" + value + "'"
         print(cmd)
         self.cursor.execute(cmd)
 
@@ -197,12 +216,18 @@ def main():
     # login.password_check("k_leonard", "weong")
     # login.password_check("j_brabham", "sauce")
     # login.password_check("hi", "123")
-    print(login.filter_rows("employee_id", "1"))
-    login.alter_row("admin", "False", "employee_id", "1")
-    login.print_rows()
-    data = ['test', 'test', 'False', 'False']
+    # print(login.filter_rows("employee_id", "1"))
+    # login.alter_row("admin", "False", "employee_id", "1")
+    # login.print_rows()
+    # data = ['test', 'test', 'False', 'False',0]
     # login.insert_data(data)
-    login.print_rows()
+    # login.print_rows()
+    # login.cancel_row("username","test")
+    # login.print_rows()
+    result = login.sort_table_ascending("username")
+    print(result)
+    result = login.sort_table_descending("employee_id")
+    print(result)
 
 
 if __name__ == "__main__":
