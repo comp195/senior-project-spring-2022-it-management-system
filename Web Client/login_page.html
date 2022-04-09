@@ -89,6 +89,11 @@
 				background-color: DarkCyan;
 			}
 			
+			p
+			{
+				font-size: 20px;
+			}
+		
 			label
 			{
 				font-size: 20px;
@@ -106,7 +111,9 @@
 						<label for="password" id="password_label">Password</label>						
 					</div>    
 					<div class="column">
-						<input type="text" id="username" name="username" class="form-control" style="margin-top:10px;" required/>					
+						<input type="text" id="username" name="username" class="form-control <?php echo (!empty($username_error)) ? 'is-invalid' : '';?>" style="margin-top:10px;" required/>					
+						<span class="invalid-feedback"><?php echo $username_err; ?></span>
+						
 						<input type="password" id="password" name="password" class="form-control" style="margin-top:17px;" required/>
 					</div>							
 					<!-- Log In Button -->
