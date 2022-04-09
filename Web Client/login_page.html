@@ -3,11 +3,11 @@
 	<head>
 		<title>Ticketing Login</title>
 		<h1>Welcome to __ Ticketing System</h1>
-		<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 		<style>
 			h1
 			{
-				font-family: "helvetica, sans-serif";
+				font-family: Georgia, serif;				
 				font-size: 300%;
 				color: DarkCyan;
 				white-space: nowrap;
@@ -16,7 +16,7 @@
 			
 			body
 			{
-				font-family: verdana;
+				font-family: Georgia, serif;
 				background-color: Bisque;
 			}						
 			
@@ -35,6 +35,7 @@
 				background: #eee;
 				background-color: LightBlue;
 				border: 4px solid DarkSlateGray;
+				border-radius: 20px;
 				display: flex;
 				flex-direction: row;
 				flex-wrap: nowrap;
@@ -53,7 +54,7 @@
 				padding: 2px;
 				text-align: right;
 				margin-bottom: 26px;
-				margin-left: 65px;
+				margin-left: 50px;
 			}
 
 			#container form .column input, 
@@ -77,10 +78,10 @@
 				font-size: 170%;
 				background-color: Turquoise;
 				color: MidnightBlue;
-				position: absolute;				
-				top: 31%;
-				left: 50%;
-				transform: translate(-50%, 50%);							
+				margin-top:15px;
+				margin-left: 40px;
+				margin-right: 40px;
+				position: relative;				
 			}
 			
 			.login_button:hover
@@ -88,6 +89,10 @@
 				background-color: DarkCyan;
 			}
 			
+			label
+			{
+				font-size: 20px;
+			}			
 		</style>
 	</head>
 	
@@ -101,8 +106,8 @@
 						<label for="password" id="password_label">Password</label>						
 					</div>    
 					<div class="column">
-						<input type="text" id="username" name="username"/>					
-						<input type="password" id="password" name="password"/>
+						<input type="text" id="username" name="username" class="form-control" style="margin-top:10px;" required/>					
+						<input type="password" id="password" name="password" class="form-control" style="margin-top:17px;" required/>
 					</div>							
 					<!-- Log In Button -->
 					<input type="submit" name="login_button" id="login_button" value="Log In" class="login_button"/>
