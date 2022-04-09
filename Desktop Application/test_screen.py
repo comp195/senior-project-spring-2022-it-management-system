@@ -190,10 +190,12 @@ class DataFrame(tk.Frame):
 
     def add_row(self):
         # TODO: Implement Logic to add a row
-
+        # assuming that they are going to press the add row button twice
+        # pressing first time
         # need a variable for table name like how the method update_on_button_press has an argument like screen_name
         # create a datatable object
         # self.current_table = table.dataTable("name of the table")
+        # pressing second time
         # should call method to check if all the fields are inputted and if so then it should put all the values within the fields into a list
         # self.current_table.insert_data(a list of all the values the user has inputted into the fields)
         # if this command runs without problem then it is good then

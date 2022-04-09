@@ -143,12 +143,25 @@ class dataTable:
             print("Column doesn't exist")
             return None
 
-    def alter_row(self, column_to_change, new_value, column_to_filter, filter_value):
+    def alter_row(self, columns_to_change, new_values, column_to_filter, filter_value):
         # UPDATE dbmanagementsystem.Login_Credentials SET admin = 'False' WHERE employee_id = 1
-        # UPDATE `dbmanagementsystem`.`Login_Credentials` SET `admin` = 'False', `active` = 'False', `permission_level` = '2' WHERE (`employee_id` = '2');
-        cmd = "UPDATE dbmanagementsystem." + self.name + " SET " + column_to_change + " = '" + new_value + "' WHERE " + column_to_filter + " = '" + filter_value + "'"
-        print(cmd)
-        self.cursor.execute(cmd)
+        # UPDATE dbmanagementsystem.Login_Credentials SET admin = 'False', `active` = 'False', `permission_level` = '2' WHERE employee_id = '2'
+        valid = True
+        check_col = self.get_cols()
+        for col in columns_to_change:
+            if col not in check_col:
+                valid = False
+        if valid:
+            cmd = "UPDATE dbmanagementsystem." + self.name + " SET "
+            for i in range(len(columns_to_change)):
+                cmd += columns_to_change[i] + " = '" + new_values[i] + "'"
+                if i < len(columns_to_change)-1:
+                    cmd += ", "
+            cmd += " WHERE " + column_to_filter + " = '" + filter_value + "'"
+            print(cmd)
+            self.cursor.execute(cmd)
+        else:
+            print("Invalid columns name")
 
     def sort_table_ascending(self, column):
         cmd = "SELECT * from dbmanagementsystem." + self.name + " ORDER BY " + column + " ASC"
@@ -217,18 +230,20 @@ def main():
     # login.password_check("j_brabham", "sauce")
     # login.password_check("hi", "123")
     # print(login.filter_rows("employee_id", "1"))
-    # login.alter_row("admin", "False", "employee_id", "1")
+    cols = ["permission_level","admin", "active"]
+    vals = ["2", "False", "False"]
+    login.alter_row(cols, vals, "employee_id", "2")
     # login.print_rows()
     # data = ['test', 'test', 'False', 'False',0]
     # login.insert_data(data)
     # login.print_rows()
     # login.cancel_row("username","test")
     # login.print_rows()
-    result = login.sort_table_ascending("username")
-    print(result)
-    result = login.sort_table_descending("employee_id")
-    print(result)
-
+    # result = login.sort_table_ascending("username")
+    # print(result)
+    # result = login.sort_table_descending("employee_id")
+    # print(result)
+    login.print_rows()
 
 if __name__ == "__main__":
     main()
