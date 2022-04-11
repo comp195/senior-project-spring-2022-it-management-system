@@ -101,7 +101,6 @@ class GUIController(tk.Tk):
         frame.grid(row=0, column=0)
 
     def login_verification(self):
-        # TODO: Implement login credential verification checks
         global username_verify, password_verify
         username = str(username_verify.get())
         password = str(password_verify.get())
