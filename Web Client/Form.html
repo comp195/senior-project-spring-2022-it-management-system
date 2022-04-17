@@ -172,7 +172,8 @@
 			var l_name = $('#l_name').val();
 			var short_description = $('#short_description').val();			
 			var long_description = $('#long_description').val();
-						
+			var	equipment_id = $('#equipment_id').val();
+			
 			if (e_id == "" || f_name == "" || l_name == "" || short_description == "" || long_description == "")
 			{
 				$('#response').html('<span>Check the required fields (<span class=asterisk>*</span>)!</span>');
@@ -190,6 +191,13 @@
 			//If all fields are filled, proceed with insertion request
 			else
 			{				
+				//If user did not enter an Associated Equipment ID, default the value to 0.
+				//(0 is used as placeholder for tickets where there is no equipment associated with the ticket).
+				if (equipment_id == "")
+				{
+					document.getElementById("equipment_id").value = "0";
+				}
+			
 				//send_retrieval_request();
 				send_insertion_request();
 			}

@@ -177,6 +177,7 @@ class DataFrame(tk.Frame):
         self.controller = controller
         self.detail_frame = DetailFrame(self, controller)
         self.detail_frame.grid(row=1, column=1)
+        self.entry_string_list = []
 
         self.frames = {}
         self.frames["DetailFrame"] = self.detail_frame
@@ -187,7 +188,22 @@ class DataFrame(tk.Frame):
         self.tool_bar = ToolBarFrame(self, controller)
         self.tool_bar.grid(row=0, column=1, sticky="w")
 
+    def clear_entry_string_list(self):
+        self.entry_string_list = []
+
     def add_row(self):
+        print("add row button clicked")
+        curr_entries = self.detail_frame.get_current_entries()
+        for entry in curr_entries:
+            self.entry_string_list.append(entry.get())
+        print(self.entry_string_list)
+        # TODO: incorporate proper checks to ensure all required rows have proper values; DO NOT ALLOW CODE BELOW TO RUN IF NOT ALL REQUIRED FIELDS ARE VALID
+
+        # TODO: After the checks to ensure that all required fields are valid and the row has been added, clear entry string list AND the actual strings that appear within the entry boxes
+        # MOVE THE TWO LINES BELOW SO THAT THEY ARE CALLED AFTER THE ROW IS ADDED SUCCESSFULLY
+        self.clear_entry_string_list()
+        self.detail_frame.clear_entries()
+
         # TODO: Implement Logic to add a row
 
         # assuming that they are going to press the add row button twice
@@ -429,6 +445,8 @@ class DetailFrame(tk.Frame):
         for entry in self.entries_to_add:
             entry.delete(0, len(entry.get()))
 
+    def get_current_entries(self):
+        return self.entries_to_add
 
 # Struct used to handle creating the appropriate Label & Entry objects based on indicated screen type
 class DetailFrameValuesStruct:
