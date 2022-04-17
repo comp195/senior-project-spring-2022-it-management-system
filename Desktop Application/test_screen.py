@@ -49,7 +49,7 @@ class GUIController(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         # Basic Configuration Values for Root Tk()
-        self.active_frame = "LoginPage"
+        self.active_frame = "MainPage"
         self.active_table = "Equipment"
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
         self.window_title = "Application"
@@ -189,6 +189,7 @@ class DataFrame(tk.Frame):
 
     def add_row(self):
         # TODO: Implement Logic to add a row
+
         # assuming that they are going to press the add row button twice
         # pressing first time
         # need a variable for table name like how the method update_on_button_press has an argument like screen_name
@@ -201,6 +202,7 @@ class DataFrame(tk.Frame):
         # you will probably need to run
         # self.current_table.get_rows()
         # to get a new list of the rows and then pass the list into whatever function to redisplay the rows
+        self.tool_bar.change_mode(2)
         return
 
     def cancel_row(self):
@@ -211,10 +213,14 @@ class DataFrame(tk.Frame):
         # if the above method is true then run the command at the bottom
         # self.current_table.cancel_row(column,value) column can be like equipment_id and value is the id number u wawnt to delete
         # if that command works then its good
-        return
+        self.tool_bar.change_mode(0)
 
     def update_database(self):
         # TODO: Implement Logic to update database
+        self.tool_bar.change_mode(2)
+
+    def submit_data(self):
+        self.tool_bar.change_mode(0)
         return
 
 
@@ -280,12 +286,32 @@ class ToolBarFrame(tk.Frame):
         # Initializing GUI Controller
         self.controller = controller
         self.parent = parent
+        self.change_mode(0)
 
-        self.add_button = tk.Button(self, text="Add Row", command=lambda: self.parent.add_row()).grid(row=0, column=0)
-        self.space_label_1 = tk.Label(self, width=1).grid(row=0, column=1)
-        self.update_button = tk.Button(self, text="Update", command=lambda: self.parent.update_database()).grid(row=0, column=2)
-        self.space_label_2 = tk.Label(self, width=1).grid(row=0, column=3)
-        self.cancel_button = tk.Button(self, text="Cancel", command=lambda: self.parent.cancel_row()).grid(row=0, column=4)
+    def change_mode(self, mode):
+        if mode == 0:
+            for i in range(len(self.winfo_children())-1, -1, -1):
+                self.winfo_children()[i].destroy()
+            self.add_button = tk.Button(self, text="Add Row", command=lambda: self.parent.add_row())
+            self.add_button.grid(row=0, column=0)
+        elif mode == 1:
+            for i in range(len(self.winfo_children())-1, -1, -1):
+                self.winfo_children()[i].destroy()
+            self.add_button = tk.Button(self, text="Add Row", command=lambda: self.parent.add_row())
+            self.add_button.grid(row=0, column=0)
+            self.space_label_1 = tk.Label(self, width=1)
+            self.space_label_1.grid(row=0, column=1)
+            self.update_button = tk.Button(self, text="Update", command=lambda: self.parent.update_database())
+            self.update_button.grid(row=0, column=2)
+        elif mode == 2:
+            for i in range(len(self.winfo_children())-1, -1, -1):
+                self.winfo_children()[i].destroy()
+            self.add_button = tk.Button(self, text="Submit", command=lambda: self.parent.submit_data())
+            self.add_button.grid(row=0, column=0)
+            self.space_label_1 = tk.Label(self, width=1)
+            self.space_label_1.grid(row=0, column=1)
+            self.cancel_button = tk.Button(self, text="Cancel", command=lambda: self.parent.cancel_row())
+            self.cancel_button.grid(row=0, column=4)
 
 
 class SearchBarFrame(tk.Frame):
@@ -619,6 +645,7 @@ class MCListDemo(ttk.Frame):
     def obtain_selected_row(self, event):
         curr_item = self.tree.focus()
         curr_row = (self.tree.item(curr_item))      # Obtain row as dictionary
+        self.controller.frames['MainPage'].data_frame.tool_bar.change_mode(1)
         print(curr_row)
         list_of_values = curr_row.get('values')
         print(list_of_values)
