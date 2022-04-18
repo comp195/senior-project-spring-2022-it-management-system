@@ -287,6 +287,9 @@ class DataFrame(tk.Frame):
         self.tool_bar.change_mode(0)
         return
 
+    def refresh(self):
+        return
+
 
 class MainPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -356,24 +359,36 @@ class ToolBarFrame(tk.Frame):
         if mode == 0:
             for i in range(len(self.winfo_children())-1, -1, -1):
                 self.winfo_children()[i].destroy()
+            self.refresh_button = tk.Button(self, text="Refresh", command=lambda: self.parent.refresh())
+            self.refresh_button.grid(row=0, column=0)
+            self.space_label_1 = tk.Label(self, width=1)
+            self.space_label_1.grid(row=0, column=1)
             self.add_button = tk.Button(self, text="Add Row", command=lambda: self.parent.add_row())
-            self.add_button.grid(row=0, column=0)
+            self.add_button.grid(row=0, column=2)
         elif mode == 1:
             for i in range(len(self.winfo_children())-1, -1, -1):
                 self.winfo_children()[i].destroy()
-            self.add_button = tk.Button(self, text="Add Row", command=lambda: self.parent.add_row())
-            self.add_button.grid(row=0, column=0)
+            self.refresh_button = tk.Button(self, text="Refresh", command=lambda: self.parent.refresh())
+            self.refresh_button.grid(row=0, column=0)
             self.space_label_1 = tk.Label(self, width=1)
             self.space_label_1.grid(row=0, column=1)
+            self.add_button = tk.Button(self, text="Add Row", command=lambda: self.parent.add_row())
+            self.add_button.grid(row=0, column=2)
+            self.space_label_1 = tk.Label(self, width=1)
+            self.space_label_1.grid(row=0, column=3)
             self.update_button = tk.Button(self, text="Update", command=lambda: self.parent.update_database())
-            self.update_button.grid(row=0, column=2)
+            self.update_button.grid(row=0, column=4)
         elif mode == 2:
             for i in range(len(self.winfo_children())-1, -1, -1):
                 self.winfo_children()[i].destroy()
-            self.add_button = tk.Button(self, text="Submit", command=lambda: self.parent.submit_data())
-            self.add_button.grid(row=0, column=0)
+            self.refresh_button = tk.Button(self, text="Refresh", command=lambda: self.parent.refresh())
+            self.refresh_button.grid(row=0, column=0)
             self.space_label_1 = tk.Label(self, width=1)
             self.space_label_1.grid(row=0, column=1)
+            self.add_button = tk.Button(self, text="Submit", command=lambda: self.parent.submit_data())
+            self.add_button.grid(row=0, column=2)
+            self.space_label_1 = tk.Label(self, width=1)
+            self.space_label_1.grid(row=0, column=3)
             self.cancel_button = tk.Button(self, text="Cancel", command=lambda: self.parent.cancel_row())
             self.cancel_button.grid(row=0, column=4)
 
