@@ -41,7 +41,6 @@ class SeeDismissPanel(ttk.Frame):
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 
-
 class GUIController(tk.Tk):
 
     def __init__(self, *args, **kwargs):
@@ -49,7 +48,7 @@ class GUIController(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         # Basic Configuration Values for Root Tk()
-        self.active_frame = "MainPage"
+        self.active_frame = "LoginPage"
         self.active_table = "Equipment"
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
         self.window_title = "Application"
@@ -129,12 +128,60 @@ class LoginPage(tk.Frame):
         self.password_login_entry.pack()
         self.space_label_2 = Label(self, text=" ", fg="red", bg=stormcloud)
         self.space_label_2.pack()
-        self.login_button = Button(self, text="Login", width=10, height=1, command=self.login).pack()
+
+        self.login_button = Button(self, text="Login", width=10, height=1, command=self.login)
+        self.login_button.pack()
+
+        self.registration_button = Button(self, text="Register", width=10, height=1, command = self.register)
+        self.registration_button.pack()
 
     def login(self):
         texts = [" ", "Invalid Credentials"]
         logged_in = self.controller.login_verification()
         self.space_label_2['text'] = texts[int(not logged_in)]
+
+    def register(self):
+        self.credentials = [StringVar(), StringVar(), StringVar(), StringVar()]
+
+        self.registration_screen = Toplevel(self.controller)
+        self.registration_screen.title("Register")
+        self.registration_screen.config(bg=stormcloud)
+
+
+        self.user_label = tk.Label(self.registration_screen, text="Username:", bg=stormcloud).pack()
+        self.username_login_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[0]).pack()
+        self.register_space_label_0 = tk.Label(self.registration_screen, text="", bg=stormcloud).pack()
+        self.register_email_label = tk.Label(self.registration_screen, text="Email:", bg=stormcloud).pack()
+        self.register_email_login_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[1]).pack()
+        self.register_space_label_1 = tk.Label(self.registration_screen, text="", bg=stormcloud).pack()
+        self.register_password_label = tk.Label(self.registration_screen, text="Password:", bg=stormcloud)
+        self.register_password_label.pack()
+        self.register_password_login_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[2], show='*')
+        self.register_password_login_entry.pack()
+        self.register_space_label_2 = Label(self.registration_screen, text=" ", fg="red", bg=stormcloud)
+        self.register_space_label_2.pack()
+        self.register_confirm_password_label = tk.Label(self.registration_screen, text="Confirm Password:", bg=stormcloud)
+        self.register_confirm_password_label.pack()
+        self.register_confirm_password_login_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[3], show='*')
+        self.register_confirm_password_login_entry.pack()
+        self.register_space_label_3 = Label(self.registration_screen, text=" ", fg="red", bg=stormcloud)
+        self.register_space_label_3.pack()
+
+        self.registration_submit_button = tk.Button(self.registration_screen, text="Submit", width=10, height=1, command= self.registration_submit)
+        self.registration_submit_button.pack()
+
+    def registration_submit(self):
+        success = True
+
+        if self.credentials[2].get() != self.credentials[3].get():
+            success = False
+            self.register_space_label_3.config(text="Password Mismatch")
+
+        if success is True:
+            self.registration_screen.destroy()
+
+
+
 
 
 class PageHeader(tk.Frame):
@@ -193,6 +240,7 @@ class DataFrame(tk.Frame):
 
     def add_row(self):
         print("add row button clicked")
+        self.search_table.search_grid.tree.selection_clear()
         curr_entries = self.detail_frame.get_current_entries()
         for entry in curr_entries:
             self.entry_string_list.append(entry.get())
@@ -664,9 +712,7 @@ class MCListDemo(ttk.Frame):
         curr_item = self.tree.focus()
         curr_row = (self.tree.item(curr_item))      # Obtain row as dictionary
         self.controller.frames['MainPage'].data_frame.tool_bar.change_mode(1)
-        print(curr_row)
         list_of_values = curr_row.get('values')
-        print(list_of_values)
         self.frames["DetailFrame"].update_entries(list_of_values[ID_INDEX])
 
 
