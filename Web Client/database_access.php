@@ -1,5 +1,5 @@
 <?php
-    require ("db_config.php");
+    require ("../db_config.php");
 	
     /*["ticket_number", "ticket_status", "client_id", "client_first_name", "client_last_name",
         "equipment_id", "ticket_category", "short_description", "full_description", "issue_scope",
