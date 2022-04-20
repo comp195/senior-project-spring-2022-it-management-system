@@ -285,9 +285,11 @@ class DataFrame(tk.Frame):
 
     def submit_data(self):
         self.tool_bar.change_mode(0)
-        return
+        # TODO: Update data to Database
+
 
     def refresh(self):
+        # TODO: Pull latest data from database
         return
 
 
@@ -627,6 +629,8 @@ class MCListDemo(ttk.Frame):
         self.controller = controller
         self.frames = frames
         self.name = name
+        self.columns = columns
+        self.grid=grid
         ttk.Frame.__init__(self, self.parent, name=self.name)
         self.config(width=10)
         self.pack(expand=Y )
@@ -646,7 +650,7 @@ class MCListDemo(ttk.Frame):
     def _set_data(self, data):
         self.data = data
 
-    def replace_contents(self, columns, grid):
+    def replace_contents(self, columns=[], grid=[]):
         self.destroy()
         ttk.Frame.__init__(self, self.parent, name=self.name)
         self.pack(expand=Y, fill=BOTH)
@@ -659,6 +663,13 @@ class MCListDemo(ttk.Frame):
     def _create_demo_panel(self, columns, grid):
         demoPanel = Frame(self)
         demoPanel.pack(side=TOP, fill=BOTH, expand=Y)
+        if not grid:
+            return
+        if not columns:
+            if len(grid[0]) != len(self.columns):
+                return
+            columns = self.columns
+
         self._create_treeview(demoPanel, columns)
         self._load_data(grid)
 
