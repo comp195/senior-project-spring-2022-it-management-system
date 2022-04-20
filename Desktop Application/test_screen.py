@@ -1,8 +1,11 @@
 import tkinter
 import tkinter as tk
+import copy as cp
 from tkinter import *
 from tkinter.font import Font
 from tkinter import font as tkfont, ttk  # python 3
+from copy import deepcopy
+
 import table
 
 SCREEN_WIDTH = 1920
@@ -221,6 +224,7 @@ class DataFrame(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         # Initializing GUI Controller
+        self.update_mode = True
         self.controller = controller
         self.detail_frame = DetailFrame(self, controller)
         self.detail_frame.grid(row=1, column=1)
@@ -239,7 +243,7 @@ class DataFrame(tk.Frame):
         self.entry_string_list = []
 
     def add_row(self):
-        print("add row button clicked")
+        self.update_mode = False
         # TODO: Clear tkinter treeview selection
         self.search_table.search_grid.tree.selection_clear() # Does not work
 
@@ -248,26 +252,31 @@ class DataFrame(tk.Frame):
 
         # Change toolbar
         self.tool_bar.change_mode(2)
-        return
 
     def cancel_row(self):
         # TODO: Implement Logic to cancel current row
-        # create a datatable object
-        # self.current_table = table.dataTable("name of the table")
-        # you should have a like a list of the ids of the newly added rows and then call a method to check if the row the user is highlighting is a newly added row that should return a bool
-        # if the above method is true then run the command at the bottom
-        # self.current_table.cancel_row(column,value) column can be like equipment_id and value is the id number u wawnt to delete
-        # if that command works then its good
         self.tool_bar.change_mode(0)
 
     def update_database(self):
+        self.update_mode = True
         # TODO: Implement Logic to update database
         self.tool_bar.change_mode(2)
 
     def submit_data(self):
         self.tool_bar.change_mode(0)
-        # TODO: Update data to Database
-
+        # TODO: Pull latest version of database
+        new_table = cp.deepcopy(self.search_table.search_grid.data)
+        new_row = self.detail_frame.details_struct.get_entry_strings()
+        if self.update_mode:
+            old_row = (self.search_table.search_grid.tree.item(self.search_table.search_grid.tree.focus()))['values']
+            selected_index = self.search_table.search_grid.tree.index(self.search_table.search_grid.tree.selection())
+            valid_row = True # TODO: Change True to some boolean function that will check if new_row follows correct format
+            if valid_row:
+                new_table[selected_index] = new_row
+            else:
+                new_table[selected_index] = old_row
+            self.search_table.search_grid.replace_contents(grid=new_table)
+            # TODO: Push current version of table to database
 
     def refresh(self):
         # TODO: Pull latest data from database
@@ -563,6 +572,12 @@ class DetailFrameValuesStruct:
 
         return self.entries
 
+    def get_entry_strings(self):
+        return_strings = []
+        for i in range(len(self.entry_texts)):
+            return_strings.append(self.entry_texts[i].get())
+        return return_strings
+
 
 # Struct used to handle obtaining the database values needed for the SearchFrame (NOT the DetailFrame)
 class MCListValuesStruct:
@@ -613,15 +628,14 @@ class MCListDemo(ttk.Frame):
     # def __init__(self, isapp=True, name='mclistdemo'):
 
     def __init__(self, parent, controller, frames, isapp=True, name='mclistdemo', columns=[], grid=[]):
+        self.rowid = 0
         self.parent = parent
         self.controller = controller
         self.frames = frames
         self.name = name
-        self.columns = columns
-        self.grid=grid
         ttk.Frame.__init__(self, self.parent, name=self.name)
         self.config(width=10)
-        self.pack(expand=Y )
+        self.pack(expand=Y)
         """, fill=BOTH"""
         self.isapp = isapp
         # test
@@ -642,6 +656,8 @@ class MCListDemo(ttk.Frame):
         self.destroy()
         ttk.Frame.__init__(self, self.parent, name=self.name)
         self.pack(expand=Y, fill=BOTH)
+        if not columns:
+            columns = self.dataCols
         self._create_widgets(columns, grid)
 
     def _delete_tree(self):
@@ -651,12 +667,6 @@ class MCListDemo(ttk.Frame):
     def _create_demo_panel(self, columns, grid):
         demoPanel = Frame(self)
         demoPanel.pack(side=TOP, fill=BOTH, expand=Y)
-        if not grid:
-            return
-        if not columns:
-            if len(grid[0]) != len(self.columns):
-                return
-            columns = self.columns
 
         self._create_treeview(demoPanel, columns)
         self._load_data(grid)
