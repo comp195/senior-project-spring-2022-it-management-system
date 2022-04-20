@@ -48,7 +48,7 @@ class GUIController(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         # Basic Configuration Values for Root Tk()
-        self.active_frame = "LoginPage"
+        self.active_frame = "MainPage"
         self.active_table = "Equipment"
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
         self.window_title = "Application"
@@ -240,32 +240,13 @@ class DataFrame(tk.Frame):
 
     def add_row(self):
         print("add row button clicked")
-        self.search_table.search_grid.tree.selection_clear()
-        curr_entries = self.detail_frame.get_current_entries()
-        for entry in curr_entries:
-            self.entry_string_list.append(entry.get())
-        print(self.entry_string_list)
-        # TODO: incorporate proper checks to ensure all required rows have proper values; DO NOT ALLOW CODE BELOW TO RUN IF NOT ALL REQUIRED FIELDS ARE VALID
+        # TODO: Clear tkinter treeview selection
+        self.search_table.search_grid.tree.selection_clear() # Does not work
 
-        # TODO: After the checks to ensure that all required fields are valid and the row has been added, clear entry string list AND the actual strings that appear within the entry boxes
-        # MOVE THE TWO LINES BELOW SO THAT THEY ARE CALLED AFTER THE ROW IS ADDED SUCCESSFULLY
-        self.clear_entry_string_list()
-        self.detail_frame.clear_entries()
+        # Clear detail entries
+        self.detail_frame.update_entries(-1)
 
-        # TODO: Implement Logic to add a row
-
-        # assuming that they are going to press the add row button twice
-        # pressing first time
-        # need a variable for table name like how the method update_on_button_press has an argument like screen_name
-        # create a datatable object
-        # self.current_table = table.dataTable("name of the table")
-        # pressing second time
-        # should call method to check if all the fields are inputted and if so then it should put all the values within the fields into a list
-        # self.current_table.insert_data(a list of all the values the user has inputted into the fields)
-        # if this command runs without problem then it is good then
-        # you will probably need to run
-        # self.current_table.get_rows()
-        # to get a new list of the rows and then pass the list into whatever function to redisplay the rows
+        # Change toolbar
         self.tool_bar.change_mode(2)
         return
 
@@ -491,20 +472,22 @@ class DetailFrame(tk.Frame):
     # Function used to update the details of a specific item when the corresponding row is clicked in the Treeview
     # NOTE: This function is called from the MCList class
     # args: item ID (such as equipment_id), passed from ID obtained from the MCList row-click
-    def update_entries(self, id):
+    def update_entries(self, id=-1):
 
         self.clear_entries()    # first clear the entry boxes' texts
-        # Find the data row that matches the row clicked in the treeview (based on ID), then update the details according
-        # to that specific data row
-        global current_data_rows
-        row_to_use = []
-        for row in current_data_rows:
-            if row[ID_INDEX] == id:
-                row_to_use = row
+        if id != -1:
+            # Find the data row that matches the row clicked in the treeview (based on ID), then update the details according
+            # to that specific data row
+            global current_data_rows
+            row_to_use = []
+            for row in current_data_rows:
+                if row[ID_INDEX] == id:
+                    row_to_use = row
 
-        # Insert that row's data into the entries
-        for i in range(len(self.entries_to_add)):
-            self.entries_to_add[i].insert(0, row_to_use[i])
+            # Insert that row's data into the entries
+
+            for i in range(len(self.entries_to_add)):
+                self.entries_to_add[i].insert(0, row_to_use[i])
 
     def clear_entries(self):
         for entry in self.entries_to_add:
@@ -521,6 +504,7 @@ class DetailFrameValuesStruct:
         self.frame = frame
         self.screen_type = screen_type
         self.column_titles = None
+        self.entry_texts = []
         self.labels = []
         self.entries = []
         self.equipment_columns = ["equipment_id", "category", "status", "current_user_id", "date_purchased",
@@ -569,10 +553,14 @@ class DetailFrameValuesStruct:
 
     # Create Entry objects based on number of columns to be displayed in Details Subframe
     def get_entries(self):
+        entry_texts = []
         for i in range(len(self.column_titles)):
-            new_entry = Entry(self.frame, font=("Montserrat", 14), width=80, bg='#C4A484', borderwidth=2, relief='solid')
+            entry_texts.append(StringVar())
+            new_entry = Entry(self.frame, font=("Montserrat", 14), width=80, bg='#C4A484', textvariable=entry_texts[i], borderwidth=2, relief='solid')
             # new_entry.insert(0, "test1231312215215512")
             self.entries.append(new_entry)
+        self.entry_texts = entry_texts
+
         return self.entries
 
 
