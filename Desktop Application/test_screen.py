@@ -181,6 +181,23 @@ class LoginPage(tk.Frame):
 
     def registration_submit(self):
         success = True
+        login = table.dataTable("Login_Credentials")
+        employee = table.dataTable("Employee")
+
+        # check if username exists
+        if login.username_exists(self.credentials[0].get()):
+            success = False
+            self.register_space_label_3.config(text="Username exists")
+
+        # check if email exists
+        if employee.email_exists(self.credentials[1].get()):
+            success = False
+            self.register_space_label_3.config(text="Email exists")
+
+        # check if email is valid format
+        if not employee.valid_email(self.credentials[1].get()):
+            success = False
+            self.register_space_label_3.config(text="Invalid email format")
 
         if self.credentials[2].get() != self.credentials[3].get():
             success = False
@@ -248,13 +265,22 @@ class DataFrame(tk.Frame):
     def clear_entry_string_list(self):
         self.entry_string_list = []
 
+    def deselect_highlighted_rows(self):
+        print("Selection before: ")
+        print(self.search_table.search_grid.tree.selection())
+        for selected_item in self.search_table.search_grid.tree.selection():
+            self.search_table.search_grid.tree.selection_remove(selected_item)
+        print("Selection after de-selection: ")
+        print(self.search_table.search_grid.tree.selection())
+
     def add_row(self):
         self.update_mode = False
-        # TODO: Clear tkinter treeview selection
-        self.search_table.search_grid.tree.selection_clear() # Does not work
+
+        # Clear tkinter treeview selection
+        self.deselect_highlighted_rows()
 
         # Clear detail entries
-        self.detail_frame.update_entries(-1)
+        self.detail_frame.clear_entries()
 
         # Change toolbar
         self.tool_bar.change_mode(2)
@@ -486,7 +512,6 @@ class DetailFrame(tk.Frame):
     # NOTE: This function is called from the MCList class
     # args: item ID (such as equipment_id), passed from ID obtained from the MCList row-click
     def update_entries(self, id=-1):
-
         self.clear_entries()    # first clear the entry boxes' texts
         if id != -1:
             # Find the data row that matches the row clicked in the treeview (based on ID), then update the details according
@@ -737,6 +762,10 @@ class MCListDemo(ttk.Frame):
     # NOTE: Row is obtained as a dictionary in the following format:
     # {'text': '', 'image': '', 'values': [13, 'Monitor', 'Support'], 'open': 0, 'tags': ''}
     def obtain_selected_row(self, event):
+        # NOTE: this is needed so that the entries are not re-populated after de-selection of highlighted row
+        if not self.tree.selection():
+            return
+
         curr_item = self.tree.focus()
         curr_row = (self.tree.item(curr_item))      # Obtain row as dictionary
         self.controller.frames['MainPage'].data_frame.tool_bar.change_mode(1)
