@@ -1,5 +1,6 @@
 import mysql
 import bcrypt
+import re
 from mysql.connector import errorcode
 
 
@@ -187,10 +188,10 @@ class dataTable:
             cmd = "SELECT EXISTS(SELECT * from dbmanagementsystem." + self.name + " WHERE username='" + value + "')"
             self.cursor.execute(cmd)
             if self.cursor.fetchone()[0]:
-                print("Username exists")
+                # print("Username exists")
                 return True
             else:
-                print("Username doesn't exist")
+                # print("Username doesn't exist")
                 return False
         else:
             print("You can only use this method for Login_Credentials table")
@@ -199,10 +200,20 @@ class dataTable:
         cmd = "SELECT EXISTS(SELECT * from dbmanagementsystem." + self.name + " WHERE email='" + value + "')"
         self.cursor.execute(cmd)
         if self.cursor.fetchone()[0]:
-            print("Email exists")
+            # print("Email exists")
             return True
         else:
-            print("Email doesn't exist")
+            # print("Email doesn't exist")
+            return False
+
+    def valid_email(self, email):
+        regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+
+        if re.search(regex, email):
+            print("Valid Email")
+            return True
+        else:
+            print("Invalid Email")
             return False
 
 
@@ -237,6 +248,7 @@ def main():
 
     log = dataTable("Login_Credentials")
     log.username_exists("k_leonard")
+    log.valid_email("k_leonard@gmail.com")
 
     emp = dataTable("Employee")
     emp.email_exists("k_leonard@gmail.com")

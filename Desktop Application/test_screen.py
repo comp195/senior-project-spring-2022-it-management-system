@@ -51,7 +51,7 @@ class GUIController(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         # Basic Configuration Values for Root Tk()
-        self.active_frame = "MainPage"
+        self.active_frame = "LoginPage"
         self.active_table = "Equipment"
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
         self.window_title = "Application"
@@ -175,6 +175,23 @@ class LoginPage(tk.Frame):
 
     def registration_submit(self):
         success = True
+        login = table.dataTable("Login_Credentials")
+        employee = table.dataTable("Employee")
+
+        # check if username exists
+        if login.username_exists(self.credentials[0].get()):
+            success = False
+            self.register_space_label_3.config(text="Username exists")
+
+        # check if email exists
+        if employee.email_exists(self.credentials[1].get()):
+            success = False
+            self.register_space_label_3.config(text="Email exists")
+
+        # check if email is valid format
+        if not employee.valid_email(self.credentials[1].get()):
+            success = False
+            self.register_space_label_3.config(text="Invalid email format")
 
         if self.credentials[2].get() != self.credentials[3].get():
             success = False
