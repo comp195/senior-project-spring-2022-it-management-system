@@ -144,7 +144,7 @@ class LoginPage(tk.Frame):
         self.space_label_2['text'] = texts[int(not logged_in)]
 
     def register(self):
-        self.credentials = [StringVar(), StringVar(), StringVar(), StringVar()]
+        self.credentials = [StringVar(), StringVar(), StringVar(), StringVar(), StringVar(), StringVar()]
 
         self.registration_screen = Toplevel(self.controller)
         self.registration_screen.title("Register")
