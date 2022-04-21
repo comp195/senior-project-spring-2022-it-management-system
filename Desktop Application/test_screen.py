@@ -51,7 +51,7 @@ class GUIController(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         # Basic Configuration Values for Root Tk()
-        self.active_frame = "MainPage"
+        self.active_frame = "LoginPage"
         self.active_table = "Equipment"
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
         self.window_title = "Application"
@@ -157,18 +157,24 @@ class LoginPage(tk.Frame):
         self.register_email_label = tk.Label(self.registration_screen, text="Email:", bg=stormcloud).pack()
         self.register_email_login_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[1]).pack()
         self.register_space_label_1 = tk.Label(self.registration_screen, text="", bg=stormcloud).pack()
+        self.register_firstname_label = tk.Label(self.registration_screen, text="First Name", bg=stormcloud).pack()
+        self.register_firstname_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[1]).pack()
+        self.register_space_label_2 = tk.Label(self.registration_screen, text="", bg=stormcloud).pack()
+        self.register_lastname_label = tk.Label(self.registration_screen, text="Last Name", bg=stormcloud).pack()
+        self.register_lastname_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[1]).pack()
+        self.register_space_label_3 = tk.Label(self.registration_screen, text="", bg=stormcloud).pack()
         self.register_password_label = tk.Label(self.registration_screen, text="Password:", bg=stormcloud)
         self.register_password_label.pack()
         self.register_password_login_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[2], show='*')
         self.register_password_login_entry.pack()
-        self.register_space_label_2 = Label(self.registration_screen, text=" ", fg="red", bg=stormcloud)
-        self.register_space_label_2.pack()
+        self.register_space_label_4 = Label(self.registration_screen, text=" ", fg="red", bg=stormcloud)
+        self.register_space_label_4.pack()
         self.register_confirm_password_label = tk.Label(self.registration_screen, text="Confirm Password:", bg=stormcloud)
         self.register_confirm_password_label.pack()
         self.register_confirm_password_login_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[3], show='*')
         self.register_confirm_password_login_entry.pack()
-        self.register_space_label_3 = Label(self.registration_screen, text=" ", fg="red", bg=stormcloud)
-        self.register_space_label_3.pack()
+        self.register_space_label_5 = Label(self.registration_screen, text=" ", fg="red", bg=stormcloud)
+        self.register_space_label_5.pack()
 
         self.registration_submit_button = tk.Button(self.registration_screen, text="Submit", width=10, height=1, command= self.registration_submit)
         self.registration_submit_button.pack()
@@ -273,8 +279,6 @@ class DataFrame(tk.Frame):
             valid_row = True # TODO: Change True to some boolean function that will check if new_row follows correct format
             if valid_row:
                 new_table[selected_index] = new_row
-            else:
-                new_table[selected_index] = old_row
             self.search_table.search_grid.replace_contents(grid=new_table)
             # TODO: Push current version of table to database
 
