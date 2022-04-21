@@ -216,6 +216,70 @@ class dataTable:
             print("Invalid Email")
             return False
 
+    def valid_input_row(self, data):
+        type_list = []
+        cmd = "describe dbmanagementsystem." + self.name
+        self.cursor.execute(cmd)
+        temp = self.cursor.fetchall()
+
+        for col_type in temp:
+            type_list.append(col_type[1].decode("utf-8"))
+
+        type_list.pop(0)
+        print(type_list)
+
+        for i in range(len(type_list)):
+            if type_list[i][0:7] == "varchar":
+                if not isinstance(data[i], str):
+                    print("bad data varchar")
+                    return False
+
+            if type_list[i][0:4] == "enum":
+                valid = False
+                enum_list = type_list[i].split("'")[1::2]
+
+                try:
+                    for enum in enum_list:
+                        if int(data[i]) == int(enum):
+                            valid = True
+                except:
+                    pass
+                for enum in enum_list:
+                    if data[i] == enum:
+                        valid = True
+                if not valid:
+                    print("bad data enum")
+                    return False
+
+            if type_list[i] == "int":
+                try:
+                    if not isinstance(int(data[i]), int):
+                        print(isinstance(int(data[i]), int))
+                        print("bad data int")
+                        return False
+                except:
+                    print("bad data int")
+                    return False
+
+            if type_list[i][0:7] == "decimal":
+                try:
+                    if not isinstance(float(data[i]), float):
+                        print(isinstance(float(data[i]), float))
+                        print("bad data decimal")
+                        return False
+                except:
+                    print("bad data decimal")
+                    return False
+
+            if type_list[i] == "date":
+                regex = "^20[0-2][0-9]-((0[1-9])|(1[0-2]))-([0-2][1-9]|3[0-1])$"
+                if not re.search(regex, data[i]):
+                    print("bad data date")
+                    return False
+
+        print("Valid data")
+        return True
+
 
 def main():
     # # password encryption
@@ -246,12 +310,19 @@ def main():
     # else:
     #     print("incorrect password")
 
-    log = dataTable("Login_Credentials")
-    log.username_exists("k_leonard")
-    log.valid_email("k_leonard@gmail.com")
+    # log = dataTable("Login_Credentials")
+    # log.username_exists("k_leonard")
+    # log.valid_email("k_leonard@gmail.com")
+    # data = ["user", "pass", "True", "False", 1]
+    # log.valid_input_row(data)
 
-    emp = dataTable("Employee")
-    emp.email_exists("k_leonard@gmail.com")
+    # dept = dataTable("Department")
+    # data2 = ["IT", "Kevin", "Durant", 1]
+    # dept.valid_input_row(data2)
+
+    equ = dataTable("Equipment")
+    data3 = ["Other", "Active", 1, "2022-04-14", 0, 0.0, "NULL", "NULL", 1, "Financial Services"]
+    equ.valid_input_row(data3)
 
 if __name__ == "__main__":
     main()
