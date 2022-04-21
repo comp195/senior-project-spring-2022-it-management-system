@@ -169,7 +169,6 @@ class dataTable:
         result = self.cursor.fetchall()
         return result
 
-
     def sort_table_descending(self, column):
         cmd = "SELECT * from dbmanagementsystem." + self.name + " ORDER BY " + column + " DESC"
         self.cursor.execute(cmd)
@@ -181,21 +180,33 @@ class dataTable:
         print(cmd)
         self.cursor.execute(cmd)
 
+    def username_exists(self, value):
+        # SELECT EXISTS(SELECT * from dbmanagementsystem.Login_Credentials WHERE username="k_leonard")
+        valid = (self.name == "Login_Credentials")
+        if valid:
+            cmd = "SELECT EXISTS(SELECT * from dbmanagementsystem." + self.name + " WHERE username='" + value + "')"
+            self.cursor.execute(cmd)
+            if self.cursor.fetchone()[0]:
+                print("Username exists")
+                return True
+            else:
+                print("Username doesn't exist")
+                return False
+        else:
+            print("You can only use this method for Login_Credentials table")
+
+    def email_exists(self, value):
+        cmd = "SELECT EXISTS(SELECT * from dbmanagementsystem." + self.name + " WHERE email='" + value + "')"
+        self.cursor.execute(cmd)
+        if self.cursor.fetchone()[0]:
+            print("Email exists")
+            return True
+        else:
+            print("Email doesn't exist")
+            return False
+
 
 def main():
-    # tick = dataTable("Tickets")
-    # print(tick.get_cols())
-    #
-    # data = ['2', 1, 'John', 'Cena', '1', 'Mouses', 'Broken mouse', 'Left click not working', 'Maintenance', 'Medium', 'Supoort']
-    # tick.insert_data(data)
-    #
-    # print(tick.get_rows())
-    #
-    # dev = dataTable("Devices")
-    # data3 = ["1", "Monitor", "123", "Kawhi", "Leonard", "1", "Support", "365", "2021-03-05", "300.0"]
-    # dev.insert_data(data3)
-    # print(dev.get_rows())
-
     # # password encryption
     # password = "juice"
     # print(password)
@@ -209,7 +220,7 @@ def main():
     # print(hashed)
     # de_hashed = hashed.decode()
     # print(de_hashed)
-    #
+
     # # password input
     # check = "juice"
     # print(check)
@@ -224,26 +235,11 @@ def main():
     # else:
     #     print("incorrect password")
 
-    login = dataTable("Login_Credentials")
-    # login.password_check("k_leonard", "juice")
-    # login.password_check("k_leonard", "weong")
-    # login.password_check("j_brabham", "sauce")
-    # login.password_check("hi", "123")
-    # print(login.filter_rows("employee_id", "1"))
-    cols = ["permission_level","admin", "active"]
-    vals = ["2", "False", "False"]
-    login.alter_row(cols, vals, "employee_id", "2")
-    # login.print_rows()
-    # data = ['test', 'test', 'False', 'False',0]
-    # login.insert_data(data)
-    # login.print_rows()
-    # login.cancel_row("username","test")
-    # login.print_rows()
-    # result = login.sort_table_ascending("username")
-    # print(result)
-    # result = login.sort_table_descending("employee_id")
-    # print(result)
-    login.print_rows()
+    log = dataTable("Login_Credentials")
+    log.username_exists("k_leonard")
+
+    emp = dataTable("Employee")
+    emp.email_exists("k_leonard@gmail.com")
 
 if __name__ == "__main__":
     main()
