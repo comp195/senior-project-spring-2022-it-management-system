@@ -158,20 +158,20 @@ class LoginPage(tk.Frame):
         self.register_email_login_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[1]).pack()
         self.register_space_label_1 = tk.Label(self.registration_screen, text="", bg=stormcloud).pack()
         self.register_firstname_label = tk.Label(self.registration_screen, text="First Name", bg=stormcloud).pack()
-        self.register_firstname_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[1]).pack()
+        self.register_firstname_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[2]).pack()
         self.register_space_label_2 = tk.Label(self.registration_screen, text="", bg=stormcloud).pack()
         self.register_lastname_label = tk.Label(self.registration_screen, text="Last Name", bg=stormcloud).pack()
-        self.register_lastname_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[1]).pack()
+        self.register_lastname_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[3]).pack()
         self.register_space_label_3 = tk.Label(self.registration_screen, text="", bg=stormcloud).pack()
         self.register_password_label = tk.Label(self.registration_screen, text="Password:", bg=stormcloud)
         self.register_password_label.pack()
-        self.register_password_login_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[2], show='*')
+        self.register_password_login_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[4], show='*')
         self.register_password_login_entry.pack()
         self.register_space_label_4 = Label(self.registration_screen, text=" ", fg="red", bg=stormcloud)
         self.register_space_label_4.pack()
         self.register_confirm_password_label = tk.Label(self.registration_screen, text="Confirm Password:", bg=stormcloud)
         self.register_confirm_password_label.pack()
-        self.register_confirm_password_login_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[3], show='*')
+        self.register_confirm_password_login_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[5], show='*')
         self.register_confirm_password_login_entry.pack()
         self.register_space_label_5 = Label(self.registration_screen, text=" ", fg="red", bg=stormcloud)
         self.register_space_label_5.pack()
@@ -199,15 +199,12 @@ class LoginPage(tk.Frame):
             success = False
             self.register_space_label_3.config(text="Invalid email format")
 
-        if self.credentials[2].get() != self.credentials[3].get():
+        if self.credentials[4].get() != self.credentials[5].get():
             success = False
             self.register_space_label_3.config(text="Password Mismatch")
 
         if success is True:
             self.registration_screen.destroy()
-
-
-
 
 
 class PageHeader(tk.Frame):
