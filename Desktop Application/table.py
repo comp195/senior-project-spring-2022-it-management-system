@@ -280,6 +280,20 @@ class dataTable:
         print("Valid data")
         return True
 
+    def valid_first_last_names(self, first, last):
+        regex = "^[A-Z][-a-zA-Z]+$"
+
+        if re.search(regex, first):
+            if re.search(regex, last):
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def insert_new_user(self, f_name, l_name, email, pw):
+        print(f_name)
+
 
 def main():
     # # password encryption

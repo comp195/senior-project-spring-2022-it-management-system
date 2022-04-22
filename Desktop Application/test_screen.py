@@ -162,7 +162,8 @@ class LoginPage(tk.Frame):
         self.register_space_label_2 = tk.Label(self.registration_screen, text="", bg=stormcloud).pack()
         self.register_lastname_label = tk.Label(self.registration_screen, text="Last Name", bg=stormcloud).pack()
         self.register_lastname_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[3]).pack()
-        self.register_space_label_3 = tk.Label(self.registration_screen, text="", bg=stormcloud).pack()
+        self.register_space_label_3 = tk.Label(self.registration_screen, text="", bg=stormcloud)
+        self.register_space_label_3.pack()
         self.register_password_label = tk.Label(self.registration_screen, text="Password:", bg=stormcloud)
         self.register_password_label.pack()
         self.register_password_login_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[4], show='*')
@@ -187,21 +188,26 @@ class LoginPage(tk.Frame):
         # check if username exists
         if login.username_exists(self.credentials[0].get()):
             success = False
-            self.register_space_label_3.config(text="Username exists")
+            self.register_space_label_5.config(text="Username exists")
 
         # check if email exists
         if employee.email_exists(self.credentials[1].get()):
             success = False
-            self.register_space_label_3.config(text="Email exists")
+            self.register_space_label_5.config(text="Email exists")
 
         # check if email is valid format
         if not employee.valid_email(self.credentials[1].get()):
             success = False
-            self.register_space_label_3.config(text="Invalid email format")
+            self.register_space_label_5.config(text="Invalid email format")
 
         if self.credentials[4].get() != self.credentials[5].get():
             success = False
-            self.register_space_label_3.config(text="Password Mismatch")
+            self.register_space_label_5.config(text="Password Mismatch")
+
+        # check if first and last name are valid
+        if not employee.valid_first_last_names(self.credentials[2].get(), self.credentials[3].get()):
+            success = False
+            self.register_space_label_5.config(text="Invalid name")
 
         if success is True:
             self.registration_screen.destroy()
