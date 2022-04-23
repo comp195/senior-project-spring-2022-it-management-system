@@ -99,64 +99,110 @@
 			{
 				color: red;
 			}
-			
+
+			.hidden
+			{
+				display: none;
+			}		
+
+			@keyframes spinner
+			{
+				0%
+				{
+					transform: translate3d(-50%, -50%, 0) rotate(0deg);
+				}
+				100%
+				{
+					transform: translate3d(-50%, -50%, 0) rotate(360deg);
+				}
+			}	
+
+			.loading_spinner::before
+			{
+				animation: 1s linear infinite spinner;
+				animation-play-state: inherit;
+				border: solid 7px Brown;
+				border-bottom-color: Bisque;
+				border-radius: 50%;
+				content: "";
+				height: 40px;
+				width: 40px;
+				position: relative;
+				top: 65.5%;
+				left: 62%;
+				transform: translate3d(-50%, -50%, 0);
+				will-change: transform;
+				display: block;
+			}
+	
+			#wrapper
+			{
+				margin-left: auto;
+				margin-right: auto;
+				width: 960px;
+			}
 		</style>
 	</head>
 	
 	<body>
-		<div id="container">
-			<div class="form-container">
-				<form>
-					<div class="column">
-						<label for="eid" id="eid_label">Employee ID</label>
-						<label for="f_name" id="f_name_label">First Name</label>
-						<label for="l_name" id="l_name_label">Last Name</label>
-						<label for="equipment_id">Associated Equipment ID</label>						
-						<label for="short_description" id="short_description_label" style="margin-top:6px; margin-bottom:66px;">Short Description</label>
-						<label for="long_description" id="long_description_label">Long Description</label>
-					</div>
-					<div class="column">
-						<input type="text" name="eid" id="eid" class="form-control" style="width: 240px; margin-top:8px; margin-bottom:37px;" value="<?php echo $_GET['eid']; ?>" readonly/>
-						<input type="text" name="f_name" id="f_name" class="form-control" style="width: 240px; margin-bottom:38px;" value="<?php echo $_GET['f_name']; ?>" readonly/>
-						<input type="text" name="l_name" id="l_name" class="form-control" style="width: 240px; margin-bottom:37px;" value="<?php echo $_GET['l_name']; ?>" readonly/>
-						<input type="text" name="equipment_id" id="equipment_id" class="form-control" style="width: 240px; margin-bottom:37px;"/>
-						<textarea name="short_description" id="short_description" class="form-control" style="width:310px; height:70px; resize:none;"></textarea>
-						<textarea name="long_description" id="long_description" class="form-control" style="width:310px; height:160px; resize:none;"></textarea>
-					</div>
-				</form>
+		<div id="wrapper">
+			<div id="container">
+				<div class="form-container">
+					<form>
+						<div class="column">
+							<label for="eid" id="eid_label">Employee ID</label>
+							<label for="f_name" id="f_name_label">First Name</label>
+							<label for="l_name" id="l_name_label">Last Name</label>
+							<label for="equipment_id">Associated Equipment ID</label>						
+							<label for="short_description" id="short_description_label" style="margin-top:6px; margin-bottom:66px;">Short Description</label>
+							<label for="long_description" id="long_description_label">Long Description</label>
+						</div>
+						<div class="column">
+							<input type="text" name="eid" id="eid" class="form-control" style="width: 240px; margin-top:8px; margin-bottom:37px;" value="<?php echo $_GET['eid']; ?>" readonly/>
+							<input type="text" name="f_name" id="f_name" class="form-control" style="width: 240px; margin-bottom:38px;" value="<?php echo $_GET['f_name']; ?>" readonly/>
+							<input type="text" name="l_name" id="l_name" class="form-control" style="width: 240px; margin-bottom:37px;" value="<?php echo $_GET['l_name']; ?>" readonly/>
+							<input type="text" name="equipment_id" id="equipment_id" class="form-control" style="width: 240px; margin-bottom:37px;"/>
+							<textarea name="short_description" id="short_description" class="form-control" style="width:310px; height:70px; resize:none;"></textarea>
+							<textarea name="long_description" id="long_description" class="form-control" style="width:310px; height:160px; resize:none;"></textarea>
+						</div>
+					</form>
+				</div>
 			</div>
+
+			<form>
+				<!-- Dropdown List for Ticket Category -->
+				<label for="categories" style="text-align:center; margin-top:30px;">Ticket Category:</label>
+				<div style="text-align:center;">
+					<select id="categories" name="categories">
+						<option value="New equipment request">New Equipment Request</option>
+						<option value="Damaged equipment">Damaged Equipment</option>
+						<option value="Equipment replacement">Equipment Replacement</option>
+						<option value="Equipment troubleshooting">Equipment Troubleshooting</option>
+						<option value="Equipment setup">Equipment Setup</option>
+						<option value="Software issue">Software Issue</option>
+					</select>
+				</div>
+
+				<!-- Dropdown List for Issue Scope -->
+				<label for="scope" style="text-align:center; margin-top:30px;">Issue Scope:</label>
+				<div style="text-align:center;">
+					<select id="scope" name="scope">
+						<option value="Single User">Single User</option>
+						<option value="Team">Team</option>
+						<option value="Departmental">Departmental</option>
+					</select>
+				</div>
+
+				<!-- Submit Button -->
+				<input type="button" name="submit_button" id="submit_button" value="Submit" class="submit_button"/>
+				
+				<!-- Loading Spinner -->
+				<div id="spinner" class="loading_spinner hidden"></div>
+
+				<!-- Response text -->
+				<div id="response" style="margin-top:-150px; margin-left:110px;"></div>
+			</form>
 		</div>
-
-		<form>
-			<!-- Dropdown List for Ticket Category -->
-			<label for="categories" style="text-align:center; margin-top:30px;">Ticket Category:</label>
-			<div style="text-align:center;">
-				<select id="categories" name="categories">
-					<option value="New equipment request">New Equipment Request</option>
-					<option value="Damaged equipment">Damaged Equipment</option>
-					<option value="Equipment replacement">Equipment Replacement</option>
-					<option value="Equipment troubleshooting">Equipment Troubleshooting</option>
-					<option value="Equipment setup">Equipment Setup</option>
-					<option value="Software issue">Software Issue</option>
-				</select>
-			</div>
-
-			<!-- Dropdown List for Issue Scope -->
-			<label for="scope" style="text-align:center; margin-top:30px;">Issue Scope:</label>
-			<div style="text-align:center;">
-				<select id="scope" name="scope">
-					<option value="Single User">Single User</option>
-					<option value="Team">Team</option>
-					<option value="Departmental">Departmental</option>
-				</select>
-			</div>
-
-			<!-- Submit Button -->
-			<input type="button" name="submit_button" id="submit_button" value="Submit" class="submit_button"/>
-			
-			<!-- Response text -->
-			<div id="response" style="margin-top:-700px; margin-left:200px;"></div>
-		</form>
 	</body>
 </html>
 
@@ -164,6 +210,8 @@
 <script>
 	$(document).ready(function()
 	{
+		display_loading_spinner();
+		hide_loading_spinner();
 		$('#submit_button').click(function()
 		{
 			//Confirm that all fields are filled
@@ -191,6 +239,8 @@
 			//If all fields are filled, proceed with insertion request
 			else
 			{				
+				display_loading_spinner();
+
 				//If user did not enter an Associated Equipment ID, default the value to 0.
 				//(0 is used as placeholder for tickets where there is no equipment associated with the ticket).
 				if (equipment_id == "")
@@ -245,6 +295,8 @@
 				console.log(data);
 				$('form').trigger("reset");
 				<!-- $('#response').fadeIn().html(data); -->
+				$('#response').html('<span>Ticket submitted successfully!</span>');
+				hide_loading_spinner();
 			},
 			error: function ()
 			{
@@ -252,4 +304,26 @@
 			}
 		});
 	}
+
+	function display_loading_spinner()
+	{
+		console.log("SPINNER SHOWN");
+		var spinner = document.getElementById("spinner");
+		if (spinner.classList.contains("hidden"))
+		{
+			spinner.classList.remove("hidden");
+		}
+	}
+
+	function hide_loading_spinner()
+	{
+		console.log("SPINNER HIDDEN");
+		var spinner = document.getElementById("spinner");
+		if (!spinner.classList.contains("hidden"))
+		{
+			spinner.classList.add("hidden");			
+		}
+	}
+
+
 </script>
