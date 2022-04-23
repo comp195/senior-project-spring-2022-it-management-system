@@ -146,6 +146,10 @@
 	
 	<body>
 		<div id="wrapper">
+			
+			<!-- Link to 'My Tickets' page -->
+			<a href="../dashboard/my_tickets.html">View my tickets</a>
+	
 			<div id="container">
 				<div class="form-container">
 					<form>
