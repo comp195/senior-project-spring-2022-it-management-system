@@ -17,7 +17,8 @@
 			
 	$username = $_POST["username"];
 	$password = $_POST["password"];
-	
+	$credentials_err_str = "Username or password is incorrect! Please re-enter your credentials...";	
+
 	if ($_SERVER["REQUEST_METHOD"] == "POST")
 	{			
 		$sql_query = "SELECT password FROM Login_Credentials WHERE username = ?";
@@ -87,24 +88,29 @@
 						}
 						else
 						{
-							$str = "1Username or password is incorrect! Please re-enter your credentials...";
-							console_log($str);
-							header("location: login_page.html");
+							echo 	"<script>
+									alert(\"{$credentials_err_str}\"); 
+									window.location.href=\"login_page.html\";
+								</script>";
+							//header("location: login_page.html");
 						}
 					}						
 				}
 				else
 				{						
-					$str = "2Username or password is incorrect! Please re-enter your credentials...";
-					console_log($str);
-					header("location: login_page.html");
+					echo 	"<script>
+							alert(\"{$credentials_err_str}\"); 
+							window.location.href=\"login_page.html\";
+						</script>";
 				}														
 			}
 			else
 			{
-				$str = "Error occurred...";
-				console_log($str);
-				header("location: login_page.html");
+				$err_msg = "Error occurred...";
+				echo 	"<script>
+						alert(\"{$err_msg}\"); 
+						window.location.href=\"login_page.html\";
+					</script>";				
 			}
 		}			
 	}
