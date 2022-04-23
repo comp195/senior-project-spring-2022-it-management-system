@@ -90,6 +90,28 @@ class dataTable:
         print(baseCMD)
         self.cursor.execute(baseCMD)
 
+    def insert_data_with_id(self, data):
+        baseCMD = "INSERT INTO dbmanagementsystem." + self.name + " ("
+        # build cmd
+        col = self.get_cols()
+        j = 0
+        for i in col:
+            if j == len(col) - 1:
+                baseCMD += str(i) + ") VALUES ("
+            else:
+                baseCMD += str(i) + ", "
+            j += 1
+
+        j = 0
+        for i in data:
+            if j == len(data) - 1:
+                baseCMD += "'" + str(i) + "')"
+            else:
+                baseCMD += "'" + str(i) + "', "
+            j += 1
+        print(baseCMD)
+        self.cursor.execute(baseCMD)
+
     # Function to parse a row of EQUIPMENT data
     # Args:     a list containing attributes of only a single row of data
     # Return:   a list pairing each attribute value to its category (EX. "ID: 123")
@@ -291,8 +313,26 @@ class dataTable:
         else:
             return False
 
-    def insert_new_user(self, f_name, l_name, email, pw):
-        print(f_name)
+    def insert_new_user(self, user, email, first, last, pw):
+        valid = (self.name == "Employee")
+        if valid:
+            data = [first, last, email, 0, "Unassigned", "000"]
+            if self.valid_input_row(data):
+                self.insert_data(data)
+                self.commit()
+                self.cursor.execute("SELECT MAX(employee_id) FROM dbmanagementsystem.Employee")
+                id = self.cursor.fetchall()[0][0]
+                password = self.encrypt_password(pw)
+                data2 = [id, user, password, "False", "True", "0"]
+                login = dataTable("Login_Credentials")
+                login.insert_data_with_id(data2)
+                login.commit()
+                self.print_rows()
+                login.print_rows()
+
+
+        else:
+            print("You can only use this method for employee table")
 
 
 def main():

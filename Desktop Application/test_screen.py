@@ -210,6 +210,9 @@ class LoginPage(tk.Frame):
             self.register_space_label_5.config(text="Invalid name")
 
         if success is True:
+            employee.insert_new_user(self.credentials[0].get(), self.credentials[1].get(), self.credentials[2].get(), self.credentials[3].get(),self.credentials[4].get())
+            # employee.print_rows()
+            # login.print_rows()
             self.registration_screen.destroy()
 
 
