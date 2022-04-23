@@ -295,6 +295,7 @@ class DataFrame(tk.Frame):
 
     def cancel_row(self):
         # TODO: Implement Logic to cancel current row
+        self.controller.frames['MainPage'].data_frame.detail_frame.disable_editable()
         self.tool_bar.change_mode(0)
 
     def update_database(self):
