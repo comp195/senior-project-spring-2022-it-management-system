@@ -51,14 +51,14 @@ class GUIController(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         # Basic Configuration Values for Root Tk()
-        self.active_frame = "LoginPage"
+        self.active_frame = "MainPage"
         self.active_table = "Equipment"
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
         self.window_title = "Application"
-        # self.resolution = str(SCREEN_WIDTH) + "x" + str(SCREEN_HEIGHT)
 
-        # self.geometry(self.resolution)
+
         # Initializing container that stacks our frames
+
 
         container = tk.Frame(self, bg=stormcloud)
 
@@ -73,13 +73,12 @@ class GUIController(tk.Tk):
 
         # Initializing all of our frames within our container
         self.frames = {}
-
+        self.edit_mode = True
         for F in (MainPage, LoginPage):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             frame.config(bg=stormcloud)   # background color of individual frame
             self.frames[page_name] = frame
-            print(page_name)
 
             # Putting all of our frames in the same place on the screen with the top one being active
             frame.grid(row=0, column=0)
@@ -87,8 +86,8 @@ class GUIController(tk.Tk):
         # Frame visible at the start of the application
         self.show_frame(self.active_frame)
 
+
     def key_pressed(self, event):
-        print(event.char)
         if event.keysym == 'Return' and self.active_frame == "LoginPage":
             self.frames["LoginPage"].login()
 
@@ -111,6 +110,9 @@ class GUIController(tk.Tk):
         if verified:
             self.show_frame("MainPage")
         return verified
+
+    def toggle_edit_mode(self):
+        self.edit_mode = not self.edit_mode
 
 
 class LoginPage(tk.Frame):
@@ -244,6 +246,7 @@ class DataFrame(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         # Initializing GUI Controller
+        self.parent = parent
         self.update_mode = True
         self.controller = controller
         self.detail_frame = DetailFrame(self, controller)
@@ -271,14 +274,13 @@ class DataFrame(tk.Frame):
         print(self.search_table.search_grid.tree.selection())
 
     def add_row(self):
+        self.old_row = []
+        self.controller.frames['MainPage'].data_frame.detail_frame.enable_editable()
         self.update_mode = False
-
         # Clear tkinter treeview selection
         self.deselect_highlighted_rows()
-
         # Clear detail entries
         self.detail_frame.clear_entries()
-
         # Change toolbar
         self.tool_bar.change_mode(2)
 
@@ -288,25 +290,36 @@ class DataFrame(tk.Frame):
 
     def update_database(self):
         self.update_mode = True
-        # TODO: Implement Logic to update database
+        self.old_row = (self.search_table.search_grid.tree.item(self.search_table.search_grid.tree.focus()))['values']
+        self.controller.frames['MainPage'].data_frame.detail_frame.enable_editable()
         self.tool_bar.change_mode(2)
 
     def submit_data(self):
+        global current_data_rows
         self.tool_bar.change_mode(0)
-        # TODO: Pull latest version of database
+        self.controller.frames['MainPage'].data_frame.detail_frame.disable_editable()
+        # TODO: self.search_table.search_grid.replace_contents(gird=<Database 2D Array>)
         new_table = cp.deepcopy(self.search_table.search_grid.data)
         new_row = self.detail_frame.details_struct.get_entry_strings()
-        if self.update_mode:
-            old_row = (self.search_table.search_grid.tree.item(self.search_table.search_grid.tree.focus()))['values']
+        print(new_row)
+        valid_row = True
+        # self.parent.equipment_table.valid_input_row(new_row)
+        if self.update_mode:  # update mode logic
+
             selected_index = self.search_table.search_grid.tree.index(self.search_table.search_grid.tree.selection())
-            valid_row = True # TODO: Change True to some boolean function that will check if new_row follows correct format
             if valid_row:
                 new_table[selected_index] = new_row
             self.search_table.search_grid.replace_contents(grid=new_table)
             # TODO: Push current version of table to database
+            return
+        # add mode logic
+        if valid_row:
+            new_table.append(new_row)
+            self.search_table.search_grid.replace_contents(grid=new_table)
+            # TODO: Push current version of table to database
 
     def refresh(self):
-        # TODO: Pull latest data from database
+        # TODO: self.search_table.search_grid.replace_contents(gird=<Database 2D Array>)
         return
 
 
@@ -327,7 +340,6 @@ class MainPage(tk.Frame):
 
         self.search = SearchBarFrame(self, controller)
         self.search.pack(side=tk.TOP, anchor="w")
-
         self.data_frame = DataFrame(self, controller)
         self.data_frame.pack(side=tk.BOTTOM)
 
@@ -361,7 +373,7 @@ class MainPage(tk.Frame):
         self.details_struct = DetailFrameValuesStruct(self.data_frame.frames["DetailFrame"], screen_name)
         self.column_titles = self.details_struct.get_specific_columns(self.column_indices_to_retrieve)
         self.data_frame.search_table.search_grid.replace_contents(self.column_titles, self.data_tuples_list)
-
+        self.controller.frames['MainPage'].data_frame.detail_frame.disable_editable()
         # self.search_table.search_grid._replace_contents(columns, data)
 
 
@@ -458,9 +470,11 @@ class DetailFrame(tk.Frame):
 
         # Update grid positions to handle entries (to the right of the labels)
         self.update_grid_positions()
-
+        self.entry_labels = []
         self.entries_to_add = self.details_struct.get_entries()
         self.add_entries()
+        self.editable = True
+        self.disable_editable()
 
     # Function is called when switching from one screen to another (ex. Equipment to Employees)
     def refresh_detail_components(self, new_screen_type):
@@ -489,6 +503,16 @@ class DetailFrame(tk.Frame):
     def refresh_entries(self):
         self.entries_to_add = self.details_struct.get_entries()
         self.add_entries()
+
+    def enable_editable(self):
+        for entry in self.entries_to_add:
+            entry.config(state="normal")
+        self.editable = True
+
+    def disable_editable(self):
+        for entry in self.entries_to_add:
+            entry.config(state="readonly")
+        self.editable = False
 
     def add_labels(self):
         for label in self.labels_to_add:
@@ -615,7 +639,6 @@ class MCListValuesStruct:
 
     def get_tuple_list(self, indices):
         global current_data_rows
-        print(current_data_rows)
         for row in current_data_rows:
             data_list = []
             for index in indices:
@@ -760,14 +783,17 @@ class MCListDemo(ttk.Frame):
     # {'text': '', 'image': '', 'values': [13, 'Monitor', 'Support'], 'open': 0, 'tags': ''}
     def obtain_selected_row(self, event):
         # NOTE: this is needed so that the entries are not re-populated after de-selection of highlighted row
+        self.controller.frames['MainPage'].data_frame.detail_frame.enable_editable()
         if not self.tree.selection():
             return
 
         curr_item = self.tree.focus()
         curr_row = (self.tree.item(curr_item))      # Obtain row as dictionary
+
         self.controller.frames['MainPage'].data_frame.tool_bar.change_mode(1)
         list_of_values = curr_row.get('values')
         self.frames["DetailFrame"].update_entries(list_of_values[ID_INDEX])
+        self.controller.frames['MainPage'].data_frame.detail_frame.disable_editable()
 
 
 if __name__ == "__main__":
