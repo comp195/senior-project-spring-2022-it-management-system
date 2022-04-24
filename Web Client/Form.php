@@ -1,3 +1,30 @@
+<?php
+	if (isset($_POST['link']))
+	{
+		$eid = $_GET['eid'];
+		$f_name = $_GET['f_name'];
+		$l_name = $_GET['l_name'];
+		/*
+		console_log($eid);	
+		console_log($f_name);
+		console_log($l_name);
+		*/
+		//Send values to My Tickets page as temporary storage
+		header("location: my_tickets.php?eid=".$eid."&f_name=".$f_name."&l_name=".$l_name);
+	}
+
+	//Used for console output testing
+	function console_log($output, $with_script = true)
+	{
+		$js = 'console.log(' . json_encode($output, JSON_HEX_TAG) . ');';
+		if ($with_script)
+		{
+			$js = '<script>' . $js . '</script>';
+		}
+		echo $js;
+	}
+?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -147,9 +174,18 @@
 	<body>
 		<div id="wrapper">
 			
+			<!-- NO LONGER USING -->
+			<!-- <a href="../dashboard/my_tickets.html">View my tickets</a> -->
+
 			<!-- Link to 'My Tickets' page -->
-			<a href="../dashboard/my_tickets.html">View my tickets</a>
-	
+			<form id="temp_form" method="post" action="<?php $_SERVER['PHP_SELF']?>">
+				<input type="hidden" name="link">
+				<a href="#" onclick="document.getElementById('temp_form').submit();">View my tickets</a>			
+			</form>
+
+
+
+
 			<div id="container">
 				<div class="form-container">
 					<form>
@@ -328,6 +364,4 @@
 			spinner.classList.add("hidden");			
 		}
 	}
-
-
 </script>
