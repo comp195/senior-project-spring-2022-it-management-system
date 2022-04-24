@@ -826,9 +826,10 @@ class MCListDemo(ttk.Frame):
     # {'text': '', 'image': '', 'values': [13, 'Monitor', 'Support'], 'open': 0, 'tags': ''}
     def obtain_selected_row(self, event):
         # NOTE: this is needed so that the entries are not re-populated after de-selection of highlighted row
-        self.controller.frames['MainPage'].data_frame.detail_frame.input_editable()
         if not self.tree.selection():
             return
+
+        self.controller.frames['MainPage'].data_frame.detail_frame.input_editable()
 
         curr_item = self.tree.focus()
         curr_row = (self.tree.item(curr_item))      # Obtain row as dictionary
