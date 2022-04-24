@@ -34,6 +34,12 @@
 		<title>My Tickets</title>
 		<h1>My Tickets</h1>
 
+		<!-- Scripts necessary for Google Charts table -->
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		<script type="text/javascript">
+			google.charts.load('current', {'packages':['table']});
+		</script>
+	
 		<style>
 			h1
 			{
@@ -65,17 +71,32 @@
 			* Need to receive EID, First Name, and Last Name values then ensure they are sent back when returning to Ticket Submission Form
 			* NOTE: This is due to how the inputs are set up to receive automatic values
 			* NOTE: Use 'workaround' of sending POST data with anchor tags through use of a form
-			-->
-			
+			-->		
 			<!-- Link to return to the Ticket Submission Form page -->
 			<form id="temp_form" method="post" action="<?php $_SERVER['PHP_SELF']?>">
 				<input type="hidden" name="link">
 				<a href="#" onclick="document.getElementById('temp_form').submit();">Return to Ticket Submission Form</a>			
 			</form>	
 
-			<!-- NO LONGER USING -->
-			<!-- <a href="../dashboard/Form.php">Return to Ticket Submission Form</a> -->
+			<div id="tickets_table_div"></div>			
 
+			<!-- JavaScript -->
+			<script>
+				function draw_table()
+				{
+					var tickets_data = new google.visualization.DataTable();
+					tickets_data.addColumn('string', 'Testing');
+					tickets_data.addRows([
+						['Test1'],
+						['Test2']
+					]);
+					
+					var tickets_table = new google.visualization.Table(document.getElementById('tickets_table_div'));
+					
+					tickets_table.draw(tickets_data, {showRowNumber: true, width: '100%', height: '100%'});
+				}
+				google.charts.setOnLoadCallback(draw_table);
+			</script>			
 		</div>
 	</body>
 
