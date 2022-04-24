@@ -284,12 +284,14 @@ class DataFrame(tk.Frame):
 
     def add_row(self):
         self.old_row = []
-        self.controller.frames['MainPage'].data_frame.detail_frame.enable_editable()
+        self.controller.frames['MainPage'].data_frame.detail_frame.input_editable()
         self.update_mode = False
         # Clear tkinter treeview selection
         self.deselect_highlighted_rows()
         # Clear detail entries
         self.detail_frame.clear_entries()
+        print("test")
+        self.controller.frames['MainPage'].data_frame.detail_frame.enable_editable()
         # Change toolbar
         self.tool_bar.change_mode(2)
 
@@ -529,8 +531,14 @@ class DetailFrame(tk.Frame):
         self.entries_to_add = self.details_struct.get_entries()
         self.add_entries()
 
-    def enable_editable(self):
+    def input_editable(self):
         for entry in self.entries_to_add:
+            entry.config(state="normal")
+        self.editable = True
+
+    def enable_editable(self):
+        self.entries_to_add[0].config(state="readonly")
+        for entry in self.entries_to_add[1:]:
             entry.config(state="normal")
         self.editable = True
 
@@ -816,7 +824,7 @@ class MCListDemo(ttk.Frame):
     # {'text': '', 'image': '', 'values': [13, 'Monitor', 'Support'], 'open': 0, 'tags': ''}
     def obtain_selected_row(self, event):
         # NOTE: this is needed so that the entries are not re-populated after de-selection of highlighted row
-        self.controller.frames['MainPage'].data_frame.detail_frame.enable_editable()
+        self.controller.frames['MainPage'].data_frame.detail_frame.input_editable()
         if not self.tree.selection():
             return
 
