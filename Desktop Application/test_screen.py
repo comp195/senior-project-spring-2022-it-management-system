@@ -26,6 +26,7 @@ DEPARTMENT_ID_INDEX = 9
 DEPARTMENT_INDEX = 10
 
 global current_data_rows
+global displayed_data_rows
 
 coconut = "#9B582E"
 quick_silver = "#A7A39E"
@@ -43,6 +44,7 @@ class SeeDismissPanel(ttk.Frame):
         # set resize constraints
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
+
 
 class GUIController(tk.Tk):
 
@@ -86,11 +88,9 @@ class GUIController(tk.Tk):
         # Frame visible at the start of the application
         self.show_frame(self.active_frame)
 
-
     def key_pressed(self, event):
         if event.keysym == 'Return' and self.active_frame == "LoginPage":
             self.frames["LoginPage"].login()
-
 
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
@@ -294,42 +294,67 @@ class DataFrame(tk.Frame):
         self.tool_bar.change_mode(2)
 
     def cancel_row(self):
-        # TODO: Implement Logic to cancel current row
+        if not self.update_mode:
+            self.detail_frame.clear_entries()
+        else:
+            self.detail_frame.details_struct.set_entry_strings(self.old_row)
         self.controller.frames['MainPage'].data_frame.detail_frame.disable_editable()
         self.tool_bar.change_mode(0)
 
     def update_database(self):
         self.update_mode = True
-        self.old_row = (self.search_table.search_grid.tree.item(self.search_table.search_grid.tree.focus()))['values']
+        self.old_row = self.detail_frame.details_struct.get_entry_strings()
         self.controller.frames['MainPage'].data_frame.detail_frame.enable_editable()
         self.tool_bar.change_mode(2)
 
     def submit_data(self):
-        global current_data_rows
+        global current_data_rows, displayed_data_rows
+        displayed_data_rows = deepcopy(current_data_rows)
         self.tool_bar.change_mode(0)
         self.controller.frames['MainPage'].data_frame.detail_frame.disable_editable()
-        # TODO: self.search_table.search_grid.replace_contents(gird=<Database 2D Array>)
-        new_table = cp.deepcopy(self.search_table.search_grid.data)
+        # TODO: Vincent, pull latest database version to current_data_rows
         new_row = self.detail_frame.details_struct.get_entry_strings()
+        row_id = new_row[0]
+        valid_row = self.parent.equipment_table.valid_input_row(new_row)
         print(new_row)
-        valid_row = True
-        # self.parent.equipment_table.valid_input_row(new_row)
-        if self.update_mode:  # update mode logic
+        existing_row = True
+        # update existing row operation
+        if self.update_mode and valid_row:
+            # update current_data_rows
+            for i in range(len(current_data_rows)):
+                if current_data_rows[i][0] == row_id:
+                    current_data_rows[i] = new_row
 
-            selected_index = self.search_table.search_grid.tree.index(self.search_table.search_grid.tree.selection())
-            if valid_row:
-                new_table[selected_index] = new_row
-            self.search_table.search_grid.replace_contents(grid=new_table)
-            # TODO: Push current version of table to database
-            return
-        # add mode logic
-        if valid_row:
-            new_table.append(new_row)
-            self.search_table.search_grid.replace_contents(grid=new_table)
-            # TODO: Push current version of table to database
+            # update grid view
+            column_list = self.parent.MCList_values_struct.get_specific_columns(self.parent.column_indices_to_retrieve)
+            data_tuples_list = self.parent.MCList_values_struct.get_tuple_list(self.parent.column_indices_to_retrieve)
+            self.parent.data_frame.search_table.search_grid.replace_contents(column_list, data_tuples_list)
+
+            # update database
+            # TODO: Vincent, Update the database using row_id, self.old_row, and self.new_row
+            displayed_data_rows = deepcopy(current_data_rows)
+        elif (not self.update_mode) and valid_row:
+            # update current_data_rows
+            for i in range(len(current_data_rows)):
+                if current_data_rows[i][0] == row_id:
+                    return
+            current_data_rows.append(new_row)
+
+            # update grid view
+            column_list = self.parent.MCList_values_struct.get_specific_columns(self.parent.column_indices_to_retrieve)
+            data_tuples_list = self.parent.MCList_values_struct.get_tuple_list(self.parent.column_indices_to_retrieve)
+            self.parent.data_frame.search_table.search_grid.replace_contents(column_list, data_tuples_list)
+
+            # update database
+            # TODO: Vincent, Update the database using row_id, self.old_row, and new_row
+            displayed_data_rows = deepcopy(current_data_rows)
+        # TODO: Vincent, make sure that your valid_row function handles new_row correctly (seems to throw bad data enum)
 
     def refresh(self):
-        # TODO: self.search_table.search_grid.replace_contents(gird=<Database 2D Array>)
+        # TODO: Vincent, pull latest version of database to current_data_rows
+        column_list = self.parent.MCList_values_struct.get_specific_columns(self.parent.column_indices_to_retrieve)
+        data_tuples_list = self.parent.MCList_values_struct.get_tuple_list(self.parent.column_indices_to_retrieve)
+        self.parent.data_frame.search_table.search_grid.replace_contents(column_list, data_tuples_list)
         return
 
 
@@ -347,26 +372,16 @@ class MainPage(tk.Frame):
 
         global current_data_rows
         current_data_rows = self.equipment_table.get_rows()
-
+        screen_name = "Equipment"
         self.search = SearchBarFrame(self, controller)
         self.search.pack(side=tk.TOP, anchor="w")
         self.data_frame = DataFrame(self, controller)
         self.data_frame.pack(side=tk.BOTTOM)
 
-
-        # self.detail_frame = DetailFrame(self, controller)
-        # self.detail_frame.pack(side=tk.RIGHT)
-
-        # Create frames dictionary so the SearchFrame/MCList can access the DetailFrame's functions
-        # (needed to update the details based on a click within the MCList)
-
-
-
-        # self.frames = {}
-        # self.frames["DetailFrame"] = self.detail_frame
-        #
-        # self.search_table = SearchFrame(self, controller, self.frames)
-        # self.search_table.pack(side=tk.LEFT)
+        self.column_indices_to_retrieve = [ID_INDEX, 1, 2, 3, 4]
+        self.MCList_values_struct = MCListValuesStruct(screen_name)
+        self.data_tuples_list = self.MCList_values_struct.get_tuple_list(self.column_indices_to_retrieve)
+        self.details_struct = DetailFrameValuesStruct(self.data_frame.frames["DetailFrame"], screen_name)
 
     def update_on_button_press(self, screen_name):
         self.equipment_table = table.dataTable(screen_name)
@@ -565,6 +580,7 @@ class DetailFrame(tk.Frame):
     def get_current_entries(self):
         return self.entries_to_add
 
+
 # Struct used to handle creating the appropriate Label & Entry objects based on indicated screen type
 class DetailFrameValuesStruct:
     # NOTE: 'frame' will always be the detail frame
@@ -631,6 +647,13 @@ class DetailFrameValuesStruct:
         self.entry_texts = entry_texts
 
         return self.entries
+
+    def set_entry_strings(self, my_strings):
+        print("my strings: " + str(len(my_strings)))
+        print("entry texts: " + str(len(self.entry_texts)))
+        if my_strings and self.entry_texts and len(my_strings) == len(self.entry_texts):
+            for i in range(len(self.entry_texts)):
+                self.entry_texts[i].set(my_strings[i])
 
     def get_entry_strings(self):
         return_strings = []
