@@ -317,8 +317,10 @@ class DataFrame(tk.Frame):
         # TODO: Vincent, pull latest database version to current_data_rows
         new_row = self.detail_frame.details_struct.get_entry_strings()
         row_id = new_row[0]
-        valid_row = self.parent.equipment_table.valid_input_row(new_row)
-        print(new_row)
+        test_row = new_row
+        test_row.pop(0)
+        valid_row = self.parent.equipment_table.valid_input_row(test_row)
+        print(test_row)
         existing_row = True
         # update existing row operation
         if self.update_mode and valid_row:
@@ -328,7 +330,7 @@ class DataFrame(tk.Frame):
                     current_data_rows[i] = new_row
 
             # update grid view
-            column_list = self.parent.MCList_values_struct.get_specific_columns(self.parent.column_indices_to_retrieve)
+            column_list = self.parent.details_struct.get_specific_columns(self.parent.column_indices_to_retrieve)
             data_tuples_list = self.parent.MCList_values_struct.get_tuple_list(self.parent.column_indices_to_retrieve)
             self.parent.data_frame.search_table.search_grid.replace_contents(column_list, data_tuples_list)
 
@@ -343,7 +345,7 @@ class DataFrame(tk.Frame):
             current_data_rows.append(new_row)
 
             # update grid view
-            column_list = self.parent.MCList_values_struct.get_specific_columns(self.parent.column_indices_to_retrieve)
+            column_list = self.parent.details_struct.get_specific_columns(self.parent.column_indices_to_retrieve)
             data_tuples_list = self.parent.MCList_values_struct.get_tuple_list(self.parent.column_indices_to_retrieve)
             self.parent.data_frame.search_table.search_grid.replace_contents(column_list, data_tuples_list)
 
@@ -354,7 +356,7 @@ class DataFrame(tk.Frame):
 
     def refresh(self):
         # TODO: Vincent, pull latest version of database to current_data_rows
-        column_list = self.parent.MCList_values_struct.get_specific_columns(self.parent.column_indices_to_retrieve)
+        column_list = self.parent.details_struct.get_specific_columns(self.parent.column_indices_to_retrieve)
         data_tuples_list = self.parent.MCList_values_struct.get_tuple_list(self.parent.column_indices_to_retrieve)
         self.parent.data_frame.search_table.search_grid.replace_contents(column_list, data_tuples_list)
         return
