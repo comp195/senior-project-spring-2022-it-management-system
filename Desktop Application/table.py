@@ -270,7 +270,7 @@ class dataTable:
                     if data[i] == enum:
                         valid = True
                 if not valid:
-                    print("bad data enum")
+                    print("bad data enum", data[i], enum_list)
                     return False
 
             if type_list[i] == "int":
@@ -376,7 +376,8 @@ def main():
 
     equ = dataTable("Equipment")
     data3 = ["Other", "Active", 1, "2022-04-14", 0, 0.0, "NULL", "NULL", 1, "Financial Services"]
-    equ.valid_input_row(data3)
+    data4 = ['Desktop', 'Active', '1', '2021-03-05', '200', '1000.00', 'Kawhi', 'Leonard', '2', 'IT']
+    equ.valid_input_row(data4)
 
 if __name__ == "__main__":
     main()
