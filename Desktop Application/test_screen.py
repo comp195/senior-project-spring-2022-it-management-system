@@ -366,12 +366,16 @@ class DataFrame(tk.Frame):
 
             # update database
             # TODO: Vincent, Update the database using row_id, self.old_row, and new_row
+            new_row.pop(0)
+            self.parent.equipment_table.insert_data(new_row)
+            self.parent.equipment_table.print_rows()
+            self.parent.equipment_table.commit()
             displayed_data_rows = deepcopy(current_data_rows)
         # TODO: Vincent, make sure that your valid_row function handles new_row correctly (seems to throw bad data enum)
 
     def refresh(self):
         # TODO: Vincent, pull latest version of database to current_data_rows
-        current_data_rows = self.parent.equipment_table.get_rows()
+        # current_data_rows = self.parent.equipment_table.get_rows()
         column_list = self.parent.details_struct.get_specific_columns(self.parent.column_indices_to_retrieve)
         data_tuples_list = self.parent.MCList_values_struct.get_tuple_list(self.parent.column_indices_to_retrieve)
         self.parent.data_frame.search_table.search_grid.replace_contents(column_list, data_tuples_list)
