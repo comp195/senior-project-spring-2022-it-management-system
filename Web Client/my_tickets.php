@@ -1,8 +1,12 @@
-<?php
+<?php	
+	//First get value of EID to pass as argument for db ticket rows retrieval
+	session_start();
+	$eid = $_SESSION['eid'];
+
 	require ("ticket_db_retrieval.php");
 	console_log("TEST");
 	console_log($rows);
-		
+	
 	if (isset($_POST['link']))
 	{
 		console_log("testing");
@@ -143,7 +147,7 @@
 					
 					var tickets_table = new google.visualization.Table(document.getElementById('tickets_table_div'));
 					
-					tickets_table.draw(tickets_data, {showRowNumber: true, width: '100%', height: '100%'});
+					tickets_table.draw(tickets_data, {showRowNumber: true, width: '100%'});
 				}
 				google.charts.setOnLoadCallback(draw_table);
 			</script>			

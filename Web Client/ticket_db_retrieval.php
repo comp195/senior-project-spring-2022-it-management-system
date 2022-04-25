@@ -2,13 +2,13 @@
 	require ("../db_config.php");
 	
 	$rows = [];
-	get_specific_ticket_rows(1);
+	get_specific_ticket_rows($eid);
 	
 	//Function to obtain all Tickets table data rows based on employee ID parameter
-	function get_specific_ticket_rows($eid)
+	function get_specific_ticket_rows($input_eid)
 	{
 		global $connection;
-		$sql_query = "SELECT * FROM Tickets WHERE client_id = $eid";
+		$sql_query = "SELECT * FROM Tickets WHERE client_id = $input_eid";
 		$result = mysqli_query($connection, $sql_query);
 	
 		global $rows;

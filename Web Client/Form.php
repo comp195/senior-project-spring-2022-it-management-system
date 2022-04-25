@@ -1,6 +1,11 @@
 <?php
 	if (isset($_POST['link']))
 	{
+		//Needed to allow my_tickets.php to retrieve EID value (to send to ticket_db_retrieval.php)
+		ob_start();
+		session_start();
+		$_SESSION['eid'] = $_GET['eid'];			
+
 		$eid = $_GET['eid'];
 		$f_name = $_GET['f_name'];
 		$l_name = $_GET['l_name'];
@@ -325,6 +330,7 @@
 			url:		"database_access.php",
 			type:		"POST",
 			data:		$('form').serialize(),
+			dataType:	'json',
 			beforeSend: function()
 			{
 				$('#response').html('<span>Submitting ticket...</span>');
