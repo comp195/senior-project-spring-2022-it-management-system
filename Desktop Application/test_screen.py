@@ -1,6 +1,6 @@
 import tkinter
 import tkinter as tk
-import copy as cp
+from fuzzywuzzy import fuzz as fz
 from tkinter import *
 from tkinter.font import Font
 from tkinter import font as tkfont, ttk  # python 3
@@ -321,7 +321,6 @@ class DataFrame(tk.Frame):
         test_row.pop(0)
         valid_row = self.parent.equipment_table.valid_input_row(test_row)
         print(test_row)
-        existing_row = True
         # update existing row operation
         if self.update_mode and valid_row:
             # update current_data_rows
@@ -359,7 +358,6 @@ class DataFrame(tk.Frame):
         column_list = self.parent.details_struct.get_specific_columns(self.parent.column_indices_to_retrieve)
         data_tuples_list = self.parent.MCList_values_struct.get_tuple_list(self.parent.column_indices_to_retrieve)
         self.parent.data_frame.search_table.search_grid.replace_contents(column_list, data_tuples_list)
-        return
 
 
 class MainPage(tk.Frame):
@@ -374,24 +372,30 @@ class MainPage(tk.Frame):
         header = PageHeader(parent=self, controller=self.controller)
         header.pack(side="top", anchor="nw")
 
-        global current_data_rows
+        global current_data_rows, displayed_data_rows
         current_data_rows = self.equipment_table.get_rows()
+        displayed_data_rows = deepcopy(current_data_rows)
         screen_name = "Equipment"
+
+        # Child Frames
         self.search = SearchBarFrame(self, controller)
         self.search.pack(side=tk.TOP, anchor="w")
         self.data_frame = DataFrame(self, controller)
         self.data_frame.pack(side=tk.BOTTOM)
 
+        # Grid View Data
         self.column_indices_to_retrieve = [ID_INDEX, 1, 2, 3, 4]
         self.MCList_values_struct = MCListValuesStruct(screen_name)
         self.data_tuples_list = self.MCList_values_struct.get_tuple_list(self.column_indices_to_retrieve)
         self.details_struct = DetailFrameValuesStruct(self.data_frame.frames["DetailFrame"], screen_name)
+        self.column_titles = self.details_struct.get_specific_columns(self.column_indices_to_retrieve)
 
     def update_on_button_press(self, screen_name):
         self.equipment_table = table.dataTable(screen_name)
         # Update the global current_data_rows value based on the new table
-        global current_data_rows
+        global current_data_rows, displayed_data_rows
         current_data_rows = self.equipment_table.get_rows()
+        displayed_data_rows = deepcopy(current_data_rows)
 
         # Update the labels and entry boxes that appear based on the new table
         self.data_frame.detail_frame.refresh_detail_components(screen_name)
@@ -403,6 +407,7 @@ class MainPage(tk.Frame):
         self.column_titles = self.details_struct.get_specific_columns(self.column_indices_to_retrieve)
         self.data_frame.search_table.search_grid.replace_contents(self.column_titles, self.data_tuples_list)
         self.controller.frames['MainPage'].data_frame.detail_frame.disable_editable()
+        self.data_frame.tool_bar.change_mode(0)
         # self.search_table.search_grid._replace_contents(columns, data)
 
 
@@ -460,7 +465,7 @@ class SearchBarFrame(tk.Frame):
         self.config(bg=stormcloud)
         # Initializing GUI Controller
         self.controller = controller
-
+        self.parent = parent
         self.search_var = StringVar()
         self.search_text = ""
         self.search_bar = tk.Entry(self, highlightbackground="#363030", textvariable=self.search_var, highlightthickness=1,
@@ -473,8 +478,27 @@ class SearchBarFrame(tk.Frame):
         self.search_button = tk.Button(self, text="Search", command=lambda: self.search(), width=10)
         self.search_button.grid(row=0, column=2)
 
+    def clear_searchbar(self):
+        self.search_var.set("")
+
     def search(self):
-        return None
+        global current_data_rows, displayed_data_rows
+        displayed_data_rows = []
+        search_word = self.search_var.get()
+        hits = 0
+        for i in range(len(current_data_rows)):
+            for j in range(len(current_data_rows[i])):
+                ratio = fz.partial_ratio(str(search_word).lower(), str(current_data_rows[i][j]).lower())
+                if ratio > 85:
+                    hits += 1
+                    displayed_data_rows.append(deepcopy(current_data_rows[i]))
+                    continue
+        print(displayed_data_rows)
+
+        print("hits: " + str(hits))
+        column_list = self.parent.details_struct.get_specific_columns(self.parent.column_indices_to_retrieve)
+        data_tuples_list = self.parent.MCList_values_struct.get_limited_list(self.parent.column_indices_to_retrieve)
+        self.parent.data_frame.search_table.search_grid.replace_contents(column_list, data_tuples_list)
 
 
 class DetailFrame(tk.Frame):
@@ -682,7 +706,19 @@ class MCListValuesStruct:
 
     def get_tuple_list(self, indices):
         global current_data_rows
+        self.data_tuple_list = []
         for row in current_data_rows:
+            data_list = []
+            for index in indices:
+                data_list.append(row[index])
+            curr_tuple = tuple(data_list)
+            self.data_tuple_list.append(curr_tuple)
+        return self.data_tuple_list
+
+    def get_limited_list(self, indices):
+        global displayed_data_rows
+        self.data_tuple_list = []
+        for row in displayed_data_rows:
             data_list = []
             for index in indices:
                 data_list.append(row[index])
