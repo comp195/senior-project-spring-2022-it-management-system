@@ -240,7 +240,7 @@
 				<div id="spinner" class="loading_spinner hidden"></div>
 
 				<!-- Response text -->
-				<div id="response" style="margin-top:-150px; margin-left:110px;"></div>
+				<div id="response" style="color:crimson; margin-top:-54px; text-align:center"></div>
 			</form>
 		</div>
 	</body>
@@ -334,8 +334,16 @@
 				console.log("Success");
 				console.log(data);
 				$('form').trigger("reset");
-				<!-- $('#response').fadeIn().html(data); -->
-				$('#response').html('<span>Ticket submitted successfully!</span>');
+					
+				if (data.query_success)
+				{
+					$('#response').html('<span>Ticket submitted successfully!</span>');
+				}
+				else
+				{
+					$('#response').html('<span>Ticket submission failed! Please confirm the information provided...</span>');
+				}				
+	
 				hide_loading_spinner();
 			},
 			error: function ()

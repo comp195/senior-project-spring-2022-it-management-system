@@ -8,8 +8,10 @@
 		"phone_extension"]
     */
     
-	printf("<br><br>");
+	//printf("<br><br>");
 	
+	$query_success = false;	
+
 	//Comment or uncomment function calls depending on use-case
 	//NOTE: also comment out the send_retrieval_request or send_insertion_request function in Form.html
 	// get_ticket_rows();	
@@ -67,8 +69,14 @@
 		$sql_query = "INSERT INTO dbmanagementsystem.Tickets (ticket_status, client_id, client_first_name, client_last_name, equipment_id, ticket_category, short_description, full_description, issue_scope, priority, department) VALUES ('Submitted', '".$eid."', '".$f_name."', '".$l_name."', '".$equipment_id."', '".$ticket_category."', '".$short_description."', '".$long_description."', '".$scope."', '".$priority."', '".$department."')";   				
 		
 		// printf($sql_query);
-		mysqli_query($connection, $sql_query);
+		//mysqli_query($connection, $sql_query) or trigger_error("ERR: ".mysqli_error($connection), E_USER_ERROR);
+		$query_success = mysqli_query($connection, $sql_query);
 		
+		//Send JSON object from PHP to AJAX in Form.php
+		$data = array();
+		$data['query_success'] = $query_success;
+		echo json_encode($data); 				
+
 		// printf(nl2br($eid . "\n" . $f_name . "\n" . $l_name . "\n" . $equipment_id . "\n" . $short_description . "\n" . $long_description . "\n" . $ticket_category . "\n" . $scope . "\n" . $priority . "\n" . $department));
 	}		
 
