@@ -4,19 +4,19 @@
 	$eid = $_SESSION['eid'];
 
 	require ("ticket_db_retrieval.php");
-	console_log("TEST");
-	console_log($rows);
+	//console_log("TEST");
+	//console_log($rows);
 	
 	if (isset($_POST['link']))
 	{
-		console_log("testing");
+		//console_log("testing");
 		$eid = $_GET['eid'];
 		$f_name = $_GET['f_name'];
 		$l_name = $_GET['l_name'];
-		console_log($eid);	
-		console_log($f_name);
-		console_log($l_name);
-		console_log("abc");
+		//console_log($eid);	
+		//console_log($f_name);
+		//console_log($l_name);
+		//console_log("abc");
 
 		//Send the values that were already received BACK to the Form page so that the auto-filled input boxes still work
 		header("location: Form.php?eid=".$eid."&f_name=".$f_name."&l_name=".$l_name);
