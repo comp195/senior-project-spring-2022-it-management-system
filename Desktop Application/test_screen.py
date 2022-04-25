@@ -314,10 +314,10 @@ class DataFrame(tk.Frame):
         displayed_data_rows = deepcopy(current_data_rows)
         self.tool_bar.change_mode(0)
         self.controller.frames['MainPage'].data_frame.detail_frame.disable_editable()
-        # TODO: Vincent, pull latest database version to current_data_rows
+        current_data_rows = self.parent.equipment_table.get_rows()
         new_row = self.detail_frame.details_struct.get_entry_strings()
         row_id = new_row[0]
-        test_row = new_row
+        test_row = deepcopy(new_row)
         test_row.pop(0)
         valid_row = self.parent.equipment_table.valid_input_row(test_row)
         print(test_row)
@@ -334,7 +334,21 @@ class DataFrame(tk.Frame):
             self.parent.data_frame.search_table.search_grid.replace_contents(column_list, data_tuples_list)
 
             # update database
-            # TODO: Vincent, Update the database using row_id, self.old_row, and self.new_row
+            cols = self.parent.equipment_table.get_cols()
+            # index_list = []
+            columns_affected = []
+            new_values = []
+            for i in range(len(new_row)):
+                if new_row[i] != self.old_row[i]:
+                    # index_list.append(i)
+                    columns_affected.append(cols[i])
+                    new_values.append(new_row[i])
+            # for i in index_list:
+            #     columns_affected.append(cols[i])
+            #     new_values.append(new_row[i])
+            self.parent.equipment_table.alter_row(columns_affected, new_values, cols[0], row_id)
+            self.parent.equipment_table.commit()
+            self.parent.equipment_table.print_rows()
             displayed_data_rows = deepcopy(current_data_rows)
         elif (not self.update_mode) and valid_row:
             # update current_data_rows
@@ -349,13 +363,16 @@ class DataFrame(tk.Frame):
             self.parent.data_frame.search_table.search_grid.replace_contents(column_list, data_tuples_list)
 
             # update database
-            # TODO: Vincent, Update the database using row_id, self.old_row, and new_row
+            new_row.pop(0)
+            self.parent.equipment_table.insert_data(new_row)
+            self.parent.equipment_table.print_rows()
+            self.parent.equipment_table.commit()
             displayed_data_rows = deepcopy(current_data_rows)
-        # TODO: Vincent, make sure that your valid_row function handles new_row correctly (seems to throw bad data enum)
         self.parent.search.clear_searchbar()
 
     def refresh(self):
-        # TODO: Vincent, pull latest version of database to current_data_rows
+        global current_data_rows
+        current_data_rows = self.parent.equipment_table.get_rows()
         column_list = self.parent.details_struct.get_specific_columns(self.parent.column_indices_to_retrieve)
         data_tuples_list = self.parent.MCList_values_struct.get_tuple_list(self.parent.column_indices_to_retrieve)
         self.parent.data_frame.search_table.search_grid.replace_contents(column_list, data_tuples_list)
@@ -864,9 +881,10 @@ class MCListDemo(ttk.Frame):
     # {'text': '', 'image': '', 'values': [13, 'Monitor', 'Support'], 'open': 0, 'tags': ''}
     def obtain_selected_row(self, event):
         # NOTE: this is needed so that the entries are not re-populated after de-selection of highlighted row
-        self.controller.frames['MainPage'].data_frame.detail_frame.input_editable()
         if not self.tree.selection():
             return
+
+        self.controller.frames['MainPage'].data_frame.detail_frame.input_editable()
 
         curr_item = self.tree.focus()
         curr_row = (self.tree.item(curr_item))      # Obtain row as dictionary

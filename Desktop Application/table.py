@@ -177,12 +177,15 @@ class dataTable:
         if valid:
             cmd = "UPDATE dbmanagementsystem." + self.name + " SET "
             for i in range(len(columns_to_change)):
-                cmd += columns_to_change[i] + " = '" + new_values[i] + "'"
+                cmd += columns_to_change[i] + " = \"" + new_values[i] + "\""
                 if i < len(columns_to_change)-1:
                     cmd += ", "
             cmd += " WHERE " + column_to_filter + " = '" + filter_value + "'"
             print(cmd)
-            self.cursor.execute(cmd)
+            try:
+                self.cursor.execute(cmd)
+            except:
+                print("cannot execute sql query")
         else:
             print("Invalid columns name")
 
@@ -248,7 +251,7 @@ class dataTable:
             type_list.append(col_type[1].decode("utf-8"))
 
         type_list.pop(0)
-        print(type_list)
+        # print(type_list)
 
         for i in range(len(type_list)):
             if type_list[i][0:7] == "varchar":
