@@ -18,6 +18,15 @@
 		header("location: my_tickets.php?eid=".$eid."&f_name=".$f_name."&l_name=".$l_name);
 	}
 
+	//Code to be run if "Log out" is clicked	
+	if (isset($_POST['logout_link']))
+	{
+		session_start();
+		session_destroy();
+		header("location: login_page.php");
+	}
+
+
 	//Used for console output testing
 	function console_log($output, $with_script = true)
 	{
@@ -183,12 +192,17 @@
 			<!-- <a href="../dashboard/my_tickets.html">View my tickets</a> -->
 
 			<!-- Link to 'My Tickets' page -->
-			<form id="temp_form" method="post" action="<?php $_SERVER['PHP_SELF']?>">
+			<form id="temp_form" method="post" action="<?php $_SERVER['PHP_SELF']?>" style="display:inline;">
 				<input type="hidden" name="link">
 				<a href="#" onclick="document.getElementById('temp_form').submit();">View my tickets</a>			
 			</form>
 
-
+			<!-- Link to Login page (logout link) -->
+			<form id="logout_form" method="post" action="<?php $_SERVER['PHP_SELF']?>" style="display:inline; float:right;">
+				<input type="hidden" name="logout_link">
+				<a href="#" onclick="document.getElementById('logout_form').submit();">Log out</a>
+			</form>		
+			<!-- <a style="float:right; display:inline;" href="../dashboard/login_page.php">Log out</a> -->
 
 
 			<div id="container">

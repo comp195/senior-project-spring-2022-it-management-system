@@ -11,7 +11,13 @@
 	{
 		$str = "CHECK";
 		console_log($str);
-		header("location: Form.html"); 
+		//header("location: Form.php"); 
+		
+		//Testing
+		$eid = $_SESSION["employee_id"];
+		$f_name = $_SESSION["first_name"];
+		$l_name = $_SESSION["last_name"];
+		//header("location: Form.php?eid=".$eid."&f_name=".$f_name."&l_name=".$l_name);
 		exit;
 	}
 			
@@ -65,6 +71,11 @@
 											//Use session variables to handle case where user is already logged in
 											$_SESSION["logged_in"] = true;
 							
+											//Testing
+											$_SESSION["employee_id"] = $eid;
+											$_SESSION["first_name"] = $f_name;
+											$_SESSION["last_name"] = $l_name;
+
 											//Send user to form page
 											//header("location: Form.html");
 											//header("location: Form.html?eid=".$eid."&f_name=".$f_name."&l_name=".$l_name);

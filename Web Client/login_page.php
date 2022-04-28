@@ -1,4 +1,36 @@
-<!DOCTYPE html>
+<?php
+	//Automatically redirect to main form page if user is already logged in
+	session_start();
+	console_log("Testing");
+	$str = "test";
+	console_log($str);
+	if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true
+		&& isset($_SESSION["employee_id"]) && isset($_SESSION["first_name"]) && isset($_SESSION["last_name"]))
+	{		
+		printf($_SESSION["employee_id"]);
+		printf($_SESSION["first_name"]);
+
+		$eid = $_SESSION["employee_id"];
+		$f_name = $_SESSION["first_name"];
+		$l_name = $_SESSION["last_name"];
+		header("location: Form.php?eid=".$eid."&f_name=".$f_name."&l_name=".$l_name);
+		//header("location: login_verification.php?eid=".$eid."&f_name=".$f_name."&l_name=".$l_name);
+		exit;
+	}
+
+	//Used for console output testing
+	function console_log($output, $with_script = true)
+	{
+		$js = 'console.log(' . json_encode($output, JSON_HEX_TAG) . ');';
+		if ($with_script)
+		{
+			$js = '<script>' . $js . '</script>';
+		}
+		echo $js;
+	}
+?>
+
+
 <html>
 	<head>
 		<title>Ticketing Login</title>
