@@ -1,4 +1,3 @@
-import tkinter
 import tkinter as tk
 from fuzzywuzzy import fuzz as fz
 from tkinter import *
@@ -122,7 +121,6 @@ class LoginPage(tk.Frame):
         self.parent = parent
         self.controller = controller
         self.config(width=self.controller.winfo_reqwidth(), height=self.controller.winfo_reqheight(), bg=stormcloud)
-
 
         self.user_label = tk.Label(self, text="Username:", bg=stormcloud).pack()
         self.username_login_entry = tk.Entry(self, textvariable=username_verify).pack()
@@ -275,12 +273,8 @@ class DataFrame(tk.Frame):
         self.entry_string_list = []
 
     def deselect_highlighted_rows(self):
-        print("Selection before: ")
-        print(self.search_table.search_grid.tree.selection())
         for selected_item in self.search_table.search_grid.tree.selection():
             self.search_table.search_grid.tree.selection_remove(selected_item)
-        print("Selection after de-selection: ")
-        print(self.search_table.search_grid.tree.selection())
 
     def add_row(self):
         self.old_row = []
@@ -290,7 +284,6 @@ class DataFrame(tk.Frame):
         self.deselect_highlighted_rows()
         # Clear detail entries
         self.detail_frame.clear_entries()
-        print("test")
         self.controller.frames['MainPage'].data_frame.detail_frame.enable_editable()
         # Change toolbar
         self.tool_bar.change_mode(2)
@@ -328,11 +321,6 @@ class DataFrame(tk.Frame):
                 if current_data_rows[i][0] == row_id:
                     current_data_rows[i] = new_row
 
-            # update grid view
-            column_list = self.parent.details_struct.get_specific_columns(self.parent.column_indices_to_retrieve)
-            data_tuples_list = self.parent.MCList_values_struct.get_tuple_list(self.parent.column_indices_to_retrieve)
-            self.parent.data_frame.search_table.search_grid.replace_contents(column_list, data_tuples_list)
-
             # update database
             cols = self.parent.equipment_table.get_cols()
             # index_list = []
@@ -343,13 +331,15 @@ class DataFrame(tk.Frame):
                     # index_list.append(i)
                     columns_affected.append(cols[i])
                     new_values.append(new_row[i])
-            # for i in index_list:
-            #     columns_affected.append(cols[i])
-            #     new_values.append(new_row[i])
             self.parent.equipment_table.alter_row(columns_affected, new_values, cols[0], row_id)
             self.parent.equipment_table.commit()
             self.parent.equipment_table.print_rows()
             displayed_data_rows = deepcopy(current_data_rows)
+
+            # update grid view
+            column_list = self.parent.details_struct.get_specific_columns(self.parent.column_indices_to_retrieve)
+            data_tuples_list = self.parent.MCList_values_struct.get_tuple_list(self.parent.column_indices_to_retrieve)
+            self.parent.data_frame.search_table.search_grid.replace_contents(column_list, data_tuples_list)
         elif (not self.update_mode) and valid_row:
             # update current_data_rows
             for i in range(len(current_data_rows)):
@@ -369,14 +359,20 @@ class DataFrame(tk.Frame):
             self.parent.equipment_table.commit()
             displayed_data_rows = deepcopy(current_data_rows)
         self.parent.search.clear_searchbar()
+        self.refresh()
 
     def refresh(self):
-        global current_data_rows
+        global current_data_rows, displayed_data_rows
+        displayed_data_rows = current_data_rows
         current_data_rows = self.parent.equipment_table.get_rows()
         column_list = self.parent.details_struct.get_specific_columns(self.parent.column_indices_to_retrieve)
         data_tuples_list = self.parent.MCList_values_struct.get_tuple_list(self.parent.column_indices_to_retrieve)
         self.parent.data_frame.search_table.search_grid.replace_contents(column_list, data_tuples_list)
         self.parent.search.clear_searchbar()
+
+    def remove_row(self):
+        global current_data_rows
+
 
 
 class MainPage(tk.Frame):
@@ -427,7 +423,6 @@ class MainPage(tk.Frame):
         self.data_frame.search_table.search_grid.replace_contents(self.column_titles, self.data_tuples_list)
         self.controller.frames['MainPage'].data_frame.detail_frame.disable_editable()
         self.data_frame.tool_bar.change_mode(0)
-        # self.search_table.search_grid._replace_contents(columns, data)
 
 
 class ToolBarFrame(tk.Frame):
@@ -440,6 +435,7 @@ class ToolBarFrame(tk.Frame):
         self.change_mode(0)
 
     def change_mode(self, mode):
+        global username_verify, password_verify
         if mode == 0:
             for i in range(len(self.winfo_children())-1, -1, -1):
                 self.winfo_children()[i].destroy()
@@ -449,6 +445,7 @@ class ToolBarFrame(tk.Frame):
             self.space_label_1.grid(row=0, column=1)
             self.add_button = tk.Button(self, text="Add Row", command=lambda: self.parent.add_row())
             self.add_button.grid(row=0, column=2)
+
         elif mode == 1:
             for i in range(len(self.winfo_children())-1, -1, -1):
                 self.winfo_children()[i].destroy()
@@ -458,10 +455,19 @@ class ToolBarFrame(tk.Frame):
             self.space_label_1.grid(row=0, column=1)
             self.add_button = tk.Button(self, text="Add Row", command=lambda: self.parent.add_row())
             self.add_button.grid(row=0, column=2)
-            self.space_label_1 = tk.Label(self, width=1)
-            self.space_label_1.grid(row=0, column=3)
+            self.space_label_2 = tk.Label(self, width=1)
+            self.space_label_2.grid(row=0, column=3)
             self.update_button = tk.Button(self, text="Update", command=lambda: self.parent.update_database())
             self.update_button.grid(row=0, column=4)
+
+            # REMOVE LOGIC PSEUDOCODE
+            # self.space_label_3 = tk.Label(self, width=1)
+            # self.space_label_3.grid(row=0, column=5)
+            # login_row = get_row(username_verify.get(), password_verify.get())
+            # if login_row is administrator:
+            #    self.remove_button = tk.Button(self, text="Add Row", command=lambda: self.parent.remove_row())
+            #    self.remove_button.grid(row=0, column=6)
+
         elif mode == 2:
             for i in range(len(self.winfo_children())-1, -1, -1):
                 self.winfo_children()[i].destroy()
@@ -471,10 +477,18 @@ class ToolBarFrame(tk.Frame):
             self.space_label_1.grid(row=0, column=1)
             self.add_button = tk.Button(self, text="Submit", command=lambda: self.parent.submit_data())
             self.add_button.grid(row=0, column=2)
-            self.space_label_1 = tk.Label(self, width=1)
-            self.space_label_1.grid(row=0, column=3)
+            self.space_label_2 = tk.Label(self, width=1)
+            self.space_label_2.grid(row=0, column=3)
             self.cancel_button = tk.Button(self, text="Cancel", command=lambda: self.parent.cancel_row())
             self.cancel_button.grid(row=0, column=4)
+
+            # REMOVE LOGIC PSEUDOCODE
+            # self.space_label_3 = tk.Label(self, width=1)
+            # self.space_label_3.grid(row=0, column=5)
+            # login_row = get_row(username_verify.get(), password_verify.get())
+            # if login_row is administrator:
+            #    self.remove_button = tk.Button(self, text="Add Row", command=lambda: self.parent.remove_row())
+            #    self.remove_button.grid(row=0, column=6)
 
 
 class SearchBarFrame(tk.Frame):
@@ -774,7 +788,9 @@ class MCListDemo(ttk.Frame):
     SortDir = True  # descending
     # def __init__(self, isapp=True, name='mclistdemo'):
 
-    def __init__(self, parent, controller, frames, isapp=True, name='mclistdemo', columns=[], grid=[]):
+    def __init__(self, parent, controller, frames, isapp=True, name='mclistdemo', columns=None, grid=None):
+        if columns is None:
+            columns = []
         self.rowid = 0
         self.parent = parent
         self.controller = controller
@@ -799,7 +815,7 @@ class MCListDemo(ttk.Frame):
     def _set_data(self, data):
         self.data = data
 
-    def replace_contents(self, columns=[], grid=[]):
+    def replace_contents(self, columns=None, grid=None):
         self.destroy()
         ttk.Frame.__init__(self, self.parent, name=self.name)
         self.pack(expand=Y, fill=BOTH)
@@ -850,6 +866,7 @@ class MCListDemo(ttk.Frame):
                 self.tree.column(c, width=Font().measure(c.title()))
 
             # add data to the tree
+            item = None
             for item in self.data:
                 self.tree.insert('', 'end', values=item)
 
