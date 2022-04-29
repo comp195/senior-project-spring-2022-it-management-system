@@ -222,7 +222,7 @@ class PageHeader(tk.Frame):
         global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, quick_silver, gainsboro, stormcloud, username_verify, password_verify
         # Initializing GUI Controller
         self.controller = controller
-        self.button_names = ["Equipment", "Employees", "Tickets", "Help"]
+        self.button_names = ["Equipment", "Employees", "Tickets", "Help", "Logout"]
         self.buttons = []
         self.button_dict = {}   # Maps button name to button index
         username_verify = StringVar()
@@ -245,7 +245,18 @@ class PageHeader(tk.Frame):
         for button in self.buttons:
             button.config(fg=gainsboro)
         self.buttons[self.button_dict.get(identifier)].config(fg=quick_silver)
-        if identifier != "Help":
+        if identifier == "Logout":
+            global username_verify, password_verify
+            username_verify.set("")
+            password_verify.set("")
+            self.controller.frames["LoginPage"].username_label.config(text="")
+            self.controller.frames["LoginPage"].password_label.config(text="")
+            self.controller.show_frame("LoginPage")
+
+        elif identifier == "Help":
+            # TODO: Destroy irrelevant frames and make help frame appear
+            return
+        else:
             self.controller.frames["MainPage"].update_on_button_press(identifier)
 
 
