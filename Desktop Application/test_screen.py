@@ -371,8 +371,20 @@ class DataFrame(tk.Frame):
         self.parent.search.clear_searchbar()
 
     def remove_row(self):
-        global current_data_rows
+        global current_data_rows, displayed_data_rows
+        # get id of row to be removed
+        row_id = self.detail_frame.details_struct.get_entry_strings()[0]
+        # update current_data_rows
+        for i in range(len(current_data_rows)):
+            if current_data_rows[i][0] == row_id:
+                current_data_rows.pop(i)
+                break
+        # TODO: Vincent, remove the row from and update the database
 
+        self.controller.frames['MainPage'].data_frame.detail_frame.enable_editable()
+        self.detail_frame.clear_entries()
+        self.controller.frames['MainPage'].data_frame.detail_frame.disable_editable()
+        self.refresh()
 
 
 class MainPage(tk.Frame):
@@ -445,6 +457,8 @@ class ToolBarFrame(tk.Frame):
             self.space_label_1.grid(row=0, column=1)
             self.add_button = tk.Button(self, text="Add Row", command=lambda: self.parent.add_row())
             self.add_button.grid(row=0, column=2)
+            self.space_label_2 = tk.Label(self, width=1)
+            self.space_label_2.grid(row=0, column=3)
 
         elif mode == 1:
             for i in range(len(self.winfo_children())-1, -1, -1):
@@ -459,10 +473,11 @@ class ToolBarFrame(tk.Frame):
             self.space_label_2.grid(row=0, column=3)
             self.update_button = tk.Button(self, text="Update", command=lambda: self.parent.update_database())
             self.update_button.grid(row=0, column=4)
+            self.space_label_3 = tk.Label(self, width=1)
+            self.space_label_3.grid(row=0, column=5)
 
             # REMOVE LOGIC PSEUDOCODE
-            # self.space_label_3 = tk.Label(self, width=1)
-            # self.space_label_3.grid(row=0, column=5)
+            # TODO: Vincent, change the first two lines of the pseudocode to validate that the user who is logged in is an administrator
             # login_row = get_row(username_verify.get(), password_verify.get())
             # if login_row is administrator:
             #    self.remove_button = tk.Button(self, text="Add Row", command=lambda: self.parent.remove_row())
@@ -481,11 +496,12 @@ class ToolBarFrame(tk.Frame):
             self.space_label_2.grid(row=0, column=3)
             self.cancel_button = tk.Button(self, text="Cancel", command=lambda: self.parent.cancel_row())
             self.cancel_button.grid(row=0, column=4)
+            self.space_label_3 = tk.Label(self, width=1)
+            self.space_label_3.grid(row=0, column=5)
 
             # REMOVE LOGIC PSEUDOCODE
-            # self.space_label_3 = tk.Label(self, width=1)
-            # self.space_label_3.grid(row=0, column=5)
-            # login_row = get_row(username_verify.get(), password_verify.get())
+            # TODO: Vincent, change the first two lines of the pseudocode to validate that the user who is logged in is an administrator
+            # self.login_row = get_row(username_verify.get(), password_verify.get())
             # if login_row is administrator:
             #    self.remove_button = tk.Button(self, text="Add Row", command=lambda: self.parent.remove_row())
             #    self.remove_button.grid(row=0, column=6)
