@@ -83,6 +83,19 @@
 				var rows;
 				$(document).ready(function()
 				{				
+					//Automatically check login status (needed to automatically log out in other tabs if user logs out in one tab)
+					var status_check_interval = 2000;		
+					window.setInterval(function()
+					{
+						$.get("login_status_check.php", function(data)
+						{
+							if (!data)
+							{
+								window.location = "login_page.php";
+							}
+						});
+					}, status_check_interval);	
+
 					//NOTE: must use json_encode here due to issues with special characters	
 					rows = <?php echo json_encode($rows); ?>;
 					console.log("Rows from JS: ");

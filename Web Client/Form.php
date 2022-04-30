@@ -269,6 +269,19 @@
 <script>
 	$(document).ready(function()
 	{
+		//Automatically check login status (needed to automatically log out in other tabs if user logs out in one tab)
+		var status_check_interval = 2000;
+		window.setInterval(function()
+		{
+			$.get("login_status_check.php", function(data)
+			{
+				if (!data)
+				{
+					window.location = "login_page.php";
+				}
+			});
+		}, status_check_interval);		
+	
 		display_loading_spinner();
 		hide_loading_spinner();
 		$('#submit_button').click(function()
