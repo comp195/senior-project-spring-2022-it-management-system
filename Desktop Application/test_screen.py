@@ -33,7 +33,7 @@ gainsboro = "#E0DDD9"
 rajah = "#F5B15E"
 stormcloud = "#4D646A"
 
-global username_verify, password_verify
+global username_verify, password_verify, administrator
 
 
 class SeeDismissPanel(ttk.Frame):
@@ -52,7 +52,7 @@ class GUIController(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         # Basic Configuration Values for Root Tk()
-        self.active_frame = "MainPage"
+        self.active_frame = "LoginPage"
         self.active_table = "Equipment"
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
         self.window_title = "Application"
@@ -101,14 +101,17 @@ class GUIController(tk.Tk):
         frame.grid(row=0, column=0)
 
     def login_verification(self):
-        global username_verify, password_verify
+        global username_verify, password_verify, administrator
         username = str(username_verify.get())
         password = str(password_verify.get())
         login = table.dataTable("Login_Credentials")
         verified = login.password_check(username, password)
-        if verified:
+        active = login.check_active(username)
+        if verified and active:
+            administrator = login.check_admin(username)
             self.show_frame("MainPage")
-        return verified
+        # return verified
+        return False
 
     def toggle_edit_mode(self):
         self.edit_mode = not self.edit_mode
@@ -391,6 +394,11 @@ class DataFrame(tk.Frame):
                 current_data_rows.pop(i)
                 break
         # TODO: Vincent, remove the row from and update the database
+        column = self.parent.equipment_table.get_cols()[0]
+        self.parent.equipment_table.delete_row(column, str(row_id))
+        self.parent.equipment_table.commit()
+
+
 
         self.controller.frames['MainPage'].data_frame.detail_frame.enable_editable()
         self.detail_frame.clear_entries()
@@ -458,7 +466,7 @@ class ToolBarFrame(tk.Frame):
         self.change_mode(0)
 
     def change_mode(self, mode):
-        global username_verify, password_verify
+        global username_verify, password_verify, administrator
         if mode == 0:
             for i in range(len(self.winfo_children())-1, -1, -1):
                 self.winfo_children()[i].destroy()
@@ -491,8 +499,9 @@ class ToolBarFrame(tk.Frame):
             # TODO: Vincent, change the first two lines of the pseudocode to validate that the user who is logged in is an administrator
             # login_row = get_row(username_verify.get(), password_verify.get())
             # if login_row is administrator:
-            #    self.remove_button = tk.Button(self, text="Add Row", command=lambda: self.parent.remove_row())
-            #    self.remove_button.grid(row=0, column=6)
+            if administrator:
+               self.remove_button = tk.Button(self, text="Add Row", command=lambda: self.parent.remove_row())
+               self.remove_button.grid(row=0, column=6)
 
         elif mode == 2:
             for i in range(len(self.winfo_children())-1, -1, -1):
@@ -514,8 +523,9 @@ class ToolBarFrame(tk.Frame):
             # TODO: Vincent, change the first two lines of the pseudocode to validate that the user who is logged in is an administrator
             # self.login_row = get_row(username_verify.get(), password_verify.get())
             # if login_row is administrator:
-            #    self.remove_button = tk.Button(self, text="Add Row", command=lambda: self.parent.remove_row())
-            #    self.remove_button.grid(row=0, column=6)
+            if administrator:
+               self.remove_button = tk.Button(self, text="Add Row", command=lambda: self.parent.remove_row())
+               self.remove_button.grid(row=0, column=6)
 
 
 class SearchBarFrame(tk.Frame):

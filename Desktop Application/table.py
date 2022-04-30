@@ -201,7 +201,7 @@ class dataTable:
         result = self.cursor.fetchall()
         return result
 
-    def cancel_row(self, column, value):
+    def delete_row(self, column, value):
         cmd = "DELETE from dbmanagementsystem." + self.name + " where " + column + " = '" + value + "'"
         print(cmd)
         self.cursor.execute(cmd)
@@ -337,6 +337,34 @@ class dataTable:
         else:
             print("You can only use this method for employee table")
 
+    def check_admin(self, username):
+        # select * from dbmanagementsystem.Login_Credentials where username ='k_leonard';
+        valid = (self.name == "Login_Credentials")
+        if valid:
+            cmd = "SELECT * FROM dbmanagementsystem.Login_Credentials where username = " + "'" + username + "'"
+            self.cursor.execute(cmd)
+            temp = self.cursor.fetchall()
+            if temp[0][3] == "True":
+                print("Is admin")
+                return True
+            else:
+                print("Not admin")
+                return False
+
+    def check_active(self, username):
+        valid = (self.name == "Login_Credentials")
+        if valid:
+            cmd = "SELECT * FROM dbmanagementsystem.Login_Credentials where username = " + "'" + username + "'"
+            self.cursor.execute(cmd)
+            temp = self.cursor.fetchall()
+            if temp[0][4] == "True":
+                print("Is active")
+                return True
+            else:
+                print("Not active")
+                return False
+
+
 
 def main():
     # # password encryption
@@ -381,6 +409,12 @@ def main():
     data3 = ["Other", "Active", 1, "2022-04-14", 0, 0.0, "NULL", "NULL", 1, "Financial Services"]
     data4 = ['Desktop', 'Active', '1', '2021-03-05', '200', '1000.00', 'Kawhi', 'Leonard', '2', 'IT']
     equ.valid_input_row(data4)
+
+    log = dataTable("Login_Credentials")
+    log.check_admin("k_leonard")
+    log.delete_row(log.get_cols()[0], "1")
+    log.print_rows()
+
 
 if __name__ == "__main__":
     main()
