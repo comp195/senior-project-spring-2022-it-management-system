@@ -180,7 +180,7 @@
 			{
 				margin-left: auto;
 				margin-right: auto;
-				width: 960px;
+				width: 1000px;
 			}
 		</style>
 	</head>
@@ -228,7 +228,7 @@
 				</div>
 			</div>
 
-			<form>
+			<form style="text-align:center;">
 				<!-- Dropdown List for Ticket Category -->
 				<label for="categories" style="text-align:center; margin-top:30px;">Ticket Category:</label>
 				<div style="text-align:center;">
@@ -252,6 +252,11 @@
 					</select>
 				</div>
 
+				<!-- File submit button for optional image -->
+				<label for="image_file" style="margin-top:30px;">Image Attachment</label>
+				<input type="file" id="image_file" name="image_file" style="margin-left:127px;">
+				
+
 				<!-- Submit Button -->
 				<input type="button" name="submit_button" id="submit_button" value="Submit" class="submit_button"/>
 				
@@ -260,7 +265,7 @@
 
 				<!-- Response text -->
 				<div id="response" style="color:crimson; margin-top:-54px; text-align:center"></div>
-			</form>
+			</form>							
 		</div>
 	</body>
 </html>
