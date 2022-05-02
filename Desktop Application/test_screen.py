@@ -656,7 +656,6 @@ class DetailFrame(tk.Frame):
         for entry in self.entries_to_add:
             entry.grid(row=self.curr_row, column=self.curr_col)
             self.curr_row = self.curr_row + 1
-        # self.update_entries()
 
     # Function used to update the details of a specific item when the corresponding row is clicked in the Treeview
     # NOTE: This function is called from the MCList class
@@ -703,7 +702,7 @@ class DetailFrameValuesStruct:
                                 "phone_extension"]
         self.tickets_columns = ["ticket_number", "ticket_status", "client_id", "client_first_name", "client_last_name",
                                 "equipment_id", "ticket_category", "short_description", "full_description", "issue_scope",
-                                "priority", "department"]
+                                "priority", "department", "image"]
         if self.screen_type == "Equipment":
             self.column_titles = self.equipment_columns
         elif self.screen_type == "Employee":
