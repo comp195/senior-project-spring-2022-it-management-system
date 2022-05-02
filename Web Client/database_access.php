@@ -65,8 +65,32 @@
 		
 		//Obtain Department field from the Employee table			
 		$department = get_department_from_eid($eid);
-		
-		$sql_query = "INSERT INTO dbmanagementsystem.Tickets (ticket_status, client_id, client_first_name, client_last_name, equipment_id, ticket_category, short_description, full_description, issue_scope, priority, department) VALUES ('Submitted', '".$eid."', '".$f_name."', '".$l_name."', '".$equipment_id."', '".$ticket_category."', '".$short_description."', '".$long_description."', '".$scope."', '".$priority."', '".$department."')";   				
+			
+		//Handle attached image file here
+		//NOTE: Upload file to EC2 instance; store only the file path in db
+		$image_path;
+		extract($_POST);
+		$attached_file_name = $_FILES["image_file"]["name"];
+		echo $attached_file_name;
+		if ($attached_file_name != "")
+		{
+			$image_directory = "image_attachments/";
+			$image_path = time() . "" . $attached_file_name;
+			if (move_uploaded_file($_FILES["image_file"]["tmp_name"], $image_directory . $image_path))
+			{
+				//then file was moved successfully 
+			}
+			else
+			{
+				$image_path = "";
+			}
+		}
+		else
+		{
+			$image_path = "";
+		}
+
+		$sql_query = "INSERT INTO dbmanagementsystem.Tickets (ticket_status, client_id, client_first_name, client_last_name, equipment_id, ticket_category, short_description, full_description, issue_scope, priority, department, image) VALUES ('Submitted', '".$eid."', '".$f_name."', '".$l_name."', '".$equipment_id."', '".$ticket_category."', '".$short_description."', '".$long_description."', '".$scope."', '".$priority."', '".$department."', '".$image_path."')";   				
 		
 		// printf($sql_query);
 		//mysqli_query($connection, $sql_query) or trigger_error("ERR: ".mysqli_error($connection), E_USER_ERROR);

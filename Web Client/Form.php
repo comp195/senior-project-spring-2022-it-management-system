@@ -207,7 +207,7 @@
 
 			<div id="container">
 				<div class="form-container">
-					<form>
+					<form id="form1">
 						<div class="column">
 							<label for="eid" id="eid_label">Employee ID</label>
 							<label for="f_name" id="f_name_label">First Name</label>
@@ -228,7 +228,7 @@
 				</div>
 			</div>
 
-			<form style="text-align:center;">
+			<form id="form2" style="text-align:center;" enctype="multipart/form-data">			
 				<!-- Dropdown List for Ticket Category -->
 				<label for="categories" style="text-align:center; margin-top:30px;">Ticket Category:</label>
 				<div style="text-align:center;">
@@ -358,10 +358,21 @@
 	//Function used to initiate insertion of new ticket row to 'Tickets' table
 	function send_insertion_request()
 	{
+		//Combine two forms into FormData object
+		var form_data = new FormData(document.forms['form2']);	//this form contains the file input
+		var non_file_form = jQuery(document.forms['form1']).serializeArray();
+		for (var i = 0; i < non_file_form.length; ++i)
+			form_data.append(non_file_form[i].name, non_file_form[i].value);
+		
+		console.log(typeof(this));
 		$.ajax({
 			url:		"database_access.php",
 			type:		"POST",
-			data:		$('form').serialize(),
+			// data:		$('form').serialize(),
+			// data:		new FormData(document.getElementById('form1')),
+			data:		form_data,
+			processData:	false,
+			contentType:	false,
 			dataType:	'json',
 			beforeSend: function()
 			{
@@ -387,7 +398,12 @@
 			error: function ()
 			{
 				console.log("Error occurred! Insertion request failed...");
+				alert("Error occurred! Insertion request failed...");
 			}
+			// error: function(xhr, status, error)
+			// {
+				// alert(xhr.responseText);
+			// }
 		});
 	}
 
