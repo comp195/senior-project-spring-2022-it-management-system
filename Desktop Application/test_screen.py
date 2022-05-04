@@ -24,6 +24,9 @@ USER_LAST_NAME_INDEX = 8
 DEPARTMENT_ID_INDEX = 9
 DEPARTMENT_INDEX = 10
 
+# CONSTANT ONLY FOR TICKETS TABLE
+IMAGE_INDEX = 12
+
 global current_data_rows
 global displayed_data_rows
 
@@ -672,8 +675,15 @@ class DetailFrame(tk.Frame):
                     row_to_use = row
 
             # Insert that row's data into the entries
-
             for i in range(len(self.entries_to_add)):
+                # Check if there is image display button should be shown
+                # (if the "image" field of the Tickets table is NOT an empty string)
+                if i == IMAGE_INDEX:
+                    if self.details_struct.get_screen_type() == "Tickets":
+                        if row_to_use[i] != "":
+                            print("File name: " + row_to_use[i])
+                        else:
+                            print("No image file stored for this ticket...")
                 self.entries_to_add[i].insert(0, row_to_use[i])
 
     def clear_entries(self):
@@ -717,6 +727,10 @@ class DetailFrameValuesStruct:
             self.column_titles = self.employee_columns
         elif screen_type == "Tickets":
             self.column_titles = self.tickets_columns
+        self.screen_type = screen_type
+
+    def get_screen_type(self):
+        return self.screen_type
 
     def clear_component_lists(self):
         self.labels = []
