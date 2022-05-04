@@ -9,6 +9,7 @@ import tkinter.font as font
 
 import table
 import paramiko
+from PIL import ImageTk, Image
 
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
@@ -748,6 +749,16 @@ class DetailFrame(tk.Frame):
         sftp.get(source_path, destination_path)
         sftp.close()
         print("IMAGE FILE RETRIEVED")
+
+        # Now show the downloaded image
+        image_window = Toplevel(self)
+        image_window.title("Attached Image: " + self.image_path)
+        downloaded_img = Image.open(destination_path)
+        resized_img = downloaded_img.resize((1280,720), Image.ANTIALIAS)
+        img_to_show = ImageTk.PhotoImage(resized_img)
+        img_panel = Label(image_window, image=img_to_show)
+        img_panel.image = img_to_show
+        img_panel.pack()
 
 # Struct used to handle creating the appropriate Label & Entry objects based on indicated screen type
 class DetailFrameValuesStruct:
