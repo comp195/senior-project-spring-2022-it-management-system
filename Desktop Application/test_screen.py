@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 from fuzzywuzzy import fuzz as fz
 from tkinter import *
@@ -7,6 +8,7 @@ from copy import deepcopy
 import tkinter.font as font
 
 import table
+import paramiko
 
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
@@ -726,7 +728,26 @@ class DetailFrame(tk.Frame):
     def display_image(self):
         print("this code will be run on button click")
         print("the current value for path is: " + self.image_path)
-        return
+
+        source_path = "C:\\xampp\htdocs\dashboard\image_attachments\\" + self.image_path
+        destination_path = os.getcwd() + "\\retrieved_image_files\\" + self.image_path
+        host = '18.144.147.150'
+        username = "Administrator"
+        # Retrieve password from file
+        with open("pw.txt") as text_file:
+            pw = text_file.read()
+
+        # Retrieve the file from EC2 instance to local folder
+        transport = paramiko.Transport((host, 22))
+        try:
+            transport.connect(username=username, password=pw)
+        except Exception as e:
+            print(e)
+            return False
+        sftp = paramiko.SFTPClient.from_transport(transport)
+        sftp.get(source_path, destination_path)
+        sftp.close()
+        print("IMAGE FILE RETRIEVED")
 
 # Struct used to handle creating the appropriate Label & Entry objects based on indicated screen type
 class DetailFrameValuesStruct:
