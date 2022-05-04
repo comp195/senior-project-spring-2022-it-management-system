@@ -4,6 +4,7 @@ from tkinter import *
 from tkinter.font import Font
 from tkinter import font as tkfont, ttk  # python 3
 from copy import deepcopy
+import tkinter.font as font
 
 import table
 
@@ -602,6 +603,10 @@ class DetailFrame(tk.Frame):
         self.editable = True
         self.disable_editable()
 
+        # Button used to display image
+        self.image_display_button = tk.Button(self.detail_frame, text="Show attached image", bg='#9FAAEF', state=DISABLED)
+        self.image_display_button['font'] = font.Font(size=10, weight='bold')
+
     # Function is called when switching from one screen to another (ex. Equipment to Employees)
     def refresh_detail_components(self, new_screen_type):
         self.clear_screen_components()
@@ -611,6 +616,10 @@ class DetailFrame(tk.Frame):
         self.refresh_labels()
         self.update_grid_positions()
         self.refresh_entries()
+
+        # Hide the image display button if active screen is NOT Tickets screen
+        if self.details_struct.get_screen_type() != "Tickets":
+            self.hide_image_button()
 
     def clear_screen_components(self):
         for label in self.labels_to_add:
@@ -682,9 +691,18 @@ class DetailFrame(tk.Frame):
                     if self.details_struct.get_screen_type() == "Tickets":
                         if row_to_use[i] != "":
                             print("File name: " + row_to_use[i])
+                            self.image_display_button["state"] = "normal"
                         else:
                             print("No image file stored for this ticket...")
+                            self.image_display_button["state"] = "disabled"
                 self.entries_to_add[i].insert(0, row_to_use[i])
+
+            # Show the image button if current screen is Tickets screen
+            if self.details_struct.get_screen_type() == "Tickets":
+                self.display_image_button()
+            else:
+                self.hide_image_button()
+
 
     def clear_entries(self):
         for entry in self.entries_to_add:
@@ -692,6 +710,13 @@ class DetailFrame(tk.Frame):
 
     def get_current_entries(self):
         return self.entries_to_add
+
+    def display_image_button(self):
+        self.image_display_button.tkraise()
+        self.image_display_button.place(x=1014, y=335)
+
+    def hide_image_button(self):
+        self.image_display_button.place_forget()
 
 
 # Struct used to handle creating the appropriate Label & Entry objects based on indicated screen type
