@@ -603,8 +603,11 @@ class DetailFrame(tk.Frame):
         self.editable = True
         self.disable_editable()
 
+        # Variable to hold image path to be used in display
+        self.image_path = ""
+
         # Button used to display image
-        self.image_display_button = tk.Button(self.detail_frame, text="Show attached image", bg='#9FAAEF', state=DISABLED)
+        self.image_display_button = tk.Button(self.detail_frame, text="Show attached image", bg='#9FAAEF', command=self.display_image)
         self.image_display_button['font'] = font.Font(size=10, weight='bold')
 
     # Function is called when switching from one screen to another (ex. Equipment to Employees)
@@ -691,6 +694,8 @@ class DetailFrame(tk.Frame):
                     if self.details_struct.get_screen_type() == "Tickets":
                         if row_to_use[i] != "":
                             print("File name: " + row_to_use[i])
+                            # Update the image path variable and set the button to a normal state
+                            self.image_path = row_to_use[i]
                             self.image_display_button["state"] = "normal"
                         else:
                             print("No image file stored for this ticket...")
@@ -718,6 +723,10 @@ class DetailFrame(tk.Frame):
     def hide_image_button(self):
         self.image_display_button.place_forget()
 
+    def display_image(self):
+        print("this code will be run on button click")
+        print("the current value for path is: " + self.image_path)
+        return
 
 # Struct used to handle creating the appropriate Label & Entry objects based on indicated screen type
 class DetailFrameValuesStruct:
