@@ -62,13 +62,13 @@ class GUIController(tk.Tk):
         self.active_frame = "LoginPage"
         self.active_table = "Equipment"
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
-        self.window_title = "Application"
+        self.window_title = "IT Management System"
 
 
         # Initializing container that stacks our frames
 
 
-        container = tk.Frame(self, bg=stormcloud)
+        container = tk.Frame(self, bg="#540A2F")
 
         container.pack(side="top", fill="both", expand=True)
 
@@ -90,6 +90,8 @@ class GUIController(tk.Tk):
 
             # Putting all of our frames in the same place on the screen with the top one being active
             frame.grid(row=0, column=0)
+
+        self.frames["MainPage"].config(bg="#540A2F")
 
         # Frame visible at the start of the application
         self.show_frame(self.active_frame)
@@ -243,8 +245,11 @@ class PageHeader(tk.Frame):
             if curr_button_name == "Employees":
                 curr_button_name = "Employee"
 
-            button = tk.Button(self, text=curr_button_name, command=lambda identifier=curr_button_name: self.press_button(identifier), bg=stormcloud,
+            button = tk.Button(self, text=curr_button_name, command=lambda identifier=curr_button_name: self.press_button(identifier), bg="#540A2F",
                                fg=gainsboro, highlightthickness=0, bd=0)
+            button.bind("<Enter>", highlight_button)
+            button.bind("<Leave>", unhighlight_navigation_button)
+
             button.config(width=15, height=4, font=("Montserrat", 20))
             button.grid(row=0, column=i, sticky=W)
             self.buttons.append(button)
@@ -273,6 +278,7 @@ class PageHeader(tk.Frame):
 class DataFrame(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        self.config(bg="#522B3F")
         # Initializing GUI Controller
         self.parent = parent
         self.update_mode = True
@@ -308,6 +314,8 @@ class DataFrame(tk.Frame):
         self.controller.frames['MainPage'].data_frame.detail_frame.enable_editable()
         # Change toolbar
         self.tool_bar.change_mode(2)
+        # Hide image-display button
+        self.detail_frame.hide_image_button()
 
     def cancel_row(self):
         if not self.update_mode:
@@ -322,6 +330,8 @@ class DataFrame(tk.Frame):
         self.old_row = self.detail_frame.details_struct.get_entry_strings()
         self.controller.frames['MainPage'].data_frame.detail_frame.enable_editable()
         self.tool_bar.change_mode(2)
+        # Hide image-display button
+        self.detail_frame.hide_image_button()
 
     def submit_data(self):
         global current_data_rows, displayed_data_rows
@@ -468,6 +478,7 @@ class ToolBarFrame(tk.Frame):
         global stormcloud
         tk.Frame.__init__(self, parent)
         # Initializing GUI Controller
+        self.config(bg="#522B3F")
         self.controller = controller
         self.parent = parent
         self.change_mode(0)
@@ -479,11 +490,11 @@ class ToolBarFrame(tk.Frame):
                 self.winfo_children()[i].destroy()
             self.refresh_button = tk.Button(self, text="Refresh", command=lambda: self.parent.refresh())
             self.refresh_button.grid(row=0, column=0)
-            self.space_label_1 = tk.Label(self, width=1)
+            self.space_label_1 = tk.Label(self, width=1, bg="#522B3F")
             self.space_label_1.grid(row=0, column=1)
             self.add_button = tk.Button(self, text="Add Row", command=lambda: self.parent.add_row())
             self.add_button.grid(row=0, column=2)
-            self.space_label_2 = tk.Label(self, width=1)
+            self.space_label_2 = tk.Label(self, width=1, bg="#522B3F")
             self.space_label_2.grid(row=0, column=3)
 
         elif mode == 1:
@@ -491,15 +502,15 @@ class ToolBarFrame(tk.Frame):
                 self.winfo_children()[i].destroy()
             self.refresh_button = tk.Button(self, text="Refresh", command=lambda: self.parent.refresh())
             self.refresh_button.grid(row=0, column=0)
-            self.space_label_1 = tk.Label(self, width=1)
+            self.space_label_1 = tk.Label(self, width=1, bg="#522B3F")
             self.space_label_1.grid(row=0, column=1)
             self.add_button = tk.Button(self, text="Add Row", command=lambda: self.parent.add_row())
             self.add_button.grid(row=0, column=2)
-            self.space_label_2 = tk.Label(self, width=1)
+            self.space_label_2 = tk.Label(self, width=1, bg="#522B3F")
             self.space_label_2.grid(row=0, column=3)
             self.update_button = tk.Button(self, text="Update", command=lambda: self.parent.update_database())
             self.update_button.grid(row=0, column=4)
-            self.space_label_3 = tk.Label(self, width=1)
+            self.space_label_3 = tk.Label(self, width=1, bg="#522B3F")
             self.space_label_3.grid(row=0, column=5)
 
             # REMOVE LOGIC PSEUDOCODE
@@ -515,15 +526,15 @@ class ToolBarFrame(tk.Frame):
                 self.winfo_children()[i].destroy()
             self.refresh_button = tk.Button(self, text="Refresh", command=lambda: self.parent.refresh())
             self.refresh_button.grid(row=0, column=0)
-            self.space_label_1 = tk.Label(self, width=1)
+            self.space_label_1 = tk.Label(self, width=1, bg="#522B3F")
             self.space_label_1.grid(row=0, column=1)
             self.add_button = tk.Button(self, text="Submit", command=lambda: self.parent.submit_data())
             self.add_button.grid(row=0, column=2)
-            self.space_label_2 = tk.Label(self, width=1)
+            self.space_label_2 = tk.Label(self, width=1, bg="#522B3F")
             self.space_label_2.grid(row=0, column=3)
             self.cancel_button = tk.Button(self, text="Cancel", command=lambda: self.parent.cancel_row())
             self.cancel_button.grid(row=0, column=4)
-            self.space_label_3 = tk.Label(self, width=1)
+            self.space_label_3 = tk.Label(self, width=1, bg="#522B3F")
             self.space_label_3.grid(row=0, column=5)
 
             # REMOVE LOGIC PSEUDOCODE
@@ -539,7 +550,7 @@ class SearchBarFrame(tk.Frame):
     def __init__(self, parent, controller):
         global stormcloud
         tk.Frame.__init__(self, parent)
-        self.config(bg=stormcloud)
+        self.config(bg="#4E1220")
         # Initializing GUI Controller
         self.controller = controller
         self.parent = parent
@@ -549,7 +560,7 @@ class SearchBarFrame(tk.Frame):
                               width=258)
         self.search_bar.grid(row=0, column=0)
 
-        self.search_space = tk.Label(self, width=1, bg=stormcloud)
+        self.search_space = tk.Label(self, width=1, bg="#280B12")
         self.search_space.grid(row=0, column=1)
 
         self.search_button = tk.Button(self, text="Search", command=lambda: self.search(), width=10)
@@ -582,10 +593,12 @@ class DetailFrame(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         global SCREEN_WIDTH, SCREEN_HEIGHT, coconut, gainsboro, stormcloud
-        self.config(bg=stormcloud)
+
         # Initializing GUI Controller
         self.controller = controller
-        self.detail_frame = tk.Frame(self, bg="white", highlightbackground="#363030", highlightthickness=2, width=1300, height=670)
+        #4E0717
+        #280B12
+        self.detail_frame = tk.Frame(self, bg="#522B3F", highlightbackground="#363030", highlightthickness=2, width=1200, height=670) #1300,670
         self.detail_frame.grid_propagate(False)     # Needed so that detail frame does not resize to minimum space needed
         self.detail_frame.pack(side=tk.RIGHT)
 
@@ -610,7 +623,7 @@ class DetailFrame(tk.Frame):
         self.image_path = ""
 
         # Button used to display image
-        self.image_display_button = tk.Button(self.detail_frame, text="Show attached image", bg='#9FAAEF', command=self.display_image)
+        self.image_display_button = tk.Button(self.detail_frame, text="Show attached image", bg='#D84A6C', command=self.display_image) #9FAAEF
         self.image_display_button['font'] = font.Font(size=10, weight='bold')
 
     # Function is called when switching from one screen to another (ex. Equipment to Employees)
@@ -773,14 +786,23 @@ class DetailFrameValuesStruct:
         self.entry_texts = []
         self.labels = []
         self.entries = []
-        self.equipment_columns = ["equipment_id", "category", "status", "current_user_id", "date_purchased",
-                                  "days_in_rotation", "cost", "user_first_name", "user_last_name", "department_id",
-                                  "department"]
-        self.employee_columns = ["employee_id", "first_name", "last_name", "email", "num_equipment_used", "department",
-                                "phone_extension"]
-        self.tickets_columns = ["ticket_number", "ticket_status", "client_id", "client_first_name", "client_last_name",
-                                "equipment_id", "ticket_category", "short_description", "full_description", "issue_scope",
-                                "priority", "department", "image"]
+        # self.equipment_columns = ["equipment_id", "category", "status", "current_user_id", "date_purchased",
+        #                           "days_in_rotation", "cost", "user_first_name", "user_last_name", "department_id",
+        #                           "department"]
+        # self.employee_columns = ["employee_id", "first_name", "last_name", "email", "num_equipment_used", "department",
+        #                         "phone_extension"]
+        # self.tickets_columns = ["ticket_number", "ticket_status", "client_id", "client_first_name", "client_last_name",
+        #                         "equipment_id", "ticket_category", "short_description", "full_description", "issue_scope",
+        #                         "priority", "department", "image"]
+        self.equipment_columns = ["Equipment ID", "Category", "Status", "Current User ID", "Date Purchased",
+                                  "Days in Rotation", "Cost", "User First Name", "User Last Name", "Department ID",
+                                  "Department"]
+        self.employee_columns = ["Employee ID", "First Name", "Last Name", "Email", "Num. Equipment Used", "Department",
+                                 "Phone Extension"]
+        self.tickets_columns = ["Ticket Number", "Ticket Status", "Client ID", "Client First Name", "Client Last Name",
+                                "Equipment ID", "Ticket Category", "Short Description", "Full Description",
+                                "Issue Scope", "Priority", "Department", "Image"]
+
         if self.screen_type == "Equipment":
             self.column_titles = self.equipment_columns
         elif self.screen_type == "Employee":
@@ -817,7 +839,7 @@ class DetailFrameValuesStruct:
     def get_labels(self):
         # Create appropriate Label objects
         for title in self.column_titles:
-            new_label = Label(self.frame, text=title, font=("Montserrat", 14), width=25, borderwidth=2, relief='ridge', anchor='center', bg='#b5651d')
+            new_label = Label(self.frame, text=title, font=("Montserrat", 14), width=25, borderwidth=2, relief='ridge', anchor='center', bg='#870524', fg=gainsboro)
             self.labels.append(new_label)
         return self.labels
 
@@ -1029,6 +1051,11 @@ class MCListDemo(ttk.Frame):
         self.frames["DetailFrame"].update_entries(list_of_values[ID_INDEX])
         self.controller.frames['MainPage'].data_frame.detail_frame.disable_editable()
 
+def highlight_button(e):
+    e.widget['background'] = "#8A1550"
+
+def unhighlight_navigation_button(e):
+    e.widget['background'] = "#540A2F"
 
 if __name__ == "__main__":
     app = GUIController()
