@@ -113,10 +113,11 @@ class GUIController(tk.Tk):
         password = str(password_verify.get())
         login = table.dataTable("Login_Credentials")
         verified = login.password_check(username, password)
-        active = login.check_active(username)
-        if verified and active:
-            administrator = login.check_admin(username)
-            self.show_frame("MainPage")
+        if verified:
+            active = login.check_active(username)
+            if active:
+                administrator = login.check_admin(username)
+                self.show_frame("MainPage")
         # return verified
         return False
 
