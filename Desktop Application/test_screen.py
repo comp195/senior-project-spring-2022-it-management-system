@@ -271,6 +271,12 @@ class PageHeader(tk.Frame):
 
         elif identifier == "Help":
             # TODO: Destroy irrelevant frames and make help frame appear
+            # The refresh button will update the row view with the newest data from the database
+            # The add row button puts the user into a mode where they're able to add a row of data to the selected table
+            # The update button puts the user into a mode where they're able to modify the values of a selected row
+            # The submit button finalizes the task or either updating the row or adding a row
+            # The cancel button force the user out the update/adding mode
+            #
             return
         else:
             self.controller.frames["MainPage"].update_on_button_press(identifier)
