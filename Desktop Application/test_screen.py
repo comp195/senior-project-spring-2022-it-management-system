@@ -732,11 +732,13 @@ class DetailFrame(tk.Frame):
 
         source_path = "C:\\xampp\htdocs\dashboard\image_attachments\\" + self.image_path
         destination_path = os.getcwd() + "\\retrieved_image_files\\" + self.image_path
-        host = '18.144.147.150'
-        username = "Administrator"
-        # Retrieve password from file
-        with open("pw.txt") as text_file:
-            pw = text_file.read()
+
+        # Retrieve connection details from file
+        with open("conn_details.txt") as text_file:
+            lines = text_file.read().splitlines()
+        host = lines[0]
+        username = lines[1]
+        pw = lines[2]
 
         # Retrieve the file from EC2 instance to local folder
         transport = paramiko.Transport((host, 22))
