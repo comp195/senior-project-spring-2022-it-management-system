@@ -531,7 +531,7 @@ class ToolBarFrame(tk.Frame):
             # login_row = get_row(username_verify.get(), password_verify.get())
             # if login_row is administrator:
             if administrator:
-               self.remove_button = tk.Button(self, text="Add Row", command=lambda: self.parent.remove_row())
+               self.remove_button = tk.Button(self, text="Remove Row", command=lambda: self.parent.remove_row())
                self.remove_button.grid(row=0, column=6)
 
         elif mode == 2:
@@ -555,7 +555,7 @@ class ToolBarFrame(tk.Frame):
             # self.login_row = get_row(username_verify.get(), password_verify.get())
             # if login_row is administrator:
             if administrator:
-               self.remove_button = tk.Button(self, text="Add Row", command=lambda: self.parent.remove_row())
+               self.remove_button = tk.Button(self, text="Remove Row", command=lambda: self.parent.remove_row())
                self.remove_button.grid(row=0, column=6)
 
 
