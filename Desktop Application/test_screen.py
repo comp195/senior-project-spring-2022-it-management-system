@@ -153,7 +153,6 @@ class LoginPage(tk.Frame):
         self.registration_screen.title("Register")
         self.registration_screen.config(bg=stormcloud)
 
-
         self.user_label = tk.Label(self.registration_screen, text="Username:", bg=stormcloud).pack()
         self.username_login_entry = tk.Entry(self.registration_screen, textvariable=self.credentials[0]).pack()
         self.register_space_label_0 = tk.Label(self.registration_screen, text="", bg=stormcloud).pack()
