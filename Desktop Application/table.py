@@ -364,6 +364,26 @@ class dataTable:
                 print("Not active")
                 return False
 
+    def check_IT(self, id):
+        valid = (self.name == "Employee")
+        if valid:
+            cmd = "SELECT * FROM dbmanagementsystem.Employee where employee_id = " + "'" + str(id) + "'"
+            self.cursor.execute(cmd)
+            temp = self.cursor.fetchall()
+            if temp[0][5] == "IT":
+                print("Is IT")
+                return True
+            else:
+                print("Not IT")
+                return False
+
+    def get_ID(self, username):
+        valid = (self.name == "Login_Credentials")
+        if valid:
+            cmd = "SELECT employee_id FROM dbmanagementsystem.Login_Credentials where username = " + "'" + username + "'"
+            self.cursor.execute(cmd)
+            temp = self.cursor.fetchall()
+            return temp[0][0]
 
 
 def main():
@@ -412,8 +432,10 @@ def main():
 
     log = dataTable("Login_Credentials")
     log.check_admin("k_leonard")
-    log.delete_row(log.get_cols()[0], "1")
-    log.print_rows()
+    print(log.get_ID("k_leonard"))
+
+    emp = dataTable("Employee")
+    emp.check_IT(2)
 
 
 if __name__ == "__main__":
