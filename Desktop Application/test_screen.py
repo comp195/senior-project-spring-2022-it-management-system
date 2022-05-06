@@ -82,7 +82,7 @@ class GUIController(tk.Tk):
         # Initializing all of our frames within our container
         self.frames = {}
         self.edit_mode = True
-        for F in (MainPage, LoginPage):
+        for F in (HelpPage, MainPage, LoginPage):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             frame.config(bg=stormcloud)   # background color of individual frame
@@ -127,6 +127,18 @@ class GUIController(tk.Tk):
         self.edit_mode = not self.edit_mode
 
 
+class HelpPage(tk.Frame):
+    def __init__(self, parent, controller):
+        global username_verify, password_verify, stormcloud
+        tk.Frame.__init__(self, parent)
+        self.parent = parent
+        self.controller = controller
+        self.header = PageHeader(self, self.controller)
+        self.header.pack()
+        self.text = tk.Label(self, text="test")
+        self.text.pack()
+
+
 class LoginPage(tk.Frame):
     def __init__(self, parent, controller):
         global username_verify, password_verify, stormcloud
@@ -135,10 +147,11 @@ class LoginPage(tk.Frame):
         self.controller = controller
         self.config(width=self.controller.winfo_reqwidth(), height=self.controller.winfo_reqheight(), bg=stormcloud)
 
-        self.user_label = tk.Label(self, text="Username:", bg=stormcloud).pack()
+        self.user_label = tk.Label(self, text="Username:", bg=stormcloud)
+        self.user_label.pack()
         self.username_login_entry = tk.Entry(self, textvariable=username_verify).pack()
         self.space_label = tk.Label(self, text="", bg=stormcloud).pack()
-        self.password_label = tk.Label(self, text="Password:",bg=stormcloud)
+        self.password_label = tk.Label(self, text="Password:" ,bg=stormcloud)
         self.password_label.pack()
         self.password_login_entry = tk.Entry(self, textvariable=password_verify, show='*')
         self.password_login_entry.pack()
@@ -262,22 +275,16 @@ class PageHeader(tk.Frame):
         self.buttons[self.button_dict.get(identifier)].config(fg=quick_silver)
         if identifier == "Logout":
             global username_verify, password_verify
+            self.controller.show_frame("LoginPage")
             username_verify.set("")
             password_verify.set("")
-            self.controller.frames["LoginPage"].username_label.config(text="")
+            self.controller.frames["LoginPage"].user_label.config(text="")
             self.controller.frames["LoginPage"].password_label.config(text="")
-            self.controller.show_frame("LoginPage")
 
         elif identifier == "Help":
-            # TODO: Destroy irrelevant frames and make help frame appear
-            # The refresh button will update the row view with the newest data from the database
-            # The add row button puts the user into a mode where they're able to add a row of data to the selected table
-            # The update button puts the user into a mode where they're able to modify the values of a selected row
-            # The submit button finalizes the task or either updating the row or adding a row
-            # The cancel button force the user out the update/adding mode
-            #
-            return
+            self.controller.show_frame("HelpPage")
         else:
+            self.controller.show_frame("MainPage")
             self.controller.frames["MainPage"].update_on_button_press(identifier)
 
 
