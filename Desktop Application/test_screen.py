@@ -471,6 +471,7 @@ class MainPage(tk.Frame):
         # Update the global current_data_rows value based on the new table
         global current_data_rows, displayed_data_rows
         current_data_rows = self.equipment_table.get_rows()
+
         displayed_data_rows = deepcopy(current_data_rows)
 
         # Update the labels and entry boxes that appear based on the new table
