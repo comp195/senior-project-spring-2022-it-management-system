@@ -135,8 +135,16 @@ class HelpPage(tk.Frame):
         self.controller = controller
         self.header = PageHeader(self, self.controller)
         self.header.pack()
-        self.text = tk.Label(self, text="test")
-        self.text.pack()
+        self.text = tk.Label(self, text="The refresh button will update the row view area with the latest data from the database")
+        self.text1 = tk.Label(self, text="The add row button allows users to add additional rows to a table")
+        self.text2 = tk.Label(self, text="The update button allows users to modify the information in the selected row")
+        self.text3 = tk.Label(self, text="The submit button finalizes the changes/additions")
+        self.text4 = tk.Label(self, text="The cancel button will take the user out of the add/update mode")
+        self.text5 = tk.Label(self, text="The remove button will remove the selected row from the table")
+        text_list = [self.text, self.text1, self.text2, self.text3, self.text4, self.text5]
+        # self.text.pack()
+        for i in text_list:
+            i.pack()
 
 
 class LoginPage(tk.Frame):
