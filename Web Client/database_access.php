@@ -71,11 +71,11 @@
 		$image_path;
 		extract($_POST);
 		$attached_file_name = $_FILES["image_file"]["name"];
-		echo $attached_file_name;
+		//echo $attached_file_name;
 		if ($attached_file_name != "")
 		{
 			$image_directory = "image_attachments/";
-			$image_path = time() . "" . $attached_file_name;
+			$image_path = time() . "_" . $attached_file_name;
 			if (move_uploaded_file($_FILES["image_file"]["tmp_name"], $image_directory . $image_path))
 			{
 				//then file was moved successfully 

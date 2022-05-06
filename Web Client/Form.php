@@ -254,7 +254,7 @@
 
 				<!-- File submit button for optional image -->
 				<label for="image_file" style="margin-top:30px;">Image Attachment</label>
-				<input type="file" id="image_file" name="image_file" style="margin-left:127px;">
+				<input type="file" id="image_file" name="image_file" accept="image/*" style="margin-left:127px;" onchange="verify_file_upload()">
 				
 
 				<!-- Submit Button -->
@@ -373,18 +373,18 @@
 			data:		form_data,
 			processData:	false,
 			contentType:	false,
-			dataType:	'json',
+			//dataType:	'json',
 			beforeSend: function()
 			{
 				$('#response').html('<span>Submitting ticket...</span>');
 			},
 			success:	function (data)
 			{
-				console.log("Success");
-				console.log(data);
 				$('form').trigger("reset");
-					
-				if (data.query_success)
+				
+				var data_as_JSON = JSON.parse(data); 	
+				//if (data.query_success)
+				if (data_as_JSON.query_success)
 				{
 					$('#response').html('<span>Ticket submitted successfully!</span>');
 				}
@@ -409,7 +409,7 @@
 
 	function display_loading_spinner()
 	{
-		console.log("SPINNER SHOWN");
+		//console.log("SPINNER SHOWN");
 		var spinner = document.getElementById("spinner");
 		if (spinner.classList.contains("hidden"))
 		{
@@ -419,11 +419,38 @@
 
 	function hide_loading_spinner()
 	{
-		console.log("SPINNER HIDDEN");
+		//console.log("SPINNER HIDDEN");
 		var spinner = document.getElementById("spinner");
 		if (!spinner.classList.contains("hidden"))
 		{
 			spinner.classList.add("hidden");			
 		}
+	}
+
+	//Used to perform checks for image-file upload.
+	function verify_file_upload()
+	{
+		var uploaded_file = document.getElementById("image_file");
+		//alert(uploaded_file.files[0].size);		
+		if (uploaded_file.files[0].size > 3145728)
+		{
+			alert("File size exceeds limit (3MB)!");
+			uploaded_file.value = "";
+			return;
+		}
+
+		//Next, perform file extension check.
+		var file_name = document.getElementById("image_file").value;
+		var index_of_dot = file_name.lastIndexOf(".");
+		var file_ext = file_name.substring(index_of_dot+1);
+		if (file_ext == "jpg" || file_ext == "jpeg" || file_ext == "png")
+		{
+			//File extension is valid
+		}
+		else
+		{
+			alert("File type not valid! Supported types: jpg, jpeg, png");
+			uploaded_file.value = "";
+		}		
 	}
 </script>
