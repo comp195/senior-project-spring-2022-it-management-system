@@ -44,7 +44,7 @@ Components:	 This system is separated into two components: The Desktop Applicati
 		  This is necessary if you would like to use the "Show attached image" feature.
 		  
 		  
-		  *THE EXECUTABLE IS LOCATED AT "IT Management System\dist\test_screen\AVD_IT_Management_System.exe"
+		  *THE EXECUTABLE IS LOCATED AT "IT Management System\dist\test_screen\AVD IT Management System.exe"
 		   within the 7z file.
 		  *THE WEB CLIENT LINK IS: http://ec2-18-144-147-150.us-west-1.compute.amazonaws.com/ OR 
 		  http://18.144.147.150/
