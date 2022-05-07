@@ -34,7 +34,7 @@
 <html>
 	<head>
 		<title>Ticketing Login</title>
-		<h1>Welcome to __ Ticketing System</h1>
+		<h1>Welcome to A.V.D. Ticketing System</h1>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 		<style>
 			h1

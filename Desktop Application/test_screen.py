@@ -115,12 +115,25 @@ class GUIController(tk.Tk):
         username = str(username_verify.get())
         password = str(password_verify.get())
         login = table.dataTable("Login_Credentials")
+        emp = table.dataTable("Employee")
         verified = login.password_check(username, password)
         if verified:
             active = login.check_active(username)
-            if active:
+            is_IT = emp.check_IT(login.get_ID(username))
+            if active and is_IT:
                 administrator = login.check_admin(username)
                 self.show_frame("MainPage")
+                print("HERE")
+
+                image_window = Toplevel(self)
+                image_window.title("ENTRY REQUIREMENTS")
+                downloaded_img = Image.open("requirements image.PNG")
+                resized_img = downloaded_img.resize((1280, 720), Image.ANTIALIAS)
+                img_to_show = ImageTk.PhotoImage(resized_img)
+                img_panel = Label(image_window, image=img_to_show)
+                img_panel.image = img_to_show
+                img_panel.pack()
+
         # return verified
         return False
 
@@ -136,18 +149,38 @@ class HelpPage(tk.Frame):
         self.controller = controller
         self.header = PageHeader(self, self.controller)
         self.header.pack()
-        self.text6 = tk.Label(self, text="At the top the user is able to select which table they would like to view")
+
+        self.head6 = tk.Label(self, text="FAQ", font=('Helvetica', 10, 'bold'))
+        self.text6 = tk.Label(self,text="At the top the user is able to select which table they would like to view")
+
+        self.head = tk.Label(self, text="What does the refresh button do?", font=('Helvetica', 10, 'bold'))
         self.text = tk.Label(self, text="The refresh button will update the row view area with the latest data from the database")
+
+        self.head1 = tk.Label(self, text="What does add row button do?", font=('Helvetica', 10, 'bold'))
         self.text1 = tk.Label(self, text="The add row button allows users to add additional rows to a table")
+
+        self.head2 = tk.Label(self, text="What does update button do?", font=('Helvetica', 10, 'bold'))
         self.text2 = tk.Label(self, text="The update button allows users to modify the information in the selected row")
+
+        self.head3 = tk.Label(self, text="What does the submit button do?", font=('Helvetica', 10, 'bold'))
         self.text3 = tk.Label(self, text="The submit button finalizes the changes/additions")
+
+        self.head4 = tk.Label(self, text="What does the cancel button do?", font=('Helvetica', 10, 'bold'))
         self.text4 = tk.Label(self, text="The cancel button will take the user out of the add/update mode")
+
+        self.head5 = tk.Label(self, text="What does the remove button do?", font=('Helvetica', 10, 'bold'))
         self.text5 = tk.Label(self, text="The remove button will remove the selected row from the table")
-        text_list = [self.text6, self.text, self.text1, self.text2, self.text3, self.text4, self.text5]
+        text_list = [self.head6, self.text6,
+                     self.head, self.text,
+                     self.head1, self.text1,
+                     self.head2, self.text2,
+                     self.head3, self.text3,
+                     self.head4, self.text4,
+                     self.head5, self.text5]
         # self.text.pack()
         for i in text_list:
             i.place(x=0)
-            i.pack(anchor="w")
+            i.pack(anchor="w", fill=BOTH, expand=1)
 
 
 class LoginPage(tk.Frame):
@@ -179,6 +212,9 @@ class LoginPage(tk.Frame):
         texts = [" ", "Invalid Credentials"]
         logged_in = self.controller.login_verification()
         self.space_label_2['text'] = texts[int(not logged_in)]
+
+    def set_empty_text_on_logout(self):
+        self.space_label_2['text'] = ""
 
     def register(self):
         self.credentials = [StringVar(), StringVar(), StringVar(), StringVar(), StringVar(), StringVar()]
@@ -289,8 +325,7 @@ class PageHeader(tk.Frame):
             self.controller.show_frame("LoginPage")
             username_verify.set("")
             password_verify.set("")
-            self.controller.frames["LoginPage"].user_label.config(text="")
-            self.controller.frames["LoginPage"].password_label.config(text="")
+            self.controller.frames["LoginPage"].set_empty_text_on_logout()
 
         elif identifier == "Help":
             self.controller.show_frame("HelpPage")
@@ -413,6 +448,8 @@ class DataFrame(tk.Frame):
             self.parent.equipment_table.print_rows()
             self.parent.equipment_table.commit()
             displayed_data_rows = deepcopy(current_data_rows)
+        else:
+            self.tool_bar.pass_error("Error: Bad data")
         self.parent.search.clear_searchbar()
         self.refresh()
 
@@ -518,6 +555,8 @@ class ToolBarFrame(tk.Frame):
             self.add_button.grid(row=0, column=2)
             self.space_label_2 = tk.Label(self, width=1, bg="#522B3F")
             self.space_label_2.grid(row=0, column=3)
+            self.error_label = tk.Label(self, bg="#522B3F", fg = "Red")
+            self.error_label.grid(row=0, column=4)
 
         elif mode == 1:
             for i in range(len(self.winfo_children())-1, -1, -1):
@@ -534,6 +573,8 @@ class ToolBarFrame(tk.Frame):
             self.update_button.grid(row=0, column=4)
             self.space_label_3 = tk.Label(self, width=1, bg="#522B3F")
             self.space_label_3.grid(row=0, column=5)
+            self.error_label = tk.Label(self, bg="#522B3F", fg = "Red")
+            self.error_label.grid(row=0, column=6)
 
             # REMOVE LOGIC PSEUDOCODE
             # TODO: Vincent, change the first two lines of the pseudocode to validate that the user who is logged in is an administrator
@@ -558,6 +599,8 @@ class ToolBarFrame(tk.Frame):
             self.cancel_button.grid(row=0, column=4)
             self.space_label_3 = tk.Label(self, width=1, bg="#522B3F")
             self.space_label_3.grid(row=0, column=5)
+            self.error_label = tk.Label(self, bg="#522B3F", fg = "Red")
+            self.error_label.grid(row=0, column=6)
 
             # REMOVE LOGIC PSEUDOCODE
             # TODO: Vincent, change the first two lines of the pseudocode to validate that the user who is logged in is an administrator
@@ -566,6 +609,9 @@ class ToolBarFrame(tk.Frame):
             if administrator:
                self.remove_button = tk.Button(self, text="Remove Row", command=lambda: self.parent.remove_row())
                self.remove_button.grid(row=0, column=6)
+
+    def pass_error(self, value):
+        self.error_label.config(text=value)
 
 
 class SearchBarFrame(tk.Frame):

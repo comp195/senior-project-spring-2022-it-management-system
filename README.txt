@@ -1,7 +1,7 @@
 Senior Project - IT Management System
 
 
-Last Update:     04/03/2022
+Last Update:     05/06/2022
 
 Contributors:    Daniel Adler - d_adler@u.pacific.edu
 		 Vincent Tran - v_tran37@u.pacific.edu
@@ -28,5 +28,25 @@ Components:	 This system is separated into two components: The Desktop Applicati
 		 The Web Application Includes:
 			- A Login section that limits access to users that are employees
 			- A Ticket Screen that gives employees the ability to submit tickets about issues
+			- A View Tickets screen that gives employees the ability to view their own tickets
 
-Special Notes:   N/A
+*Special Notes:   STEPS MUST BE TAKEN FOR EXECUTABLE TO WORK:
+		  [1] Create conn_details.txt file that must be created and placed into the executable file's 	                     
+                  directory. The format should be as follows:
+                  <HOST>       
+		  <USERNAME OF REMOTE SERVER>
+		  <PASSWORD TO REMOTE SERVER>
+
+                  *Ensure there is no leading or trailing whitespace.
+		  *REMOTE SERVER in our case refers to an AWS EC2 instance.
+		
+		  [2] Create a folder called "retrieved_image_files" in "IT Management System\dist\test_screen\"
+		  This is necessary if you would like to use the "Show attached image" feature.
+		  
+		  
+		  *THE EXECUTABLE IS LOCATED AT "IT Management System\dist\test_screen\AVD_IT_Management_System.exe"
+		   within the 7z file.
+		  *THE WEB CLIENT LINK IS: http://ec2-18-144-147-150.us-west-1.compute.amazonaws.com/ OR 
+		  http://18.144.147.150/
+		  
+		  *The executable file may be flagged incorrectly. Check antivirus settings.
