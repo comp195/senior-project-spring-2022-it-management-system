@@ -12,6 +12,7 @@ import paramiko
 from PIL import ImageTk, Image
 
 SCREEN_WIDTH = 1920
+SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 
 # CONSTANTS TO KEEP TRACK OF INDICES OF EACH DB TABLE FIELD WITHIN THE LIST(S)
@@ -135,7 +136,7 @@ class HelpPage(tk.Frame):
         self.controller = controller
         self.header = PageHeader(self, self.controller)
         self.header.pack()
-        self.text6 = tk.Label(self,text="At the top the user is able to select which table they would like to view")
+        self.text6 = tk.Label(self, text="At the top the user is able to select which table they would like to view")
         self.text = tk.Label(self, text="The refresh button will update the row view area with the latest data from the database")
         self.text1 = tk.Label(self, text="The add row button allows users to add additional rows to a table")
         self.text2 = tk.Label(self, text="The update button allows users to modify the information in the selected row")
@@ -147,7 +148,6 @@ class HelpPage(tk.Frame):
         for i in text_list:
             i.place(x=0)
             i.pack(anchor="w")
-
 
 
 class LoginPage(tk.Frame):
@@ -438,9 +438,6 @@ class DataFrame(tk.Frame):
         column = self.parent.equipment_table.get_cols()[0]
         self.parent.equipment_table.delete_row(column, str(row_id))
         self.parent.equipment_table.commit()
-
-
-
         self.controller.frames['MainPage'].data_frame.detail_frame.enable_editable()
         self.detail_frame.clear_entries()
         self.controller.frames['MainPage'].data_frame.detail_frame.disable_editable()
@@ -811,14 +808,6 @@ class DetailFrameValuesStruct:
         self.entry_texts = []
         self.labels = []
         self.entries = []
-        # self.equipment_columns = ["equipment_id", "category", "status", "current_user_id", "date_purchased",
-        #                           "days_in_rotation", "cost", "user_first_name", "user_last_name", "department_id",
-        #                           "department"]
-        # self.employee_columns = ["employee_id", "first_name", "last_name", "email", "num_equipment_used", "department",
-        #                         "phone_extension"]
-        # self.tickets_columns = ["ticket_number", "ticket_status", "client_id", "client_first_name", "client_last_name",
-        #                         "equipment_id", "ticket_category", "short_description", "full_description", "issue_scope",
-        #                         "priority", "department", "image"]
         self.equipment_columns = ["Equipment ID", "Category", "Status", "Current User ID", "Date Purchased",
                                   "Days in Rotation", "Cost", "User First Name", "User Last Name", "Department ID",
                                   "Department"]
