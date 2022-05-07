@@ -201,6 +201,9 @@ class LoginPage(tk.Frame):
         logged_in = self.controller.login_verification()
         self.space_label_2['text'] = texts[int(not logged_in)]
 
+    def set_empty_text_on_logout(self):
+        self.space_label_2['text'] = ""
+
     def register(self):
         self.credentials = [StringVar(), StringVar(), StringVar(), StringVar(), StringVar(), StringVar()]
 
@@ -312,6 +315,7 @@ class PageHeader(tk.Frame):
             password_verify.set("")
             self.controller.frames["LoginPage"].user_label.config(text="")
             self.controller.frames["LoginPage"].password_label.config(text="")
+            self.controller.frames["LoginPage"].set_empty_text_on_logout()
 
         elif identifier == "Help":
             self.controller.show_frame("HelpPage")
