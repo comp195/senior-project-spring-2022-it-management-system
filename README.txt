@@ -42,3 +42,5 @@ Components:	 This system is separated into two components: The Desktop Applicati
 		  *THE EXECUTABLE IS LOCATED AT "IT Management System\dist\test_screen\AVD_IT_Management_System.exe
 		  *THE WEB CLIENT LINK IS: http://ec2-18-144-147-150.us-west-1.compute.amazonaws.com/ OR 
 		  http://18.144.147.150/
+		  
+		  *The executable file may be flagged incorrectly. Check antivirus settings.
