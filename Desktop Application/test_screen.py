@@ -122,6 +122,17 @@ class GUIController(tk.Tk):
             if active and is_IT:
                 administrator = login.check_admin(username)
                 self.show_frame("MainPage")
+                print("HERE")
+
+                image_window = Toplevel(self)
+                image_window.title("ENTRY REQUIREMENTS")
+                downloaded_img = Image.open("requirements image.PNG")
+                resized_img = downloaded_img.resize((1280, 720), Image.ANTIALIAS)
+                img_to_show = ImageTk.PhotoImage(resized_img)
+                img_panel = Label(image_window, image=img_to_show)
+                img_panel.image = img_to_show
+                img_panel.pack()
+
         # return verified
         return False
 
