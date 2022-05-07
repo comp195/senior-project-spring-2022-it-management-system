@@ -167,7 +167,7 @@ class HelpPage(tk.Frame):
         # self.text.pack()
         for i in text_list:
             i.place(x=0)
-            i.pack(anchor="w")
+            i.pack(anchor="w", fill=BOTH, expand=1)
 
 
 
