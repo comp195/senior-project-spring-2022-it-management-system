@@ -40,7 +40,7 @@ Components:	 This system is separated into two components: The Desktop Applicati
                   *Ensure there is no leading or trailing whitespace.
 		  *REMOTE SERVER in our case refers to an AWS EC2 instance.
 		
-		  [2] Create a folder called "retrieved_image_files" in "IT Management System\dist\test_screen\"
+		  [2] Ensure folder called "retrieved_image_files" exists in "IT Management System\dist\test_screen\"
 		  This is necessary if you would like to use the "Show attached image" feature.
 		  
 		  
