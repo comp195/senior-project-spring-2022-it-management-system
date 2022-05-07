@@ -30,4 +30,10 @@ Components:	 This system is separated into two components: The Desktop Applicati
 			- A Ticket Screen that gives employees the ability to submit tickets about issues
 			- A View Tickets screen that gives employees the ability to view their own tickets
 
-Special Notes:   N/A
+*Special Notes:   There is a required conn_details.txt file that must be created and placed into the executable file's 	                     directory. The format should be as follows:
+                  <HOST>       
+		  <USERNAME OF REMOTE SERVER>
+		  <PASSWORD TO REMOTE SERVER>
+
+                  Ensure there is no leading or trailing whitespace.
+		  *REMOTE SERVER in our case refers to an AWS EC2 instance.
