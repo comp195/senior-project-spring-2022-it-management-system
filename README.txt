@@ -28,5 +28,6 @@ Components:	 This system is separated into two components: The Desktop Applicati
 		 The Web Application Includes:
 			- A Login section that limits access to users that are employees
 			- A Ticket Screen that gives employees the ability to submit tickets about issues
+			- A View Tickets screen that gives employees the ability to view their own tickets
 
 Special Notes:   N/A
